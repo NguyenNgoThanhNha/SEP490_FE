@@ -11,6 +11,8 @@ import { AlignJustify, BookIcon, ShoppingBag, SquareMenu, TicketPercent } from "
 import { MenuItemComponent } from "@/components/molecules/MenuItem";
 import { useTranslation } from "react-i18next";
 import solace from "@/assets/images/solace.png";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -23,70 +25,91 @@ interface MenuItem {
   path?: string;
   submenu?: MenuItem[];
 }
+const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuItem[] => {
+  switch (roleID) {
+    case 1: // Admin
+      return [
+        { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
+        { label: t("branch"), icon: <BarChartIcon />, path: "/branch" },
+        {
+          label: t("products"),
+          icon: <ArchiveIcon />,
+          submenu: [
+            { label: t("manageProducts"), icon: <ArchiveIcon />, path: "/products-management" },
+            { label: t("addProduct"), icon: <ArchiveIcon />, path: "/create-product" },
+          ],
+        },
+        {
+          label: t("service"),
+          icon: <ShoppingBag />,
+          submenu: [
+            { label: t("manageServices"), icon: <ShoppingBag />, path: "/services-management" },
+            { label: t("addService"), icon: <ShoppingBag />, path: "/create-service" },
+          ],
+        },
+        { label: t("saleReport"), icon: <DashboardIcon />, path: "/sales" },
+        {
+          label: t("employee"),
+          icon: <PersonIcon />,
+          submenu: [
+            { label: t("manageEmployee"), icon: <PersonIcon />, path: "/staffs-management" },
+            { label: t("addEmployee"), icon: <PersonIcon />, path: "/employees/add" },
+          ],
+        },
+        {
+          label: t("blog"),
+          icon: <ArchiveIcon />,
+          submenu: [
+            { label: t("manageBlog"), icon: <ArchiveIcon />, path: "/blog" },
+            { label: t("createBlog"), icon: <ArchiveIcon />, path: "/create-blog" },
+          ],
+        },
+        {
+          label: t("order"),
+          icon: <DashboardIcon />,
+          submenu: [
+            { label: t("manageOrder"), icon: <DashboardIcon />, path: "/order" },
+            { label: t("createOrder"), icon: <DashboardIcon />, path: "/create-blog" },
+          ],
+        },
+        { label: t("customer"), icon: <PersonIcon />, path: "/customers-management" },
+        {
+          label: t("promote"),
+          icon: <TicketPercent />,
+          submenu: [
+            { label: t("promote"), icon: <TicketPercent />, path: "/promotions-management" },
+            { label: t("addPromote"), icon: <TicketPercent />, path: "/create-promote" },
+          ],
+        },
+        { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
+        { label: t("manageAppoinment"), icon: <BookIcon />, path: "/appoinments-management" },
+        { label: t("manageRoom"), icon: <BookIcon />, path: "/rooms-management" },
+        { label: t("settings"), icon: <GearIcon />, path: "/settings" },
+        { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
+      ];
+    case 2: // Manager
+      return [
+        { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
+        { label: t("manageOrders"), icon: <ShoppingBag />, path: "/order" },
+        { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
+      ];
+    case 3: // Staff
+      return [
+        { label: t("home"), icon: <DashboardIcon />, path: "/home" },
+        { label: t("appointments"), icon: <BookIcon />, path: "/appointments" },
+        { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
+      ];
+    default:
+      return [];
+  }
+};
+
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(isOpen);
   const { t } = useTranslation();
-
-  const menuItems: MenuItem[] = [
-    { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
-    { label: t("branch"), icon: <BarChartIcon />, path: "/branch" },
-    {
-      label: t("products"),
-      icon: <ArchiveIcon />,
-      submenu: [
-        { label: t("manageProducts"), icon: <ArchiveIcon />, path:"/products-management" },
-        { label: t("addProduct"), icon: <ArchiveIcon />, path: "/create-product" },
-      ],
-    },
-    {
-      label: t("service"),
-      icon: <ShoppingBag />,
-      submenu: [
-        { label: t("manageServices"), icon: <ShoppingBag />, path: "/services-management" },
-        { label: t("addService"), icon: <ShoppingBag />, path: "/create-service" },
-      ],
-    },
-    { label: t("saleReport"), icon: <DashboardIcon />, path: "/sales" },
-    {
-      label: t("employee"),
-      icon: <PersonIcon />,
-      submenu: [
-        { label: t("manageEmployee"), icon: <PersonIcon />, path: "/staffs-management" },
-        { label: t("addEmployee"), icon: <PersonIcon />, path: "/employees/add" },
-      ],
-    },
-    {
-      label: t("blog"),
-      icon: <ArchiveIcon />,
-      submenu: [
-        { label: t("manageBlog"), icon: <ArchiveIcon />, path: "/blog" },
-        { label: t("createBlog"), icon: <ArchiveIcon />, path: "/create-blog" },
-      ],
-    },
-    {
-      label: t("order"),
-      icon: <DashboardIcon />,
-      submenu: [
-        { label: t("manageOrder"), icon: <DashboardIcon />, path: "/order" },
-        { label: t("createOrder"), icon: <DashboardIcon />, path: "/create-blog" },
-      ],
-    },
-    { label: t("customer"), icon: <PersonIcon />, path: "/customers-management" },
-    {
-      label: t("promote"),
-      icon: <TicketPercent />,
-      submenu: [
-        { label: t("promote"), icon: <TicketPercent />, path: "/promotions-management" },
-        { label: t("addPromote"), icon: <TicketPercent />, path: "/create-promote" },
-      ],
-    },
-    { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
-    { label: t("manageAppoinment"), icon: <BookIcon />, path: "/appoinments-management" },
-    { label: t("manageRoom"), icon: <BookIcon />, path: "/rooms-management" },
-    { label: t("settings"), icon: <GearIcon />, path: "/settings" },
-    { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
-  ];
+  const roleID = useSelector((state: RootState) => state.auth.user?.roleID);
+  const menuItems = getMenuItemsByRole(roleID || 0, t);
 
   const renderMenuItems = (items: MenuItem[]) => (
     <ul className="space-y-1">
@@ -112,7 +135,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         {isSidebarOpen && (
           <>
             <img src={solace} alt="Solace Spa"
-              className="w-10 h-10 object-cover rounded-full" 
+              className="w-10 h-10 object-cover rounded-full"
             />
             <h1 className="text-lg font-semibold text-[#516D19]">Solace Spa</h1>
           </>

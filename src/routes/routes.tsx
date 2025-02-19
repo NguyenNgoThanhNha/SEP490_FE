@@ -48,7 +48,7 @@ export const AppRouter = () => {
         <Route path={ROUTES.VERIFY_CODE} element={<VerifyCodePage />} />,
         <Route path={ROUTES.SET_PASSWORD} element={<SetPasswordPage />} />
         {/* ROOT */}
-        <Route path={ROUTES.ROOT} element={<Layout />}>
+        <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
           <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
           <Route path={ROUTES.OUR_SERVICES} element={<OurServices />} />
