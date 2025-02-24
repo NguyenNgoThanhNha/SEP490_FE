@@ -77,6 +77,7 @@ const deletePromotion = async (promotionId: number): Promise<ResponseProps> => {
   return await put(`Promotion/delete/${promotionId}`)
 }
 
+
 export default {
   getAllPromotion,
   getPromotionDetail,

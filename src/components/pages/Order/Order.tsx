@@ -1,153 +1,210 @@
-import React, { useState } from "react";
-import { CreditCard, Wallet, MoreVertical, Edit2, Trash } from "lucide-react"; // Icon for dropdown
+import { useEffect, useState } from "react";
+import { Edit, Trash } from "lucide-react";
+import ReusableAreaChart from "@/components/molecules/AreaChart";
+import RechartsPieChart from "@/components/molecules/PieChart";
+import { Table } from "@/components/organisms/Table/Table";
+import { formatPrice } from "@/utils/formatPrice";
+import toast from "react-hot-toast";
+import { Modal, Select } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
+import { TOrder } from "@/types/order.type";
+import orderService from "@/services/orderService";
 
-// Mock data for orders
-const mockOrders = [
-  {
-    orderId: "OD001",
-    customerName: "John Doe",
-    totalAmount: 250000,
-    paymentMethod: "ZaloPay",
-    orderDate: "2024-12-01",
-    status: "Completed",
-  },
-  {
-    orderId: "OD002",
-    customerName: "Jane Smith",
-    totalAmount: 450000,
-    paymentMethod: "SolaceWallet",
-    orderDate: "2024-12-03",
-    status: "Pending",
-  },
-  {
-    orderId: "OD003",
-    customerName: "Alice Brown",
-    totalAmount: 150000,
-    paymentMethod: "ZaloPay",
-    orderDate: "2024-12-05",
-    status: "Cancelled",
-  },
-];
+const OrderManagementPage = () => {
+  const [products, setProducts] = useState<TOrder[]>([]);
+  const [, setLoading] = useState(false);  
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+  const [totalPages, setTotalPages] = useState(0);
 
-// Badge configuration for status and payment method
-const badgeConfig = {
-  status: {
-    Completed: { label: "Completed", color: "bg-green-100", textColor: "text-green-700" },
-    Pending: { label: "Pending", color: "bg-yellow-100", textColor: "text-yellow-700" },
-    Cancelled: { label: "Cancelled", color: "bg-red-100", textColor: "text-red-700" },
-  },
-  paymentMethod: {
-    ZaloPay: { label: "ZaloPay", color: "bg-blue-100", textColor: "text-blue-700" },
-    SolaceWallet: { label: "SolaceWallet", color: "bg-purple-100", textColor: "text-purple-700" },
-  },
-};
+  const fetchProducts = async (pageIndex: number, pageSize: number) => {
+    try {
+      setLoading(true);
+      const response = await orderService.getAllPurchase({ pageIndex, pageSize });
+      if (response?.success) {
+        const activeProducts = response.result?.data.filter(
+          (product: TOrder) => product.status === "Active"
+        ) || [];
+        setProducts(activeProducts);
+        setTotalPages(response.result?.pagination?.totalPage || 0);
+      } else {
+        toast.error(response.result?.message || "Failed to fetch products.");
+      }
+    } catch {
+      toast.error("Failed to fetch products.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
-const OrderPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const handleDelete = (orderId: number) => {
+    Modal.confirm({
+      title: "Are you sure?",
+      content: "This action cannot be undone.",
+      okText: "Yes, delete",
+      cancelText: "Cancel",
+    });
+  };
 
-  // Headers for the table
-  const headers = [
-    { label: "Order ID", key: "orderId", sortable: true },
-    { label: "Customer Name", key: "customerName" },
-    { label: "Total Amount (VND)", key: "totalAmount" },
-    { label: "Payment Method", key: "paymentMethod" },
-    { label: "Order Date", key: "orderDate" },
-    { label: "Status", key: "status" },
-    { label: "Actions", key: "actions", sortable: false },
-  ];
+  const handleEdit = (orderId: number) => {
+    navigate(`/products-management/${orderId}`);
+  };
 
-  // Filter and map payment method to icons
-  const renderPaymentMethodIcon = (method) => {
-    switch (method) {
-      case "ZaloPay":
-        return <CreditCard className="w-5 h-5 text-blue-600" />;
-      case "SolaceWallet":
-        return <Wallet className="w-5 h-5 text-purple-600" />;
-      default:
-        return null;
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+      fetchProducts(newPage, pageSize); 
     }
   };
 
-  // Dropdown menu for actions
-  const renderActionMenu = (order) => (
-    <Menu
-    items={[
-      {
-        label: (
-          <div onClick={() => handleViewDetails(order)} className="flex items-center space-x-2">
-            <Edit2 className="w-4 h-4 text-blue-500" />
-            <span>Order Detail</span>
-          </div>
-        ),
-        key: 'view',
-      },
-      {
-        label: (
-          <div onClick={() => handleUpdateStatus(order)} className="flex items-center space-x-2">
-            <Trash className="w-4 h-4 text-red-500" />
-            <span>Delete</span>
-          </div>
-        ),
-        key: 'delete',
-      },
-    ]}
-  />
-  );
-
-  // Handlers
-  const handleViewDetails = (order) => {
-    console.log("Viewing details for:", order.orderId);
+  const handlePageSizeChange = (value: number) => {
+    setPageSize(value);
+    setPage(1);
+    fetchProducts(1, value); 
   };
 
-  const handleUpdateStatus = (order) => {
-    console.log("Updating status for:", order.orderId);
-  };
+  useEffect(() => {
+    fetchProducts(page, pageSize);
+  }, [page, pageSize]);
 
-  // Enhance data for rendering badges and icons
-  const enhancedData = mockOrders.map((order) => ({
-    ...order,
-    paymentMethod: (
-      <div className="flex items-center space-x-2">
-        {renderPaymentMethodIcon(order.paymentMethod)}
-        <span>{order.paymentMethod}</span>
-      </div>
-    ),
-    status: (
-      <span
-        className={`px-2 py-1 text-sm rounded-lg ${badgeConfig.status[order.status].color} ${badgeConfig.status[order.status].textColor}`}
-      >
-        {badgeConfig.status[order.status].label}
-      </span>
-    ),
-    actions: (
-      <Dropdown overlay={renderActionMenu(order)} trigger={["click"]}>
-        <button className="text-gray-600 hover:text-gray-900">
-          <MoreVertical className="w-5 h-5" />
-        </button>
-      </Dropdown>
-    ),
-  }));
+  const headers = [
+    { label: "Image", key: "image", hiding: true },
+    { label: "Product Name", key: "productName" },
+    { label: "Price", key: "price", render: (price: number) => formatPrice(price), sortable: true },
+    { label: "In stock", key: "quantity", sortable: true },
+    { 
+      label: "Category", 
+      key: "category.name", 
+      render: (value: string) => <span className="font-sm">{value}</span> 
+    },
+  ];
+
+  const renderPagination = () => {
+    const paginationItems = [];
+
+    if (page >= 1) {
+      paginationItems.push(
+        <PaginationItem key={1}>
+          <PaginationLink onClick={() => handlePageChange(1)} isActive={page === 1}>
+            1
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    if (page > 3) {
+      paginationItems.push(<PaginationEllipsis key="ellipsis-start" />);
+    }
+
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
+      paginationItems.push(
+        <PaginationItem key={i}>
+          <PaginationLink onClick={() => handlePageChange(i)} isActive={page === i}>
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    if (page < totalPages - 2) {
+      paginationItems.push(<PaginationEllipsis key="ellipsis-end" />);
+    }
+
+    if (totalPages > 1) {
+      paginationItems.push(
+        <PaginationItem key={totalPages}>
+          <PaginationLink onClick={() => handlePageChange(totalPages)} isActive={page === totalPages}>
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    return paginationItems;
+  };
 
   return (
-    // <div className="p-6 bg-gray-50 min-h-screen">
-    //   <h1 className="text-xl font-bold mb-4">Order Management</h1>
+    <div className="p-6 min-h-screen">
+      <div className="flex gap-6 mb-8">
+        <div className="flex-1">
+          <ReusableAreaChart
+            title="Product used"
+            showTotal={true}
+            chartData={[
+              { label: "Jan", value: 2000 },
+              { label: "Feb", value: 1150 },
+              { label: "Mar", value: 1800 },
+              { label: "Apr", value: 900 },
+            ]}
+          />
+        </div>
+        <div className="flex-1">
+          <RechartsPieChart
+            title="Type distribution"
+            subtitle="Product Type"
+            labels={["Serum", "Toner", "Others"]}
+            data={[59, 20, 21]}
+          />
+        </div>
+      </div>
 
-    //   <Table
-    //     headers={headers}
-    //     data={enhancedData}
-    //     onSearch={(query) => setSearchQuery(query)}
-    //     filters={[
-    //       {
-    //         key: "status",
-    //         values: ["Completed", "Pending", "Cancelled"],
-    //       },
-    //     ]}
-    //     badgeConfig={badgeConfig}
-    //   />
-    // </div>
-    <h1>hello</h1>
+      <div className="bg-white shadow-md rounded-lg p-4">
+        <Table
+          headers={headers}
+          selectable={true}
+          data={products.length > 0 ? products : []}
+          badgeConfig={{
+            key: "status",
+            values: {
+              Active: { label: "Active", color: "green", textColor: "white" },
+              SoldOut: { label: "Sold Out", color: "red", textColor: "white" },
+            },
+          }}
+          actions={(row) => (
+            <>
+              <button className="text-blue-500 hover:text-blue-700" onClick={() => handleEdit(row.productId as number)}>
+                <Edit className="w-5 h-5" />
+              </button>
+              <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(row.productId as number)}>
+                <Trash className="w-5 h-5" />
+              </button>
+            </>
+          )}
+        />
+      </div>
 
+      <div className="absolute right-10 mt-3">
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <span className="whitespace-nowrap text-gray-400 text-sm">
+              Number of rows per page
+            </span>
+            <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
+              {[5, 10, 15, 20].map((size) => (
+                <Select.Option key={size} value={size}>
+                  {size} items
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
+          <Pagination className="flex">
+            <PaginationContent>
+              <PaginationPrevious onClick={() => handlePageChange(page - 1)} isDisabled={page === 1}>
+                Prev
+              </PaginationPrevious>
+              {renderPagination()}
+              <PaginationNext onClick={() => handlePageChange(page + 1)} isDisabled={page === totalPages}>
+                Next
+              </PaginationNext>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default OrderPage;
+export default OrderManagementPage;
