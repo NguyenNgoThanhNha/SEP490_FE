@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import BranchComponent from "../BranchManagement/BranchManagement";
 import { format } from "date-fns";
+import BookingForm from "@/components/organisms/Appointment/AppointmentForm";
 
 const BranchPromotionManagementPage = () => {
   const [branchPromtions, setBranchPromtions] = useState<TBranchPromotion[]>([]);
@@ -167,7 +168,7 @@ const BranchPromotionManagementPage = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <div className="my-4">
+      {/* <div className="my-4">
         <BranchComponent />
       </div>
 
@@ -222,7 +223,8 @@ const BranchPromotionManagementPage = () => {
             </PaginationContent>
           </Pagination>
         </div>
-      </div>
+      </div> */}
+      <BookingForm/>
     </div>
   );
 };
