@@ -3,6 +3,7 @@ import authReducer from './slice/authSlice';
 import blogReducer from './slice/blogSlice';
 import productReducer from './slice/productSlice';
 import serviceReducer from './slice/serviceSlice';
+import branchReducer from './slice/branchSlice';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,8 @@ const store = configureStore({
     blog: blogReducer,
     product: productReducer,
     service: serviceReducer,
+    branch: branchReducer,
+
 
   },
 });

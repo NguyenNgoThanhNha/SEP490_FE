@@ -32,5 +32,8 @@ export enum ROUTES {
   SERVICE_CATEGORY = 'service-cate-management',
   SERVICE_CATEGORY_DETAIL = '/service-cate-management/:serviceCategoryId',
   TERMS_AND_POLICIES = '/terms',
+  BRANCH_MANAGEMENT = 'branchs-management',
+  BRANCH_PROMOTION_MANAGEMENT = 'branch-promotion-management',
+  
   
 }

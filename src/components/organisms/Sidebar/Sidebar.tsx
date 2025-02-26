@@ -83,7 +83,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         },
         { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
         { label: t("manageAppoinment"), icon: <BookIcon />, path: "/appoinments-management" },
-        { label: t("manageRoom"), icon: <BookIcon />, path: "/rooms-management" },
+        { label: t("manageRoom"), icon: <BookIcon />, path: "/branchs-management" },
         { label: t("settings"), icon: <GearIcon />, path: "/settings" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
       ];
@@ -91,7 +91,9 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
       return [
         { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
         { label: t("manageOrders"), icon: <ShoppingBag />, path: "/order" },
+        { label: t("manageBranchPromotion"), icon: <ShoppingBag />, path: "/branch-promotion-management" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
+
       ];
     case 3: // Staff
       return [
