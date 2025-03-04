@@ -37,6 +37,7 @@ import ServicesCateManagementPage from '@/components/pages/ServiceCategory/Servi
 import InformationPage from '@/components/pages/Term&Policy/Term&Policy'
 import BranchComponent from '@/components/pages/BranchManagement/BranchManagement'
 import BranchPromotionManagementPage from '@/components/pages/BranchPromotion/BranchPromotionManagement'
+import SchedulePage from '@/components/pages/ScheduleManagement/ScheduleManagement'
 
 export const AppRouter = () => {
   return (
@@ -92,7 +93,8 @@ export const AppRouter = () => {
           <Route path={ROUTES.BRANCH_MANAGEMENT} element={<BranchComponent />} />
           {/* BRANCH PROMOTION MANAGEMENT */}
           <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
-
+          {/* SCHEDULE MANAGEMENT  */}
+          <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
 
 
         </Route>

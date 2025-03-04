@@ -34,6 +34,7 @@ export enum ROUTES {
   TERMS_AND_POLICIES = '/terms',
   BRANCH_MANAGEMENT = 'branchs-management',
   BRANCH_PROMOTION_MANAGEMENT = 'branch-promotion-management',
+  SCHEDULE_MANAGEMENT = 'schedule-management',
   
   
 }
