@@ -46,6 +46,7 @@ api.interceptors.response.use(
 )
 
 export interface ResponseProps<T = any> {
+  data: any
   success?: boolean
   result?: {
     message?: string

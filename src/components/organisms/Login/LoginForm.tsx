@@ -36,7 +36,9 @@ const LoginForm = () => {
       const result = await authService.getUserInfo()
       if (result.success) {
         dispatch(loginSuccess(result?.result?.data))
-        navigate(ROUTES.DASHBOARD)
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 100);
       }
       toast.success(response?.result?.message as string)
     } else {

@@ -18,7 +18,7 @@ const EventPopup: React.FC<EventPopupProps> = ({ selectedTask, onClose, onComple
   const handleUpdate = () => {
     const updatedTask: Appoinment = {
       ...selectedTask,
-      service: { name: `${selectedTask.service.name}, ${additionalService}` }, // Cập nhật thêm dịch vụ mới
+      service: { name: `${selectedTask.service.name}, ${additionalService}` }, 
       orderDetail: {
         ...selectedTask.orderDetail,
         staff: staff,

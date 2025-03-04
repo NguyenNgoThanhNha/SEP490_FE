@@ -7,5 +7,6 @@ export type TBranch = {
     latAddress: string,
     status: string,
     createdDate: string,
-    updatedDate: string
+    updatedDate: string,
+    managerId: number
 }

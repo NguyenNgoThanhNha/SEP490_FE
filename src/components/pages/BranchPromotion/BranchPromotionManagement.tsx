@@ -1,85 +1,125 @@
 import { useEffect, useState } from "react";
 import { Edit, Trash } from "lucide-react";
-import ReusableAreaChart from "@/components/molecules/AreaChart";
-import RechartsPieChart from "@/components/molecules/PieChart";
 import { Table } from "@/components/organisms/Table/Table";
-import { formatPrice } from "@/utils/formatPrice";
 import toast from "react-hot-toast";
 import { Modal, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
-import { TOrder } from "@/types/order.type";
-import orderService from "@/services/orderService";
+import { TBranchPromotion } from "@/types/branchPromotion.type";
+import branchPromotionService from "@/services/branchPromotionService";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import BranchComponent from "../BranchManagement/BranchManagement";
+import { format } from "date-fns";
+import BookingForm from "@/components/organisms/Appointment/AppointmentForm";
 
-const OrderManagementPage = () => {
-  const [products, setProducts] = useState<TOrder[]>([]);
-  const [, setLoading] = useState(false);  
+const BranchPromotionManagementPage = () => {
+  const [branchPromtions, setBranchPromtions] = useState<TBranchPromotion[]>([]);
+  const [, setLoading] = useState(false);
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
 
-  const fetchProducts = async (pageIndex: number, pageSize: number) => {
+  const branchId = useSelector((state: RootState) => state.branch.branchId);
+
+  const fetchBranchPromotion = async (branchId: number, page: number, pageSize: number) => {
     try {
       setLoading(true);
-      const response = await orderService.getAllPurchase({ pageIndex, pageSize });
+      const response = await branchPromotionService.getAllBranchPromotion({ branchId, page, pageSize });
       if (response?.success) {
-        const activeProducts = response.result?.data.filter(
-          (product: TOrder) => product.status === "Active"
-        ) || [];
-        setProducts(activeProducts);
+        setBranchPromtions(response.result?.data || []);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || "Failed to fetch products.");
+        toast.error(response.result?.message || "Failed to fetch branch promotions.");
       }
     } catch {
-      toast.error("Failed to fetch products.");
+      toast.error("Failed to fetch branch promotions.");
     } finally {
       setLoading(false);
     }
   };
-  
 
-  const handleDelete = (orderId: number) => {
+
+  const handleDelete = (branchPromotionId: number) => {
     Modal.confirm({
       title: "Are you sure?",
       content: "This action cannot be undone.",
       okText: "Yes, delete",
       cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          const response = await branchPromotionService.deleteBranchPromotion(branchPromotionId);
+          if (response?.success) {
+            toast.success("Branch Promotion deleted successfully.");
+            fetchBranchPromotion(branchPromotionId, page, pageSize);
+          } else {
+            toast.error(response.result?.message || "Failed to delete branch promotion.");
+          }
+        } catch {
+          toast.error("Failed to delete branch promotion.");
+        }
+      },
     });
   };
 
-  const handleEdit = (orderId: number) => {
-    navigate(`/products-management/${orderId}`);
+  const handleEdit = (branchPromotionId: number) => {
+    navigate(`/branch-promotion-management/${branchPromotionId}`);
   };
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
-      fetchProducts(newPage, pageSize); 
+      fetchBranchPromotion(newPage, pageSize);
     }
   };
 
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
     setPage(1);
-    fetchProducts(1, value); 
+    fetchBranchPromotion(1, 1, value);
   };
 
   useEffect(() => {
-    fetchProducts(page, pageSize);
-  }, [page, pageSize]);
+    if (branchId) {
+      fetchBranchPromotion(branchId, page, pageSize);
+    }
+  }, [branchId, page, pageSize]);
 
   const headers = [
-    { label: "Image", key: "image", hiding: true },
-    { label: "Product Name", key: "productName" },
-    { label: "Price", key: "price", render: (price: number) => formatPrice(price), sortable: true },
-    { label: "In stock", key: "quantity", sortable: true },
     { 
-      label: "Category", 
-      key: "category.name", 
-      render: (value: string) => <span className="font-sm">{value}</span> 
+      label: "Image", 
+      key: "promotion.image", 
+      render: (value: string) => (
+        <img 
+          src={value} 
+          alt="Promotion" 
+          style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "5px" }} 
+        />
+      ) 
     },
+    { label: "Promotion", key: "promotion.promotionName" },
+    {
+      label: "Discount",
+      key: "promotion.discountPercent",
+      sortable: true,
+      render: (value: number) => `${value}%`
+    },
+    { 
+      label: "Start Date", 
+      key: "promotion.startDate", 
+      sortable: true,
+      render: (value: string) => 
+        value ? format(new Date(value), "dd/MM/yyyy HH:mm") : "Invalid Date"
+    },
+    { 
+      label: "End Date", 
+      key: "promotion.endDate", 
+      sortable: true,
+      render: (value: string) => 
+        value ? format(new Date(value), "dd/MM/yyyy HH:mm") : "Invalid Date"
+    }
+    
   ];
 
   const renderPagination = () => {
@@ -128,34 +168,15 @@ const OrderManagementPage = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <div className="flex gap-6 mb-8">
-        <div className="flex-1">
-          <ReusableAreaChart
-            title="Product used"
-            showTotal={true}
-            chartData={[
-              { label: "Jan", value: 2000 },
-              { label: "Feb", value: 1150 },
-              { label: "Mar", value: 1800 },
-              { label: "Apr", value: 900 },
-            ]}
-          />
-        </div>
-        <div className="flex-1">
-          <RechartsPieChart
-            title="Type distribution"
-            subtitle="Product Type"
-            labels={["Serum", "Toner", "Others"]}
-            data={[59, 20, 21]}
-          />
-        </div>
+      {/* <div className="my-4">
+        <BranchComponent />
       </div>
 
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}
           selectable={true}
-          data={products.length > 0 ? products : []}
+          data={branchPromtions.length > 0 ? branchPromtions : []}
           badgeConfig={{
             key: "status",
             values: {
@@ -202,9 +223,10 @@ const OrderManagementPage = () => {
             </PaginationContent>
           </Pagination>
         </div>
-      </div>
+      </div> */}
+      <BookingForm/>
     </div>
   );
 };
 
-export default OrderManagementPage;
+export default BranchPromotionManagementPage;

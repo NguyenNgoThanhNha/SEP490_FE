@@ -27,7 +27,7 @@ import ServiceDetail from '@/components/pages/ServicesManagementPage/[id]'
 import { EmployeeDetail } from '@/components/pages/Employee/[id]'
 import { PromotionDetail } from '@/components/pages/Promotion/[id]'
 import { CreatePromotion } from '@/components/pages/Promotion/CreatePromotion'
-import AboutUs from '@/components/pages/AboutUs.tsx/AboutUs'
+import AboutUs from '@/components/pages/AboutUs/AboutUs'
 import Layout from '@/components/templates/Layout'
 import OurServices from '@/components/pages/OurServices/OurServices'
 import ContactPage from '@/components/pages/ContactPage/Contact'
@@ -35,6 +35,9 @@ import StaffCalendar from '@/components/pages/StaffCalendar/StaffCalendar'
 import RoomManagement from '@/components/pages/RoomManagment/RoomManagement'
 import ServicesCateManagementPage from '@/components/pages/ServiceCategory/ServiceCategoryManagement'
 import InformationPage from '@/components/pages/Term&Policy/Term&Policy'
+import BranchComponent from '@/components/pages/BranchManagement/BranchManagement'
+import BranchPromotionManagementPage from '@/components/pages/BranchPromotion/BranchPromotionManagement'
+import SchedulePage from '@/components/pages/ScheduleManagement/ScheduleManagement'
 
 export const AppRouter = () => {
   return (
@@ -48,7 +51,7 @@ export const AppRouter = () => {
         <Route path={ROUTES.VERIFY_CODE} element={<VerifyCodePage />} />,
         <Route path={ROUTES.SET_PASSWORD} element={<SetPasswordPage />} />
         {/* ROOT */}
-        <Route path={ROUTES.ROOT} element={<Layout />}>
+        <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
           <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
           <Route path={ROUTES.OUR_SERVICES} element={<OurServices />} />
@@ -86,6 +89,13 @@ export const AppRouter = () => {
           <Route path={ROUTES.ROOOM_MANAGEMENT} element={<RoomManagement />} />
           {/* SERVICES'S CATEGORY */}
           <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
+          {/* BRANCH MANAGEMENT */}
+          <Route path={ROUTES.BRANCH_MANAGEMENT} element={<BranchComponent />} />
+          {/* BRANCH PROMOTION MANAGEMENT */}
+          <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
+          {/* SCHEDULE MANAGEMENT  */}
+          <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
+
 
         </Route>
 

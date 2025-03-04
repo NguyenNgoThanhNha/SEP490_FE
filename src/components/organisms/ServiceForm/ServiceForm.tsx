@@ -34,16 +34,27 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
   const handleFormSubmit = async (data: ServiceType) => {
     console.log("Form data:", data);
     setLoading(true);
+  
     try {
-      await onSubmit(data);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("duration", data.duration);
+      formData.append("price", data.price.toString());
+  
+      data.images.forEach((image) => {
+        formData.append("images", image); 
+      });
+  
+      await onSubmit(formData as never); 
       navigate("/services-management");
     } catch {
       toast.error("Error submitting form:");
-
     } finally {
       setLoading(false);
     }
-  }
+  };
+  
 
   return (
     <Form {...form}>
