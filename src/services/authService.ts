@@ -83,6 +83,26 @@ const deleteAccount = async (): Promise<ResponseProps> => {
 const loginWithFB = async ({ data }: LoginWithGGProps): Promise<ResponseProps> => {
   return await post('Auth/login-facebook', data)
 }
+interface CustomerAccountProps {
+  phone: string,
+  fullName: string,
+}
+const generateRandomEmail = (phone: string) => `guest_${phone}@example.com`;
+const createCustomerAccount = async ({phone, fullName}: CustomerAccountProps): Promise<ResponseProps> => {
+  const email = generateRandomEmail(phone);
+  const data = {
+    email,
+    userName: phone, 
+    password: "123456",
+    fullName,
+    phone,
+    city: "",
+    address: "",
+    link: FRONT_END,
+    typeAccount: "Customer"
+  };
+  return await post("Auth/first-step", data);
+}
 export default {
   register,
   verify,
@@ -94,5 +114,6 @@ export default {
   getUserInfo,
   getRefresh,
   deleteAccount,
-  loginWithFB
+  loginWithFB,
+  createCustomerAccount
 }

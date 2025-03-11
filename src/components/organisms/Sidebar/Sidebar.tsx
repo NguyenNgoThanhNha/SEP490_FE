@@ -103,6 +103,12 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         { label: t("chat"), icon: <BookIcon />, path: "/chat" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
       ];
+      case 4: // Cashier
+      return [
+        { label: t("indeskBooking"), icon: <BookIcon />, path: "/booking-form" },
+        { label: t("chat"), icon: <BookIcon />, path: "/chat" },
+        { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
+      ];
     default:
       return [];
   }

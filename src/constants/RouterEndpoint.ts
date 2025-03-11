@@ -28,14 +28,14 @@ export enum ROUTES {
   OUR_SERVICES = 'our-services',
   CONTACT = 'contact',
   APPOINMENT_MANAGEMENT = 'appoinments-management',
-  ROOOM_MANAGEMENT = 'rooms-management',
   SERVICE_CATEGORY = 'service-cate-management',
   SERVICE_CATEGORY_DETAIL = '/service-cate-management/:serviceCategoryId',
   TERMS_AND_POLICIES = '/terms',
   BRANCH_MANAGEMENT = 'branchs-management',
   BRANCH_PROMOTION_MANAGEMENT = 'branch-promotion-management',
   SCHEDULE_MANAGEMENT = 'schedule-management',
-  CHAT = 'chat'
+  CHAT = 'chat',
+  CASHIER_BOOOKING = 'booking-form',
   
   
 }

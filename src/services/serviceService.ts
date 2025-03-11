@@ -68,10 +68,20 @@ const deleteService = async (serviceId: number): Promise<ResponseProps> => {
   return await del(`Service/delete-service?serviceId=${serviceId}`)
 }
 
+interface GetAllServiceForBranchProps {
+  branchId: number,
+  page: number,
+  pageSize: number
+}
+
+const getAllServiceForBranch = async({branchId, page, pageSize}: GetAllServiceForBranchProps): Promise<ResponseProps> => {
+  return await get(`Service/get-all-services-for-branch?branchId=${branchId}&page=${page}&pageSize=${pageSize}`)
+}
 export default {
   getAllService,
   getServiceDetail,
   createService,
   updateService,
-  deleteService
+  deleteService,
+  getAllServiceForBranch
 }

@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import BranchComponent from "../BranchManagement/BranchManagement";
 import { format } from "date-fns";
-import BookingForm from "@/components/organisms/Appointment/AppointmentForm";
+import BookingForm from "@/components/organisms/BookingStep/Step1";
 
 const BranchPromotionManagementPage = () => {
   const [branchPromtions, setBranchPromtions] = useState<TBranchPromotion[]>([]);
@@ -87,16 +87,16 @@ const BranchPromotionManagementPage = () => {
   }, [branchId, page, pageSize]);
 
   const headers = [
-    { 
-      label: "Image", 
-      key: "promotion.image", 
+    {
+      label: "Image",
+      key: "promotion.image",
       render: (value: string) => (
-        <img 
-          src={value} 
-          alt="Promotion" 
-          style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "5px" }} 
+        <img
+          src={value}
+          alt="Promotion"
+          style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "5px" }}
         />
-      ) 
+      )
     },
     { label: "Promotion", key: "promotion.promotionName" },
     {
@@ -105,21 +105,21 @@ const BranchPromotionManagementPage = () => {
       sortable: true,
       render: (value: number) => `${value}%`
     },
-    { 
-      label: "Start Date", 
-      key: "promotion.startDate", 
+    {
+      label: "Start Date",
+      key: "promotion.startDate",
       sortable: true,
-      render: (value: string) => 
+      render: (value: string) =>
         value ? format(new Date(value), "dd/MM/yyyy HH:mm") : "Invalid Date"
     },
-    { 
-      label: "End Date", 
-      key: "promotion.endDate", 
+    {
+      label: "End Date",
+      key: "promotion.endDate",
       sortable: true,
-      render: (value: string) => 
+      render: (value: string) =>
         value ? format(new Date(value), "dd/MM/yyyy HH:mm") : "Invalid Date"
     }
-    
+
   ];
 
   const renderPagination = () => {
@@ -224,7 +224,7 @@ const BranchPromotionManagementPage = () => {
           </Pagination>
         </div>
       </div> */}
-      <BookingForm/>
+      <BookingForm />
     </div>
   );
 };
