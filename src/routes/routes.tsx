@@ -32,13 +32,13 @@ import Layout from '@/components/templates/Layout'
 import OurServices from '@/components/pages/OurServices/OurServices'
 import ContactPage from '@/components/pages/ContactPage/Contact'
 import StaffCalendar from '@/components/pages/StaffCalendar/StaffCalendar'
-import RoomManagement from '@/components/pages/RoomManagment/RoomManagement'
 import ServicesCateManagementPage from '@/components/pages/ServiceCategory/ServiceCategoryManagement'
 import InformationPage from '@/components/pages/Term&Policy/Term&Policy'
 import BranchComponent from '@/components/pages/BranchManagement/BranchManagement'
 import BranchPromotionManagementPage from '@/components/pages/BranchPromotion/BranchPromotionManagement'
 import SchedulePage from '@/components/pages/ScheduleManagement/ScheduleManagement'
 import { ChatPage } from '@/components/pages/ChatPage/ChatPage'
+import BookingForm from '@/components/organisms/BookingStep/Step1'
 
 export const AppRouter = () => {
   return (
@@ -85,9 +85,9 @@ export const AppRouter = () => {
           <Route path={ROUTES.ORDER_MANAGEMENT} element={<OrderPage />} />
           {/* USER MANAGEMENT */}
           <Route path={ROUTES.CUSTOMER_MANAGEMENT} element={<CustomerManagementPage />} />
-          {/* APPOINMENT_TABLE_STAFF */}
+          {/*CASHIER */}
           <Route path={ROUTES.APPOINMENT_MANAGEMENT} element={<StaffCalendar />} />
-          <Route path={ROUTES.ROOOM_MANAGEMENT} element={<RoomManagement />} />
+          <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingForm />} />
           {/* SERVICES'S CATEGORY */}
           <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
           {/* BRANCH MANAGEMENT */}

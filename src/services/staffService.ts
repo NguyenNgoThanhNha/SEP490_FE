@@ -52,19 +52,51 @@ const updateStaff = async ({
   fullName,
   email,
   avatar,
-  branchId,
+  branchId
 }: UpdateStaffProps): Promise<ResponseProps> => {
-  return await put(`Staff/${staffId}`, { userName, fullName, email, avatar, branchId})
+  return await put(`Staff/${staffId}`, { userName, fullName, email, avatar, branchId })
 }
 
 const deleteStaff = async (staffId: number): Promise<ResponseProps> => {
   return await del(`Staff/${staffId}`)
 }
 
+interface GetStaffByBranchAndServiceProps {
+  branchId: number
+  serviceId: number
+}
+
+const getStaffByBranchAndService = async ({
+  branchId,
+  serviceId
+}: GetStaffByBranchAndServiceProps): Promise<ResponseProps> => {
+  return await get(`Staff/get-list?branchId=${branchId}&serviceId=${serviceId}`)
+}
+
+interface StaffByBranchProps {
+  branchId: number
+}
+
+const getStaffByBranch = async ({ branchId }: StaffByBranchProps): Promise<ResponseProps> => {
+  return await get(`Staff/by-branch/${branchId}`)
+}
+
+interface StaffBusyTimeProps {
+  staffId: number
+  date: string
+}
+
+const getStaffBusyTime = async ({ staffId, date }: StaffBusyTimeProps): Promise<ResponseProps> => {
+  return await get(`Staff/staff-busy-time?staffId=${staffId}&date=${date}`)
+}
+
 export default {
-    createStaff,
-    updateStaff,
-    deleteStaff,
-    getAllStaff,
-    getStaffDetail
+  createStaff,
+  updateStaff,
+  deleteStaff,
+  getAllStaff,
+  getStaffDetail,
+  getStaffByBranchAndService,
+  getStaffByBranch,
+  getStaffBusyTime
 }
