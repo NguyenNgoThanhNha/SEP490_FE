@@ -2,6 +2,7 @@ import { TBranch } from "./branch.type"
 import { TPromotion } from "./promotion.type"
 
 export type TBranchPromotion = {
+    id: number
     promotionId: number,
     promotion: TPromotion,
     branchId: number,

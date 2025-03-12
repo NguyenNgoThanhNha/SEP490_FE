@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import BranchComponent from "../BranchManagement/BranchManagement";
 import { format } from "date-fns";
-import BookingForm from "@/components/organisms/BookingStep/Step1";
+import AddPromotionModal from "./CreateBranchPromotion";
 
 const BranchPromotionManagementPage = () => {
   const [branchPromtions, setBranchPromtions] = useState<TBranchPromotion[]>([]);
@@ -20,6 +20,8 @@ const BranchPromotionManagementPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const branchId = useSelector((state: RootState) => state.branch.branchId);
 
@@ -28,7 +30,8 @@ const BranchPromotionManagementPage = () => {
       setLoading(true);
       const response = await branchPromotionService.getAllBranchPromotion({ branchId, page, pageSize });
       if (response?.success) {
-        setBranchPromtions(response.result?.data || []);
+        const activePromotions = response.result?.data.filter((item: TBranchPromotion) => item.status === "Active") || [];
+        setBranchPromtions(activePromotions);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
         toast.error(response.result?.message || "Failed to fetch branch promotions.");
@@ -41,7 +44,8 @@ const BranchPromotionManagementPage = () => {
   };
 
 
-  const handleDelete = (branchPromotionId: number) => {
+
+  const handleDelete = (id: number) => {
     Modal.confirm({
       title: "Are you sure?",
       content: "This action cannot be undone.",
@@ -49,10 +53,10 @@ const BranchPromotionManagementPage = () => {
       cancelText: "Cancel",
       onOk: async () => {
         try {
-          const response = await branchPromotionService.deleteBranchPromotion(branchPromotionId);
+          const response = await branchPromotionService.deleteBranchPromotion(id);
           if (response?.success) {
             toast.success("Branch Promotion deleted successfully.");
-            fetchBranchPromotion(branchPromotionId, page, pageSize);
+            setBranchPromtions(prev => prev.filter(item => item.id !== id));
           } else {
             toast.error(response.result?.message || "Failed to delete branch promotion.");
           }
@@ -68,9 +72,14 @@ const BranchPromotionManagementPage = () => {
   };
 
   const handlePageChange = (newPage: number) => {
+    if (!branchId) {
+      toast.error("Branch ID is required!");
+      return;
+    }
+
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
-      fetchBranchPromotion(newPage, pageSize);
+      fetchBranchPromotion(branchId, newPage, pageSize);
     }
   };
 
@@ -168,10 +177,20 @@ const BranchPromotionManagementPage = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      {/* <div className="my-4">
+      <div className="my-4 flex justify-between items-center">
         <BranchComponent />
+        <button
+          className="px-4 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-auto"
+          onClick={() => setIsModalOpen(true)}
+        >
+          Add Promotion
+        </button>
       </div>
-
+      <AddPromotionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        branchId={branchId ?? 0}
+      />
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}
@@ -186,10 +205,10 @@ const BranchPromotionManagementPage = () => {
           }}
           actions={(row) => (
             <>
-              <button className="text-blue-500 hover:text-blue-700" onClick={() => handleEdit(row.productId as number)}>
+              <button className="text-blue-500 hover:text-blue-700" onClick={() => handleEdit(row.id as number)}>
                 <Edit className="w-5 h-5" />
               </button>
-              <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(row.productId as number)}>
+              <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(row.id as number)}>
                 <Trash className="w-5 h-5" />
               </button>
             </>
@@ -223,8 +242,7 @@ const BranchPromotionManagementPage = () => {
             </PaginationContent>
           </Pagination>
         </div>
-      </div> */}
-      <BookingForm />
+      </div>
     </div>
   );
 };
