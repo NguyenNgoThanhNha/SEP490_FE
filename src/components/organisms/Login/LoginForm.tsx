@@ -3,8 +3,8 @@ import { UserLoginSchema, UserLoginType } from '@/schemas/userSchema.ts'
 import { Form } from '@/components/atoms/ui/form.tsx'
 import FormInput from '@/components/molecules/FormInput.tsx'
 import { Button } from '@/components/atoms/ui/button.tsx'
-import { Separator } from '@/components/atoms/ui/separator.tsx'
-import OptionFormFooter from '@/components/molecules/OptionFormFooter.tsx'
+// import { Separator } from '@/components/atoms/ui/separator.tsx'
+// import OptionFormFooter from '@/components/molecules/OptionFormFooter.tsx'
 import { Link, useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -76,12 +76,12 @@ const LoginForm = () => {
             </Link>
           </div>
         </div>
-        <div className={'text-sm font-extralight flex items-center justify-center gap-4'}>
+        {/* <div className={'text-sm font-extralight flex items-center justify-center gap-4'}>
           <Separator className={'w-1/3'} />
           <span> Or Login with</span>
           <Separator className={'w-1/3'} />
         </div>
-        <OptionFormFooter />
+        <OptionFormFooter /> */}
       </form>
       {loading && <Loading />}
     </Form>
