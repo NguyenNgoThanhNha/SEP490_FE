@@ -62,8 +62,8 @@ const updateBranchPromotion = async ({
   })
 }
 
-const deleteBranchPromotion = async (branchPromotionId: number): Promise<ResponseProps> => {
-  return await put(`BranchPromotion/delete/${branchPromotionId}`)
+const deleteBranchPromotion = async (id: number): Promise<ResponseProps> => {
+  return await put(`BranchPromotion/delete/${id}`)
 }
 
 
