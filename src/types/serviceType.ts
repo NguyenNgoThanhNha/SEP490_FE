@@ -1,3 +1,5 @@
+import { TCate } from "./category.type"
+
 export type TService = {
     serviceId: number,
     name: string,
@@ -8,5 +10,7 @@ export type TService = {
     steps: string,
     createdDate: string,
     updatedDate: string,
-    images: File[]
+    images: File[],
+    serviceCategoryId: number,
+    serviceCategory : TCate,
 }
