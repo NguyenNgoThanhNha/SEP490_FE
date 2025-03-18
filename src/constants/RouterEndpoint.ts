@@ -36,6 +36,8 @@ export enum ROUTES {
   SCHEDULE_MANAGEMENT = 'schedule-management',
   CHAT = 'chat',
   CASHIER_BOOOKING = 'booking-form',
+  DELETE_ACCOUNT = '/delete-account',
+
   
   
 }
