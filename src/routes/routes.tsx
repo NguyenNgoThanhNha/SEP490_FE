@@ -39,6 +39,7 @@ import BranchPromotionManagementPage from '@/components/pages/BranchPromotion/Br
 import SchedulePage from '@/components/pages/ScheduleManagement/ScheduleManagement'
 import { ChatPage } from '@/components/pages/ChatPage/ChatPage'
 import BookingForm from '@/components/organisms/BookingStep/Step1'
+import DeleteAccountPage from '@/components/pages/DeleteAcc/DeleteAcc'
 
 export const AppRouter = () => {
   return (
@@ -51,6 +52,8 @@ export const AppRouter = () => {
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />,
         <Route path={ROUTES.VERIFY_CODE} element={<VerifyCodePage />} />,
         <Route path={ROUTES.SET_PASSWORD} element={<SetPasswordPage />} />
+        <Route path={ROUTES.DELETE_ACCOUNT} element={<DeleteAccountPage/>} />
+
         {/* ROOT */}
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
@@ -98,6 +101,7 @@ export const AppRouter = () => {
           <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
           {/* CHAT */}
           <Route path={ROUTES.CHAT} element={<ChatPage />} />
+
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />
