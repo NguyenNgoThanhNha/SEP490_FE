@@ -20,7 +20,6 @@ const ForgotPasswordPage = () => {
           </div>
           <Link to={ROUTES.LOGIN} className={'flex space-x-2 cursor-pointer items-center hover:text-black'}>
             <ChevronLeft />
-            <span>Back to login</span>
           </Link>
           <div className="mb-6">
             <p className={'text-4xl tracking-wide font-bold py-2'}>Forgot your password? </p>

@@ -3,8 +3,6 @@ import { UserForgotPasswordSchema, UserForgotPasswordType } from '@/schemas/user
 import { Form } from '@/components/atoms/ui/form.tsx'
 import FormInput from '@/components/molecules/FormInput.tsx'
 import { Button } from '@/components/atoms/ui/button.tsx'
-import { Separator } from '@/components/atoms/ui/separator.tsx'
-import OptionFormFooter from '@/components/molecules/OptionFormFooter.tsx'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -51,12 +49,6 @@ const ForgotPasswordForm = () => {
             Submit
           </Button>
         </div>
-        <div className={'text-sm font-extralight flex items-center justify-center gap-4'}>
-          <Separator className={'w-1/3'} />
-          <span> Or Login with</span>
-          <Separator className={'w-1/3'} />
-        </div>
-        <OptionFormFooter />
       </form>
       {loading && <Loading />}
     </Form>
