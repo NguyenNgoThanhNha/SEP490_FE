@@ -77,9 +77,24 @@ const getUserInfo = async (): Promise<ResponseProps> => {
 const getRefresh = async (): Promise<ResponseProps> => {
   return await get('Auth/refresh-token')
 }
-const deleteAccount = async (): Promise<ResponseProps> => {
-  return await post('User/DeleteAccount', {})
+
+interface DeleteAccountProps {
+  email: string
 }
+
+const deleteAccount = async ({email} : DeleteAccountProps): Promise<ResponseProps> => {
+  return await post('User/delete-account', {email})
+}
+
+interface ConfirmDeleteAccountProps {
+  email: string,
+  otp: string
+}
+
+const confirmDeleteAccount = async({email, otp}: ConfirmDeleteAccountProps ) : Promise<ResponseProps> => {
+  return await post('User/confirm-delete', {email, otp})
+}
+
 const loginWithFB = async ({ data }: LoginWithGGProps): Promise<ResponseProps> => {
   return await post('Auth/login-facebook', data)
 }
@@ -115,5 +130,7 @@ export default {
   getRefresh,
   deleteAccount,
   loginWithFB,
-  createCustomerAccount
+  createCustomerAccount,
+  confirmDeleteAccount,
+  
 }

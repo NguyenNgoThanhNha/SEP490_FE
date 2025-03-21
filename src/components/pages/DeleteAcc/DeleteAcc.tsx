@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import authService from "@/services/authService";
 
 const DeleteAccountPage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,23 +14,48 @@ const DeleteAccountPage: React.FC = () => {
     setStep(2);
   };
 
-  const handleSendOTP = () => {
-    if (email) {
-      setIsOtpSent(true);
-      message.success("OTP has been sent to your email");
-    } else {
-      message.error("Please enter a valid email address");
+  const handleSendOTP = async (email: string) => {
+    if (!email) {
+      message.error("Vui lòng nhập email hợp lệ");
+      return;
+    }
+    try {
+      const response = await authService.deleteAccount({ email });
+      console.log("Response from deleteAccount:", response);
+      if (response?.success) {
+        setIsOtpSent(true);
+        message.success("OTP đã được gửi đến email của bạn");
+      } else {
+        message.error(response.result?.message || "Lỗi khi gửi OTP");
+      }
+    } catch (error) {
+      console.error("Error in handleSendOTP:", error);
+      message.error("Có lỗi xảy ra, vui lòng thử lại sau.");
     }
   };
+  
 
-  const handleVerifyOTP = () => {
-    if (otp.length === 6) {
-      message.success("Account deletion confirmed");
-      navigate("/delete-account/success");
-    } else {
-      message.error("Invalid OTP, please try again");
+  const handleVerifyOTP = async (email: string, otp: string) => {
+    if (otp.length !== 6) {
+      message.error("Mã OTP không hợp lệ, vui lòng thử lại.");
+      return;
+    }
+  
+    try {
+      const response = await authService.confirmDeleteAccount({ email, otp });
+  
+      if (response?.success) {
+        message.success("Tài khoản của bạn đã bị xóa");
+        navigate("/delete-account/success");
+      } else {
+        message.error(response.result?.message || "OTP không đúng, vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Error in handleVerifyOTP:", error);
+      message.error("Có lỗi xảy ra khi xác nhận OTP.");
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-green-900 p-4">
@@ -58,7 +84,6 @@ const DeleteAccountPage: React.FC = () => {
           </>
         ) : (
           <>
-            {/* Step 2: Verify Email & OTP */}
             <h2 className="text-xl sm:text-2xl font-bold text-green-800 mb-4">
               Verify Your Email
             </h2>
@@ -78,7 +103,7 @@ const DeleteAccountPage: React.FC = () => {
                   type="primary"
                   className="w-full sm:w-auto bg-green-700 border-none text-white hover:bg-green-600 px-6 py-2"
                   disabled={!email}
-                  onClick={handleSendOTP}
+                  onClick={() => handleSendOTP(email)}
                 >
                   Send OTP
                 </Button>
@@ -99,7 +124,7 @@ const DeleteAccountPage: React.FC = () => {
                   type="primary"
                   className="w-full sm:w-auto bg-green-700 border-none text-white hover:bg-green-600 px-6 py-2"
                   disabled={otp.length !== 6}
-                  onClick={handleVerifyOTP}
+                  onClick={() => handleVerifyOTP(email, otp)}
                 >
                   Verify & Delete Account
                 </Button>
