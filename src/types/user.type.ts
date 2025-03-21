@@ -11,4 +11,8 @@ export type TUser = {
   link: string
   otp: string
   roleID: number
+  gender: string
+  phoneNumber: string
+  status: "Active" | "Inactive"
+  birthDate: string
 }
