@@ -1,0 +1,20 @@
+name: Compose Docker Cloud Frontend Project
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docker-compose:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Docker Compose
+        env:
+          NODE_ENV: production
+          VITE_ORIGINAL_URL: ${{ secrets.VITE_ORIGINAL_URL }}
+
+        run: docker compose -f compose.production.yaml up --build -d
