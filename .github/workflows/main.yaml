@@ -1,4 +1,4 @@
-name: Compose Docker Cloud Project
+name: Compose Docker Cloud Frontend Project
 
 on:
   push:
