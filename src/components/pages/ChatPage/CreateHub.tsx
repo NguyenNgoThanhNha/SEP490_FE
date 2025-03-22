@@ -1,38 +1,17 @@
-import { useEffect, useState } from "react";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+// import { Form, FormControl, FormLabel } from "@/components/atoms/ui/form";
+// import { useState } from "react"
 
-type ChatHubProps = {
-  userId: number;
-  onReceiveMessage: (fromUserId: number, message: string) => void;
-};
+// const CreateHub = ({joinGroup}) => {
+//   const [customerId, setcustomerId] = useState([]);
+//   const [channelName, setChannelName] = useState();
 
-export const ChatHub = ({ userId, onReceiveMessage }: ChatHubProps) => {
-  const [connection, setConnection] = useState<HubConnection | null>(null);
-
-  useEffect(() => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl("https://solaceapi.ddnsking.com/chat")
-      .withAutomaticReconnect()
-      .build();
-
-    newConnection
-      .start()
-      .then(() => {
-        console.log("✅ Connected to SignalR");
-        return newConnection.invoke("JoinGroup", `user-${userId}`);
-      })
-      .catch((err) => console.error("❌ Error connecting:", err));
-
-    newConnection.on("ReceiveMessage", (fromUserId, message) => {
-      onReceiveMessage(fromUserId, message);
-    });
-
-    setConnection(newConnection);
-
-    return () => {
-      if (newConnection) newConnection.stop();
-    };
-  }, [userId, onReceiveMessage]);
-
-  return connection;
-};
+//   return
+//   <Form onSubmit={e => {
+//     e.preventDefault();
+//     joinGroup(adminId, customerId, channelName);
+//   }}>
+//    <FormLabel>Add user</FormLabel>
+//    <FormControl>
+//    </FormControl>
+//   </Form> 
+// }
