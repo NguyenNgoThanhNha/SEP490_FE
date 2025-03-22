@@ -37,7 +37,7 @@ import InformationPage from '@/components/pages/Term&Policy/Term&Policy'
 import BranchComponent from '@/components/pages/BranchManagement/BranchManagement'
 import BranchPromotionManagementPage from '@/components/pages/BranchPromotion/BranchPromotionManagement'
 import SchedulePage from '@/components/pages/ScheduleManagement/ScheduleManagement'
-import { ChatPage } from '@/components/pages/ChatPage/ChatPage'
+// import { ChatPage } from '@/components/pages/ChatPage/ChatPage'
 import BookingForm from '@/components/organisms/BookingStep/Step1'
 import DeleteAccountPage from '@/components/pages/DeleteAcc/DeleteAcc'
 
@@ -100,7 +100,7 @@ export const AppRouter = () => {
           {/* SCHEDULE MANAGEMENT  */}
           <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
           {/* CHAT */}
-          <Route path={ROUTES.CHAT} element={<ChatPage />} />
+          {/* <Route path={ROUTES.CHAT} element={<ChatPage />} /> */}
 
         </Route>
 
