@@ -1,50 +1,40 @@
-// import { useState } from "react";
-// import { Layout } from "antd";
-// import { ChatList } from "@/components/organisms/Chat/ChatList";
-// import { ChatBox } from "@/components/organisms/Chat/ChatBox";
-// import { ChatHub } from "./CreateHub";
+import { useState } from "react";
+import { useChat } from "@/context/ChatContext";
+import ChatBox from "@/components/organisms/Chat/ChatBox";
 
-// const { Sider, Content } = Layout;
+const ChatPage = () => {
+  const { channels, joinChatRoom } = useChat();
+  const [selectedChannel, setSelectedChannel] = useState(null);
 
-// export const ChatPage = () => {
-//   const [userId] = useState(2);
-//   const [messages, setMessages] = useState<Record<number, { user: number; message: string }[]>>({});
-//   const [unreadMessages, setUnreadMessages] = useState<Record<number, number>>({});
-//   const [activeUser, setActiveUser] = useState<number | null>(null);
+  const handleSelectChannel = (channelId) => {
+    setSelectedChannel(channelId);
+    joinChatRoom(channelId);
+  };
 
-//   const handleReceiveMessage = (fromUserId: number, msg: string) => {
-//     setMessages((prev) => ({
-//       ...prev,
-//       [fromUserId]: [...(prev[fromUserId] || []), { user: fromUserId, message: msg }],
-//     }));
-//     if (fromUserId !== activeUser) {
-//       setUnreadMessages((prev) => ({ ...prev, [fromUserId]: (prev[fromUserId] || 0) + 1 }));
-//     }
-//   };
+  return (
+    <div className="flex flex-col items-center space-y-4 p-6">
+      <h1 className="text-2xl font-bold">Messenger Chat</h1>
+      
+      <div className="w-96 border p-2 rounded">
+        <h2 className="font-semibold mb-2">Channels</h2>
+        {channels.length === 0 ? (
+          <p className="text-gray-500">No channels available</p>
+        ) : (
+          channels.map((channel) => (
+            <button
+              key={channel.id}
+              className="w-full text-left p-2 bg-gray-200 hover:bg-gray-300 rounded mb-1"
+              onClick={() => handleSelectChannel(channel.id)}
+            >
+              {channel.name}
+            </button>
+          ))
+        )}
+      </div>
 
-//   const sendMessage = (message: string) => {
-//     if (activeUser && message.trim() !== "") {
-//       setMessages((prev) => ({
-//         ...prev,
-//         [activeUser]: [...(prev[activeUser] || []), { user: userId, message }],
-//       }));
-//       setUnreadMessages((prev) => ({ ...prev, [activeUser]: 0 }));
-//     }
-//   };
+      {selectedChannel && <ChatBox senderId={1} />}
+    </div>
+  );
+};
 
-//   return (
-//     <Layout>
-//       <Sider width={250}>
-//         <ChatList onSelectUser={setActiveUser} unreadMessages={unreadMessages} />
-//       </Sider>
-//       <Content>
-//         {activeUser ? (
-//           <ChatBox messages={messages[activeUser] || []} onSendMessage={sendMessage} />
-//         ) : (
-//           <div>Chọn một người để trò chuyện</div>
-//         )}
-//       </Content>
-//       <ChatHub userId={userId} onReceiveMessage={handleReceiveMessage} />
-//     </Layout>
-//   );
-// };
+export default ChatPage;

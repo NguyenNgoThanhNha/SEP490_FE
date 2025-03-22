@@ -40,6 +40,7 @@ import SchedulePage from '@/components/pages/ScheduleManagement/ScheduleManageme
 // import { ChatPage } from '@/components/pages/ChatPage/ChatPage'
 import BookingForm from '@/components/organisms/BookingStep/Step1'
 import DeleteAccountPage from '@/components/pages/DeleteAcc/DeleteAcc'
+import ChatPage from '@/components/pages/ChatPage/ChatPage'
 
 export const AppRouter = () => {
   return (
@@ -100,7 +101,7 @@ export const AppRouter = () => {
           {/* SCHEDULE MANAGEMENT  */}
           <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
           {/* CHAT */}
-          {/* <Route path={ROUTES.CHAT} element={<ChatPage />} /> */}
+          <Route path={ROUTES.CHAT} element={<ChatPage />} />
 
         </Route>
 

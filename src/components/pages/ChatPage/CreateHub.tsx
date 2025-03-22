@@ -1,17 +1,36 @@
-// import { Form, FormControl, FormLabel } from "@/components/atoms/ui/form";
-// import { useState } from "react"
+import { useState } from "react";
 
-// const CreateHub = ({joinGroup}) => {
-//   const [customerId, setcustomerId] = useState([]);
-//   const [channelName, setChannelName] = useState();
+const CreateChannel = ({ onCreate }) => {
+  const [channelName, setChannelName] = useState("");
+  const [customerIds, setCustomerIds] = useState("");
 
-//   return
-//   <Form onSubmit={e => {
-//     e.preventDefault();
-//     joinGroup(adminId, customerId, channelName);
-//   }}>
-//    <FormLabel>Add user</FormLabel>
-//    <FormControl>
-//    </FormControl>
-//   </Form> 
-// }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const customerIdsArray = customerIds.split(",").map(Number);
+    onCreate(channelName, customerIdsArray);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+      <input
+        type="text"
+        placeholder="Channel Name"
+        value={channelName}
+        onChange={(e) => setChannelName(e.target.value)}
+        className="border p-2 rounded"
+      />
+      <input
+        type="text"
+        placeholder="Customer IDs (comma-separated)"
+        value={customerIds}
+        onChange={(e) => setCustomerIds(e.target.value)}
+        className="border p-2 rounded"
+      />
+      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+        Create Channel
+      </button>
+    </form>
+  );
+};
+
+export default CreateChannel;
