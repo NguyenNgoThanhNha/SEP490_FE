@@ -21,12 +21,12 @@ const verify = async ({ email, otp }: VerifyProps): Promise<ResponseProps> => {
 }
 
 interface LoginProps {
-  email: string
+  identifier: string
   password: string
 }
 
-const login = async ({ email, password }: LoginProps): Promise<ResponseProps> => {
-  return await post('Auth/login', { email, password })
+const login = async ({ identifier, password }: LoginProps): Promise<ResponseProps> => {
+  return await post('Auth/login', { identifier, password })
 }
 
 interface ForgotPasswordProps {
@@ -52,10 +52,10 @@ interface UpdatePasswordProps {
 }
 
 const updatePassword = async ({
-                                email,
-                                newPassword,
-                                confirmNewPassword
-                              }: UpdatePasswordProps): Promise<ResponseProps> => {
+  email,
+  newPassword,
+  confirmNewPassword
+}: UpdatePasswordProps): Promise<ResponseProps> => {
   return await post(`Auth/update-password?email=${email}`, {
     password: newPassword,
     confirmPassword: confirmNewPassword
@@ -82,8 +82,8 @@ interface DeleteAccountProps {
   email: string
 }
 
-const deleteAccount = async ({email} : DeleteAccountProps): Promise<ResponseProps> => {
-  return await post('User/delete-account', {email})
+const deleteAccount = async ({ email }: DeleteAccountProps): Promise<ResponseProps> => {
+  return await post('User/delete-account', { email })
 }
 
 interface ConfirmDeleteAccountProps {
@@ -91,8 +91,8 @@ interface ConfirmDeleteAccountProps {
   otp: string
 }
 
-const confirmDeleteAccount = async({email, otp}: ConfirmDeleteAccountProps ) : Promise<ResponseProps> => {
-  return await post('User/confirm-delete', {email, otp})
+const confirmDeleteAccount = async ({ email, otp }: ConfirmDeleteAccountProps): Promise<ResponseProps> => {
+  return await post('User/confirm-delete', { email, otp })
 }
 
 const loginWithFB = async ({ data }: LoginWithGGProps): Promise<ResponseProps> => {
@@ -103,11 +103,11 @@ interface CustomerAccountProps {
   fullName: string,
 }
 const generateRandomEmail = (phone: string) => `guest_${phone}@example.com`;
-const createCustomerAccount = async ({phone, fullName}: CustomerAccountProps): Promise<ResponseProps> => {
+const createCustomerAccount = async ({ phone, fullName }: CustomerAccountProps): Promise<ResponseProps> => {
   const email = generateRandomEmail(phone);
   const data = {
     email,
-    userName: phone, 
+    userName: phone,
     password: "123456",
     fullName,
     phone,
@@ -132,5 +132,5 @@ export default {
   loginWithFB,
   createCustomerAccount,
   confirmDeleteAccount,
-  
+
 }

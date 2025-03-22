@@ -51,7 +51,7 @@ export const UserSignupSchema = z.object({
 export type UserSignupType = z.infer<typeof UserSignupSchema>
 //login
 export const UserLoginSchema = z.object({
-  email: z
+  identifier: z
     .string({
       required_error: 'Email is required'
     })

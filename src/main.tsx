@@ -9,10 +9,13 @@ import { ChatProvider } from './context/ChatContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <ChatProvider>
+    {/* <ChatProvider>
       <StrictMode>
         <App />
       </StrictMode>
-    </ChatProvider>
+    </ChatProvider> */}
+    <StrictMode>
+      <App />
+    </StrictMode>
   </Provider>
 )
