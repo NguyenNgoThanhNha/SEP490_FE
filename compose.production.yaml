@@ -1,0 +1,12 @@
+services:
+  server:
+    build:
+      context: .
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - VITE_ORIGINAL_URL=${VITE_ORIGINAL_URL}
+    ports:
+      - 5174:80
+    volumes:
+      - ./dist:/usr/share/nginx/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
