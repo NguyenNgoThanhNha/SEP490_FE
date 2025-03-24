@@ -1,23 +1,31 @@
-import React, { useState } from "react";
-import { message} from "antd";
+import React, { useEffect, useState } from "react";
+import { message } from "antd";
 import { PlusCircleIcon } from "lucide-react";
 
 interface FileUploadProps {
   onImageUpload: (files: File[]) => void;
   multiple?: boolean;
+  initialData?: string[]; // <-- Nhận danh sách URL ảnh mặc định
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false }) => {
-  const [previews, setPreviews] = useState<string[]>([]); 
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]); 
+const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false, initialData = [] }) => {
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+  // 🟢 Load dữ liệu mặc định khi component được mount
+  useEffect(() => {
+    if (initialData.length > 0) {
+      setPreviews(initialData); // Set ảnh mặc định
+    }
+  }, [initialData]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
     if (files.length === 0) {
-      message.error("No files selected!");
+      message.warning("No files selected!");
       return;
     }
 
@@ -25,6 +33,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
     const newPreviews: string[] = [];
 
     files.forEach((file) => {
+      if (!file.type.startsWith("image/")) {
+        message.error(`${file.name} is not an image.`);
+        return;
+      }
       if (file.size > MAX_FILE_SIZE) {
         message.error(`${file.name} is too large. Max file size is 5MB.`);
         return;
@@ -32,8 +44,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
       validFiles.push(file);
       newPreviews.push(URL.createObjectURL(file));
     });
-    console.log("Valid files:", validFiles);
 
+    // Cập nhật danh sách file và preview
     setSelectedFiles((prevFiles) => (multiple ? [...prevFiles, ...validFiles] : validFiles));
     setPreviews((prevPreviews) => (multiple ? [...prevPreviews, ...newPreviews] : newPreviews));
 
@@ -42,17 +54,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
 
   const handleRemoveFile = (index: number) => {
     const newPreviews = previews.filter((_, i) => i !== index);
-    const newSelectedFiles = selectedFiles.filter((_, i) => i !== index);
-
     setPreviews(newPreviews);
-    setSelectedFiles(newSelectedFiles);
-
-    onImageUpload(newSelectedFiles);
+    setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
+    onImageUpload(selectedFiles.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="space-y-6">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+    <div className="space-y-4">
+      <label className="block text-sm font-medium text-gray-700">
         {multiple ? "Upload Images" : "Upload Image"}
       </label>
 
@@ -76,19 +85,23 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
             </button>
           </div>
         ))}
-        <label className="w-32 h-32 bg-white border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-50 cursor-pointer">
+
+        {/* Input Upload */}
+        <label className="w-32 h-32 bg-white border border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 cursor-pointer">
           <input
             type="file"
             onChange={handleFileChange}
             className="hidden"
+            accept="image/*"
             multiple={multiple}
           />
-          <PlusCircleIcon color="green" />
+          <PlusCircleIcon color="green" size={32} />
+          <span className="text-xs mt-1">Add Image</span>
         </label>
       </div>
 
       {selectedFiles.length > 0 && (
-        <div className="flex justify-center mt-4 text-gray-500">
+        <div className="text-gray-500 text-center mt-2">
           {selectedFiles.length} file(s) selected.
         </div>
       )}
