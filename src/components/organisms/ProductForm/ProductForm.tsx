@@ -24,6 +24,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [categories, setCategories] = useState<TCate[] | null>(null);
+  const [iamges, setImages] = useState<string[]>(initialData?.images || []);
 
 
   const form = useForm<ProductType>({
@@ -54,6 +55,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
     }
   }
   useEffect(() => {
+
     const fetchCategories = async () => {
       try {
         const response = await categoryService.getAllCate({ page: 1, pageSize: 10 });
@@ -68,9 +70,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
     };
     fetchCategories();
   }, []);
+  useEffect (() => {
+    if(initialData?.images) {
+      setImages(initialData.images);
+      form.setValue("images", initialData.images);
+    }
+  }, [initialData]);
+  
   const handleImageUpload = (files: File[]) => {
-    form.setValue("images", files.map((file) => URL.createObjectURL(file))); // For preview purposes
+    const newImages = files.map((file) => URL.createObjectURL(file));
+    setImages((prevImages) => [...prevImages, ...newImages]); 
+    form.setValue("images", [...form.getValues("images"), ...newImages]);
   };
+  
+  console.log("Current images:", form.watch("images"));
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -84,7 +98,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
           </CardHeader>
           <CardContent className="grid grid-cols-7 gap-6">
             <div className="col-span-4 space-y-6">
-              <ImageUploadOne onImageUpload={handleImageUpload} multiple={true} />
+              <ImageUploadOne onImageUpload={handleImageUpload} multiple={true}  initialData={initialData?.images} />
               <FormField
                 control={form.control}
                 name="productName"
@@ -222,7 +236,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={() => navigate("/dashboard/products")}
+            onClick={() => navigate("/products-management")}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
             Cancel
