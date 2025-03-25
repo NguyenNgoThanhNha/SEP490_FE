@@ -51,12 +51,16 @@ export const UserSignupSchema = z.object({
 export type UserSignupType = z.infer<typeof UserSignupSchema>
 //login
 export const UserLoginSchema = z.object({
-  identifier: z
-    .string({
-      required_error: 'Email is required'
-    })
-    .min(1, 'Email is required')
-    .email({ message: 'Email is not a valid email' }),
+emailOrPhone: z
+  .string({
+    required_error: 'Email hoặc số điện thoại là bắt buộc'
+  })
+  .min(1, 'Email hoặc số điện thoại là bắt buộc')
+  .refine((value) => {
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+    const isPhone = /^[0-9]{10}$/.test(value) 
+    return isEmail || isPhone
+  }, 'Vui lòng nhập email hoặc số điện thoại hợp lệ'),
   password: z
     .string({
       required_error: 'Password is required'

@@ -22,14 +22,18 @@ const LoginForm = () => {
   const form = useForm<UserLoginType>({
     resolver: zodResolver(UserLoginSchema),
     defaultValues: {
-      identifier: '',
+      emailOrPhone: '',
       password: ''
     }
   })
   const dispatch = useDispatch()
   const onSubmit: SubmitHandler<UserLoginType> = async (data: UserLoginType) => {
     setLoading(true)
-    const response = await authService.login(data)
+    const formattedData = {
+      identifier: data.emailOrPhone, 
+      password: data.password
+    }
+    const response = await authService.login(formattedData)
     setLoading(false)
     if (response.success) {
       localStorage.setItem('accessToken', response?.result?.data as string)
@@ -50,9 +54,9 @@ const LoginForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className={'w-full flex flex-col gap-y-3'}>
         <div className={'grid grid-cols-2  gap-x-2 gap-y-4'}>
           <FormInput
-            name={'identifier'}
+            name={'emailOrPhone'}
             form={form}
-            placeholder={'Ex:customer@gmail.com'}
+            placeholder={'Enter email or phone number'}
             classContent={'col-span-2'}
             autoFocus
           />
