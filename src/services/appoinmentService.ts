@@ -1,11 +1,14 @@
-interface CreateAppointmentProps {
-    staffId: number,
-    servicesId: [],
-    branchId: number,
-    appointmentsTime: string,
-    status?: string,
-    note?: string,
-    feedback?: string,
-    voucherId?: number,
+import { get, ResponseProps } from "./root"
+
+interface GetAppointmentProps {
+    page: number,
+    pageSize: number,
 }
-const createAppointment = async()
+
+const getAllAppointment = async({page, pageSize}: GetAppointmentProps) : Promise<ResponseProps> => {
+    return await get(`Appointments/get-all?page=${page}&pageSize=${pageSize}`)
+}
+
+export default {
+    getAllAppointment
+}

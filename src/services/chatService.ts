@@ -11,10 +11,10 @@ const chatSend = async({message}: ChatProps): Promise<ResponseProps> => {
 interface CreateHubProps {
     adminId: number,
     channelName: string,
-    customerIds: []
 }
-const createChannel = async({adminId, channelName, customerIds}: CreateHubProps):Promise<ResponseProps> => {
-    return await post('Hub/create-channel', {adminId, channelName, customerIds});
+
+const createChannel = async({adminId, channelName}: CreateHubProps):Promise<ResponseProps> => {
+    return await post('Hub/create-channel', {adminId, channelName});
 }
 export default {
     chatSend,

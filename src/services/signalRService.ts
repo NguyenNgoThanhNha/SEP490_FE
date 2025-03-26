@@ -1,6 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 
-const hubUrl = "https://solaceapix.ddnsking.com/chat"; 
+const hubUrl = "https://solaceapi.ddnsking.com/chat"; 
 
 let connection: signalR.HubConnection | null = null;
 
