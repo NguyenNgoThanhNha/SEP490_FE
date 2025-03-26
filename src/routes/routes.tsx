@@ -31,7 +31,7 @@ import AboutUs from '@/components/pages/AboutUs/AboutUs'
 import Layout from '@/components/templates/Layout'
 import OurServices from '@/components/pages/OurServices/OurServices'
 import ContactPage from '@/components/pages/ContactPage/Contact'
-import StaffCalendar from '@/components/pages/StaffCalendar/StaffCalendar'
+// import StaffCalendar from '@/components/pages/StaffCalendar/StaffCalendar'
 import ServicesCateManagementPage from '@/components/pages/ServiceCategory/ServiceCategoryManagement'
 import InformationPage from '@/components/pages/Term&Policy/Term&Policy'
 import BranchComponent from '@/components/pages/BranchManagement/BranchManagement'
@@ -41,6 +41,7 @@ import SchedulePage from '@/components/pages/ScheduleManagement/ScheduleManageme
 import BookingForm from '@/components/organisms/BookingStep/Step1'
 import DeleteAccountPage from '@/components/pages/DeleteAcc/DeleteAcc'
 import ChatPage from '@/components/pages/ChatPage/ChatPage'
+import AppointmentManagementPage from '@/components/pages/AppoinmentManagement/AppointmentManagement'
 
 export const AppRouter = () => {
   return (
@@ -90,7 +91,7 @@ export const AppRouter = () => {
           {/* USER MANAGEMENT */}
           <Route path={ROUTES.CUSTOMER_MANAGEMENT} element={<CustomerManagementPage />} />
           {/*CASHIER */}
-          <Route path={ROUTES.APPOINMENT_MANAGEMENT} element={<StaffCalendar />} />
+          <Route path={ROUTES.APPOINMENT_MANAGEMENT} element={<AppointmentManagementPage />} />
           <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingForm />} />
           {/* SERVICES'S CATEGORY */}
           <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />

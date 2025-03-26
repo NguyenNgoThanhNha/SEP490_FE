@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   DashboardIcon,
-  BarChartIcon,
   ArchiveIcon,
   PersonIcon,
   GearIcon,
@@ -30,7 +29,6 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
     case 1: // Admin
       return [
         { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
-        { label: t("branch"), icon: <BarChartIcon />, path: "/branch" },
         {
           label: t("products"),
           icon: <ArchiveIcon />,
