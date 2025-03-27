@@ -19,15 +19,23 @@ export const startConnection = async () => {
   }
 };
 
-export const sendMessage = async (channelId: string, senderId: number, content: string) => {
-  if (!connection) return;
-  await connection.invoke("SendMessageToChannel", channelId, senderId, content, "text");
+export const sendMessageToChannel = async (channelId: string, senderId: string, content: string, messageType: string) => {
+  if (!connection) {
+    console.error("SignalR connection is not established.");
+    return;
+  }
+  try {
+    console.log("Sending message to server:", { channelId, senderId, content, messageType: "text" });
+    await connection.invoke("SendMessageToChannel", channelId, senderId, content, messageType, null);
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
 };
+export const sendMessage = async (senderId: string, recipientId: string, content: string) => {
+  if (!connection) return;
+  await connection.invoke("SendMessage",  senderId, recipientId, content);
 
-export const onReceiveMessage = (callback: (message: unknown) => void) => {
-  if (!connection) return;
-  connection.on("ReceiveMessage", callback);
-};
+}
 
 export const stopConnection = async () => {
   if (connection) {

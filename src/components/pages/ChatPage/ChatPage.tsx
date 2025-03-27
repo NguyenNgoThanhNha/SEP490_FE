@@ -1,39 +1,93 @@
-import { useState } from "react";
-import { useChat } from "@/context/ChatContext";
-import ChatBox from "@/components/organisms/Chat/ChatBox";
+import { sendMessageToChannel, startConnection } from "@/services/signalRService";
+import { useEffect, useState, useRef } from "react";
+import { Input, Button, Layout, Typography, List} from "antd";
+import { SendOutlined } from "@ant-design/icons";
+
+const { Header, Sider, Content } = Layout;
+const { Text } = Typography;
 
 const ChatPage = () => {
-  const { channels, joinChatRoom } = useChat();
-  const [selectedChannel, setSelectedChannel] = useState(null);
+  const [selectedChannel, setSelectedChannel] = useState<any | null>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  const currentUserId = "67de59a9407fcc4dc71183ab";
 
-  const handleSelectChannel = (channelId) => {
-    setSelectedChannel(channelId);
-    joinChatRoom(channelId);
+  useEffect(() => {
+    fetch("https://solaceapi.ddnsking.com/api/Hub/channel/67e52aa8143ee9e921d3b5a9")
+      .then((res) => res.json())
+      .then((data) => {
+        setSelectedChannel(data.result);
+        setMessages(data.result.messages || []);
+      })
+      .catch((err) => console.error(err));
+
+    startConnection();
+  }, []);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = async () => {
+    if (!selectedChannel || !newMessage.trim()) return;
+    try {
+      await sendMessageToChannel(selectedChannel.id, currentUserId, newMessage, "text");
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { senderId: currentUserId, content: newMessage, messageType: "text" },
+      ]);
+      setNewMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4 p-6">
-      <h1 className="text-2xl font-bold">Messenger Chat</h1>
-      
-      <div className="w-96 border p-2 rounded">
-        <h2 className="font-semibold mb-2">Channels</h2>
-        {channels.length === 0 ? (
-          <p className="text-gray-500">No channels available</p>
-        ) : (
-          channels.map((channel) => (
-            <button
-              key={channel.id}
-              className="w-full text-left p-2 bg-gray-200 hover:bg-gray-300 rounded mb-1"
-              onClick={() => handleSelectChannel(channel.id)}
-            >
-              {channel.name}
-            </button>
-          ))
-        )}
-      </div>
-
-      {selectedChannel && <ChatBox senderId={1} />}
-    </div>
+    <Layout className="h-screen">
+      <Sider width={250} className="bg-white p-4 border-r border-gray-200">
+        <Text strong className="text-lg block mb-4">
+          Channels
+        </Text>
+        <List
+          dataSource={["General", "Support"]}
+          renderItem={(channel) => (
+            <List.Item className="p-3 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100 transition">
+              {`# ${channel}`}
+            </List.Item>
+          )}
+        />
+      </Sider>
+      <Layout className="w-full">
+        <Header className="bg-blue-600 text-white text-lg font-semibold p-4 flex items-center">
+          {selectedChannel ? selectedChannel.name : "Select a channel"}
+        </Header>
+        <Content className="p-6 bg-gray-100 overflow-y-auto flex-1 space-y-4">
+          {messages.map((msg, index) => (
+            <div key={index} className={`flex ${msg.senderId === currentUserId ? "justify-end" : "justify-start"}`}>
+              <div className={`p-3 max-w-lg rounded-lg text-sm shadow-md ${msg.senderId === currentUserId ? "bg-blue-500 text-white" : "bg-white border border-gray-300"}`}>
+                {msg.content}
+              </div>
+            </div>
+          ))}
+          <div ref={chatEndRef} />
+        </Content>
+        <div className="p-4 border-t bg-white flex items-center">
+          <Input
+            placeholder="Type a message..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            className="flex-1"
+          />
+          <Button
+            type="primary"
+            icon={<SendOutlined />}
+            className="ml-2"
+            onClick={handleSendMessage}
+          />
+        </div>
+      </Layout>
+    </Layout>
   );
 };
 
