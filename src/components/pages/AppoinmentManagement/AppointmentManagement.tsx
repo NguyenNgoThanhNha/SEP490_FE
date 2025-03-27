@@ -92,6 +92,12 @@ const AppointmentManagementPage = () => {
       });
 
       if (response?.success) {
+        const channelId = response.result?.data.id;
+        if(channelId) {
+          const channelResponse = await chatService.getChannels(channelId);
+          const channelInfo = channelResponse.data;
+          navigate(`/chat/${channelId}`, { state: { channelInfo } });
+        }
         toast.success("Chat Hub đã được tạo thành công!");
         setIsModalOpen(false);
         setChannelName(""); 
