@@ -42,6 +42,7 @@ import BookingForm from '@/components/organisms/BookingStep/Step1'
 import DeleteAccountPage from '@/components/pages/DeleteAcc/DeleteAcc'
 import ChatPage from '@/components/pages/ChatPage/ChatPage'
 import AppointmentManagementPage from '@/components/pages/AppoinmentManagement/AppointmentManagement'
+import RoutineManagementPage from '@/components/pages/RoutineManagement/RoutineManagement'
 
 export const AppRouter = () => {
   return (
@@ -103,6 +104,8 @@ export const AppRouter = () => {
           <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
           {/* CHAT */}
           <Route path={ROUTES.CHAT} element={<ChatPage />} />
+          {/* ROUTINE MANAGEMENT */}
+          <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
 
         </Route>
 
