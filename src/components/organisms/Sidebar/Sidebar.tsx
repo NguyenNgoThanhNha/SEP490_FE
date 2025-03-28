@@ -82,6 +82,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
         { label: t("manageAppoinment"), icon: <BookIcon />, path: "/appoinments-management" },
         { label: t("manageBranch"), icon: <BookIcon />, path: "/branchs-management" },
+        { label: t("manageRoutine"), icon: <BookIcon />, path: "/routine-management" },
         { label: t("settings"), icon: <GearIcon />, path: "/settings" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
       ];
