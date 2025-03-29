@@ -9,6 +9,16 @@ const getAllAppointment = async({page, pageSize}: GetAppointmentProps) : Promise
     return await get(`Appointments/get-all?page=${page}&pageSize=${pageSize}`)
 }
 
+interface AppointmentDetailProps {
+    appointmentId: number
+}
+
+const getAppointmentDetail = async({appointmentId}: AppointmentDetailProps) : Promise<ResponseProps> => {
+    return await get(`Appointments/get-by-id/${appointmentId}`)
+}
+
 export default {
-    getAllAppointment
+    getAllAppointment,
+    getAppointmentDetail,
+
 }

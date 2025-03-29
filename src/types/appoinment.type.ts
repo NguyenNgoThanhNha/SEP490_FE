@@ -4,7 +4,7 @@ import { TService } from "./serviceType";
 import { TStaff } from "./staff.type";
 
 export type TAppointment = {
-    id: number,
+    appointmentId: number,
     orderId: number,
     customerId: number,
     customer: TCustomer,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Edit, MessageCircle } from "lucide-react";
+import { Edit } from "lucide-react";
 import { Table } from "@/components/organisms/Table/Table";
 import toast from "react-hot-toast";
 import { Select } from "antd";
@@ -9,10 +9,6 @@ import { format } from "date-fns";
 import { TAppointment } from "@/types/appoinment.type";
 import appoinmentService from "@/services/appoinmentService";
 import BranchComponent from "../BranchManagement/BranchManagement";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import chatService from "@/services/chatService";
-import { Modal, Input } from "antd";
 import { startConnection, stopConnection } from "@/services/signalRService";
 
 const AppointmentManagementPage = () => {
@@ -22,10 +18,6 @@ const AppointmentManagementPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [channelName, setChannelName] = useState("");
-
-  //   const appointmentId = useSelector((state: RootState) => state.appointment.appointmentId);
 
   const fetchAppointment = async (page: number, pageSize: number) => {
     try {
@@ -45,15 +37,15 @@ const AppointmentManagementPage = () => {
   };
 
   useEffect(() => {
-    startConnection(); 
+    startConnection();
 
     return () => {
-      stopConnection(); 
+      stopConnection();
     };
   }, []);
 
   const handleEdit = (appointmentId: number) => {
-    navigate(`/branch-promotion-management/${appointmentId}`);
+    navigate(`/appoinments-management/${appointmentId}`);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -68,48 +60,6 @@ const AppointmentManagementPage = () => {
     setPage(1);
     fetchAppointment(1, value);
   };
-  const showCreateHubModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const adminId = useSelector((state: RootState) => state.auth.user?.userId);
-
-  const handleCreateHub = async () => {
-    if (!adminId) {
-      toast.error("Admin chưa đăng nhập!");
-      return;
-    }
-
-    if (!channelName.trim()) {
-      toast.error("Vui lòng nhập tên Chat Hub!");
-      return;
-    }
-
-    try {
-      const response = await chatService.createChannel({
-        adminId: Number(adminId),
-        channelName: channelName,
-      });
-
-      if (response?.success) {
-        const channelId = response.result?.data.id;
-        if(channelId) {
-          const channelResponse = await chatService.getChannels(channelId);
-          const channelInfo = channelResponse.data;
-          navigate(`/chat/${channelId}`, { state: { channelInfo } });
-        }
-        toast.success("Chat Hub đã được tạo thành công!");
-        setIsModalOpen(false);
-        setChannelName(""); 
-      } else {
-        toast.error(response.result?.message || "Lỗi khi tạo Chat Hub");
-      }
-    } catch {
-      toast.error("Không thể tạo Chat Hub, vui lòng thử lại!");
-    }
-  };
-
-
 
   useEffect(() => {
     fetchAppointment(page, pageSize);
@@ -222,16 +172,9 @@ const AppointmentManagementPage = () => {
           }}
           actions={(row) => (
             <>
-              <button className="text-blue-500 hover:text-blue-700 p-2 rounded-lg" onClick={() => handleEdit(row.id as number)}>
+              <button className="text-blue-500 hover:text-blue-700 p-2 rounded-lg"
+                onClick={() => handleEdit(row.appointmentId as number)}>
                 <Edit className="w-5 h-5" />
-              </button>
-
-              <button
-                className="text-green-500 hover:text-green-700 p-2 rounded-lg flex items-center gap-1"
-                onClick={showCreateHubModal}
-              >
-                <MessageCircle className="w-5 h-5" />
-                <span>Hub</span>
               </button>
             </>
           )}
@@ -263,18 +206,6 @@ const AppointmentManagementPage = () => {
               </PaginationNext>
             </PaginationContent>
           </Pagination>
-          <Modal
-            title="Tạo Chat Hub"
-            open={isModalOpen}
-            onCancel={() => setIsModalOpen(false)}
-            onOk={() => handleCreateHub()}
-          >
-            <Input
-              placeholder="Nhập tên Chat Hub"
-              value={channelName}
-              onChange={(e) => setChannelName(e.target.value)}
-            />
-          </Modal>
 
         </div>
       </div>

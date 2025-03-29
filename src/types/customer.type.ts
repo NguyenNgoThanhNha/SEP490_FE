@@ -8,6 +8,8 @@ export type TCustomer = {
    city: string,
    address: string,
    birthDate: string,
-   status: string
+   status: string,
+   phoneNumber: string,
+   bonusPoint: number
 }
 

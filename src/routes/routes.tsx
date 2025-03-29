@@ -43,6 +43,7 @@ import DeleteAccountPage from '@/components/pages/DeleteAcc/DeleteAcc'
 import ChatPage from '@/components/pages/ChatPage/ChatPage'
 import AppointmentManagementPage from '@/components/pages/AppoinmentManagement/AppointmentManagement'
 import RoutineManagementPage from '@/components/pages/RoutineManagement/RoutineManagement'
+import AppointmentDetailPage from '@/components/pages/AppoinmentManagement/AppointmentDetail'
 
 export const AppRouter = () => {
   return (
@@ -93,6 +94,8 @@ export const AppRouter = () => {
           <Route path={ROUTES.CUSTOMER_MANAGEMENT} element={<CustomerManagementPage />} />
           {/*CASHIER */}
           <Route path={ROUTES.APPOINMENT_MANAGEMENT} element={<AppointmentManagementPage />} />
+          <Route path={ROUTES.APPOINTMENT_DETAIL} element={<AppointmentDetailPage/>} />
+
           <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingForm />} />
           {/* SERVICES'S CATEGORY */}
           <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
