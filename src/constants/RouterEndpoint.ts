@@ -28,6 +28,7 @@ export enum ROUTES {
   OUR_SERVICES = 'our-services',
   CONTACT = 'contact',
   APPOINMENT_MANAGEMENT = 'appoinments-management',
+  APPOINTMENT_DETAIL = '/appoinments-management/:appointmentId',
   SERVICE_CATEGORY = 'service-cate-management',
   SERVICE_CATEGORY_DETAIL = '/service-cate-management/:serviceCategoryId',
   TERMS_AND_POLICIES = '/terms',
