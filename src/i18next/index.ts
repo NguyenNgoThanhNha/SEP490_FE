@@ -35,8 +35,11 @@ export const locales = {
         addEmployee: "Create Employee",
         manageAppoinment: 'Manage Appoinment',
         manageRoom: 'Manage Room',
-        manageCateSer: "Manage Service's Category"
-
+        manageCateSer: "Manage Service's Category",
+        manageBranchPromotion: "Manage Branch Promotion",
+        manageSchedule: "Manage Schedule",
+        manageChat: "Chat",
+        indeskBooking: "Create Booking",
       }
     },
     vi: {
@@ -68,6 +71,10 @@ export const locales = {
         manageAppoinment: "Quản lý lịch hẹn",
         manageRoom: "Quản lý phòng",
         manageCateSer: "Quản lý loại dịch vụ",
+        manageBranchPromotion: "Quản lý khuyến mãi",
+        manageSchedule: "Quản lý lịch làm việc",
+        manageChat: "Tin nhắn",
+        indeskBooking: "Tạo đơn hàng"
 
       }
     }
