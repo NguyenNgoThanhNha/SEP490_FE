@@ -35,9 +35,13 @@ const addMember = async ({ channelId, customerId }: AddMemberProps): Promise<Res
   return await post('Hub/add-member', { channelId, customerId })
 }
 
-const addManyMember = async ({ channelId, customerIds }: { channelId: string; customerIds: string[] }): Promise<ResponseProps> => {
-    return await post(`Hub/add-many-member?channelId=${channelId}`, customerIds);
-  };
+interface AddManyMemberProps {
+  channelId: string
+  customerIds: string[]
+}
+const addManyMember = async ({ channelId, customerIds }: AddManyMemberProps): Promise<ResponseProps> => {
+  return await post(`Hub/add-many-member?channelId=${channelId}`, customerIds)
+}
 
 interface GetCustomerInfoProps {
   customerId: number
@@ -84,6 +88,5 @@ export default {
   getChannels,
   getMessageChannels,
   checkExistChannel,
-  addManyMember,
-
+  addManyMember
 }

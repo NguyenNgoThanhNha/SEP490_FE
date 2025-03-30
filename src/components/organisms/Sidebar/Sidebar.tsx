@@ -5,6 +5,7 @@ import {
   PersonIcon,
   GearIcon,
   ExitIcon,
+  ChatBubbleIcon,
 } from "@radix-ui/react-icons";
 import { AlignJustify, BookIcon, ShoppingBag, SquareMenu, TicketPercent } from "lucide-react";
 import { MenuItemComponent } from "@/components/molecules/MenuItem";
@@ -89,20 +90,14 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
     case 2: // Manager
       return [
         { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
-        { label: t("manageOrders"), icon: <ShoppingBag />, path: "/order" },
+        { label: t("manageOrder"), icon: <ShoppingBag />, path: "/order" },
         { label: t("manageBranchPromotion"), icon: <ShoppingBag />, path: "/branch-promotion-management" },
         { label: t("manageSchedule"), icon: <BookIcon />, path: "/schedule-management" },
+        { label: t("manageChat"), icon: <ChatBubbleIcon />, path: "/chat" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
 
       ];
-    case 3: // Staff
-      return [
-        { label: t("home"), icon: <DashboardIcon />, path: "/home" },
-        { label: t("appointments"), icon: <BookIcon />, path: "/appointments" },
-        { label: t("chat"), icon: <BookIcon />, path: "/chat" },
-        { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
-      ];
-      case 4: // Cashier
+      case 3: // Cashier
       return [
         { label: t("indeskBooking"), icon: <BookIcon />, path: "/booking-form" },
         { label: t("chat"), icon: <BookIcon />, path: "/chat" },
