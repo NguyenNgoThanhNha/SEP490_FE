@@ -21,16 +21,18 @@ interface CreateStaffProps {
   userName: string
   fullName: string
   email: string
-  branchId: number
+  branchId: number,
+  roleId: number
 }
 
 const createStaff = async ({
   userName,
   fullName,
   email,
-  branchId
+  branchId,
+  roleId
 }: CreateStaffProps): Promise<ResponseProps> => {
-  return await post(`Staff/create`, { userName, fullName, email, branchId})
+  return await post(`Staff/create`, { userName, fullName, email, branchId, roleId})
 }
 
 interface UpdateStaffProps {

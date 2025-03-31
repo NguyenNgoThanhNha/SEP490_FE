@@ -1,7 +1,7 @@
 import StaffForm from "@/components/organisms/Employee/EmployeeForm";
 import { StaffType } from "@/schemas/staffSchema";
 import staffService from "@/services/staffService";
-import {useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 
@@ -9,25 +9,11 @@ const CreateEmployeePage = () => {
   const [, setLoading] = useState<boolean>(false);
   const createEmployee = async (data: StaffType) => {
     setLoading(true);
-  
+
     try {
       const response = await staffService.createStaff(data);
-  
       if (response.success) {
         toast.success("Staff created successfully!");
-  
-        if (data.roleId) {
-          const assignRoleResponse = await staffService.assignStaffRole({
-            staffId: response?.result?.data.staffId, 
-            roleId: data.roleId,
-          });
-  
-          if (assignRoleResponse.success) {
-            toast.success("Role assigned successfully!");
-          } else {
-            toast.error(assignRoleResponse?.result?.message || "Failed to assign role");
-          }
-        }
       } else {
         toast.error(response?.result?.message || "Failed to create staff");
       }
@@ -37,7 +23,7 @@ const CreateEmployeePage = () => {
       setLoading(false);
     }
   };
-  
+
   return (
     <div>
       <StaffForm
