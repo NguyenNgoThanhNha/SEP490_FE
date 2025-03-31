@@ -44,19 +44,19 @@ import ChatPage from '@/components/pages/ChatPage/ChatPage'
 import AppointmentManagementPage from '@/components/pages/AppoinmentManagement/AppointmentManagement'
 import RoutineManagementPage from '@/components/pages/RoutineManagement/RoutineManagement'
 import AppointmentDetailPage from '@/components/pages/AppoinmentManagement/AppointmentDetail'
+import CreateEmployeePage from '@/components/pages/Employee/CreateEmployee'
 
 export const AppRouter = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
         {/* AUTH */}
-
         <Route path={ROUTES.SIGN_UP} element={<SignupPage />} />,
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />,
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />,
         <Route path={ROUTES.VERIFY_CODE} element={<VerifyCodePage />} />,
         <Route path={ROUTES.SET_PASSWORD} element={<SetPasswordPage />} />
-        <Route path={ROUTES.DELETE_ACCOUNT} element={<DeleteAccountPage/>} />
+        <Route path={ROUTES.DELETE_ACCOUNT} element={<DeleteAccountPage />} />
 
         {/* ROOT */}
         <Route path="/" element={<Layout />}>
@@ -65,53 +65,64 @@ export const AppRouter = () => {
           <Route path={ROUTES.OUR_SERVICES} element={<OurServices />} />
           <Route path={ROUTES.CONTACT} element={<ContactPage />} />
           <Route path={ROUTES.TERMS_AND_POLICIES} element={<InformationPage />} />
-
         </Route>
+
         <Route path={ROUTES.ROOT} element={<MainLayout />}>
           <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
           {/* PRODUCT MANAGEMENT */}
           <Route path={ROUTES.PRODUCT_MANAGEMNT} element={<ProductManagementPage />} />
           <Route path={ROUTES.CREATE_PRODUCT} element={<CreateProductPage />} />
           <Route path={ROUTES.PRODUCT_DETAIL} element={<ProductDetailPage />} />
+
           {/* SERVICES MANAGEMENT */}
           <Route path={ROUTES.SERVICES_MANAGEMENT} element={<ServicesManagementPage />} />
           <Route path={ROUTES.CREATE_SERVICE} element={<CreateServiceForm />} />
           <Route path={ROUTES.SERVICE_DETAIL} element={<ServiceDetail />} />
+
           {/* BLOG MANAGEMENT */}
           <Route path={ROUTES.BLOG_MANAGEMENT} element={<BlogList />} />
           <Route path={ROUTES.CREATE_BLOG} element={<CreateBlogPage />} />
           <Route path={ROUTES.BLOG_DETAIL} element={<BlogDetailPage />} />
+
           {/* STAFF MANAGEMENT */}
           <Route path={ROUTES.STAFF_MANAGEMENT} element={<EmployeePage />} />
           <Route path={ROUTES.STAFF_DETAIL} element={<EmployeeDetail />} />
+          <Route path={ROUTES.CREATE_STAFF} element={<CreateEmployeePage />} />
+
           {/* PROMOTION MANAGEMENT */}
           <Route path={ROUTES.PROMOTION_MANAGEMENT} element={<PromotionPage />} />
           <Route path={ROUTES.PROMOTION_DETAIL} element={<PromotionDetail />} />
           <Route path={ROUTES.CREATE_PROMOTION} element={<CreatePromotion />} />
+
           {/* ORDER MANAGEMENT */}
           <Route path={ROUTES.ORDER_MANAGEMENT} element={<OrderPage />} />
+
           {/* USER MANAGEMENT */}
           <Route path={ROUTES.CUSTOMER_MANAGEMENT} element={<CustomerManagementPage />} />
+
           {/*CASHIER */}
           <Route path={ROUTES.APPOINMENT_MANAGEMENT} element={<AppointmentManagementPage />} />
-          <Route path={ROUTES.APPOINTMENT_DETAIL} element={<AppointmentDetailPage/>} />
-
+          <Route path={ROUTES.APPOINTMENT_DETAIL} element={<AppointmentDetailPage />} />
           <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingForm />} />
+
           {/* SERVICES'S CATEGORY */}
           <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
+
           {/* BRANCH MANAGEMENT */}
           <Route path={ROUTES.BRANCH_MANAGEMENT} element={<BranchComponent />} />
+
           {/* BRANCH PROMOTION MANAGEMENT */}
           <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
+
           {/* SCHEDULE MANAGEMENT  */}
           <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
+
           {/* CHAT */}
           <Route path={ROUTES.CHAT} element={<ChatPage />} />
+          
           {/* ROUTINE MANAGEMENT */}
           <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
-
         </Route>
-
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Suspense>

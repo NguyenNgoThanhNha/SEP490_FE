@@ -24,7 +24,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [categories, setCategories] = useState<TCate[] | null>(null);
-  const [iamges, setImages] = useState<string[]>(initialData?.images || []);
+  const [, setImages] = useState<string[]>(initialData?.images || []);
 
 
   const form = useForm<ProductType>({

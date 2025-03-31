@@ -16,10 +16,8 @@ const CreateServiceForm = () => {
         ...data,
         images: data.images || [] 
       });
-      console.log("Form data submitted:", data);
-
       if (response.success) {
-        toast.success("Product created successfully!");
+        toast.success("Service created successfully!");
       } else {
         toast.error(response?.result?.message || "Failed to create service");
       }

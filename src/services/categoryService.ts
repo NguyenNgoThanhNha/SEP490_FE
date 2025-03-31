@@ -5,7 +5,7 @@ interface CateProps {
     pageSize: number
 }
 const getAllCate = async ({ page, pageSize }: CateProps): Promise<ResponseProps> => {
-    return await get(`Category/get-all-categories?page=${page}&pageSize=${pageSize}`)
+    return await get(`Category/get-all?page=${page}&pageSize=${pageSize}`)
   }
   
 export default {
