@@ -26,7 +26,7 @@ const EmployeeManagementPage = () => {
           (staff: TStaff) => staff.staffInfo.status=== "Active"
         ) || [];
         setStaffs(activeStaffs);
-        setTotalPages(response.result?.pagination?.totalPage || 0);
+        setTotalPages(response.result?.data?.totalPagesCount || 0);
       } else {
         toast.error(response.result?.message || "Failed to fetch staffs.");
       }
@@ -87,7 +87,7 @@ const EmployeeManagementPage = () => {
     { label: "Email", key: "staffInfo.email" },
     { label: "Gender", key: "staffInfo.gender"},
     { label: "Phone Number", key: "staffInfo.phoneNumber"},
-    { label: "Birthdate", key: "staffInfo.birthdate",sortable: true },
+    { label: "Birth Date", key: "staffInfo.birthDate",sortable: true },
   ];
 
   const renderPagination = () => {
@@ -136,29 +136,6 @@ const EmployeeManagementPage = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      {/* <div className="flex gap-6 mb-8">
-        <div className="flex-1">
-          <ReusableAreaChart
-            title="Product used"
-            showTotal={true}
-            chartData={[
-              { label: "Jan", value: 2000 },
-              { label: "Feb", value: 1150 },
-              { label: "Mar", value: 1800 },
-              { label: "Apr", value: 900 },
-            ]}
-          />
-        </div>
-        <div className="flex-1">
-          <RechartsPieChart
-            title="Type distribution"
-            subtitle="Product Type"
-            labels={["Serum", "Toner", "Others"]}
-            data={[59, 20, 21]}
-          />
-        </div>
-      </div> */}
-
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}

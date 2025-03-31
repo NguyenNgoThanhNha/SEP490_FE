@@ -22,19 +22,15 @@ interface CreateStaffProps {
   fullName: string
   email: string
   branchId: number
-  createdDate: string
-  updatedDate: string
 }
 
 const createStaff = async ({
   userName,
   fullName,
   email,
-  branchId,
-  createdDate,
-  updatedDate
+  branchId
 }: CreateStaffProps): Promise<ResponseProps> => {
-  return await post(`Staff`, { userName, fullName, email, branchId, createdDate, updatedDate })
+  return await post(`Staff/create`, { userName, fullName, email, branchId})
 }
 
 interface UpdateStaffProps {
@@ -89,6 +85,14 @@ interface StaffBusyTimeProps {
 const getStaffBusyTime = async ({ staffId, date }: StaffBusyTimeProps): Promise<ResponseProps> => {
   return await get(`Staff/staff-busy-time?staffId=${staffId}&date=${date}`)
 }
+interface AssignStaffRoleProps {
+  staffId: number,
+  roleId: number
+}
+
+const assignStaffRole = async ({ staffId, roleId}: AssignStaffRoleProps): Promise<ResponseProps> => {
+  return await get(`Staff/assign-role?staffId=${staffId}&roleId=${roleId}`)
+}
 
 export default {
   createStaff,
@@ -98,5 +102,6 @@ export default {
   getStaffDetail,
   getStaffByBranchAndService,
   getStaffByBranch,
-  getStaffBusyTime
+  getStaffBusyTime,
+  assignStaffRole
 }

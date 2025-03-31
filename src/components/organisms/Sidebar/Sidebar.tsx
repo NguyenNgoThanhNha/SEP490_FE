@@ -52,7 +52,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
           icon: <PersonIcon />,
           submenu: [
             { label: t("manageEmployee"), icon: <PersonIcon />, path: "/staffs-management" },
-            { label: t("addEmployee"), icon: <PersonIcon />, path: "/employees/add" },
+            { label: t("addEmployee"), icon: <PersonIcon />, path: "/create-staff" },
           ],
         },
         {
