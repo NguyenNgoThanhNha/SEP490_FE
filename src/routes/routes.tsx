@@ -38,13 +38,15 @@ import BranchComponent from '@/components/pages/BranchManagement/BranchManagemen
 import BranchPromotionManagementPage from '@/components/pages/BranchPromotion/BranchPromotionManagement'
 import SchedulePage from '@/components/pages/ScheduleManagement/ScheduleManagement'
 // import { ChatPage } from '@/components/pages/ChatPage/ChatPage'
-import BookingForm from '@/components/organisms/BookingStep/Step1'
 import DeleteAccountPage from '@/components/pages/DeleteAcc/DeleteAcc'
 import ChatPage from '@/components/pages/ChatPage/ChatPage'
 import AppointmentManagementPage from '@/components/pages/AppoinmentManagement/AppointmentManagement'
 import RoutineManagementPage from '@/components/pages/RoutineManagement/RoutineManagement'
 import AppointmentDetailPage from '@/components/pages/AppoinmentManagement/AppointmentDetail'
 import CreateEmployeePage from '@/components/pages/Employee/CreateEmployee'
+import BookingPage from '@/components/pages/CashierBooking/CashierBooking'
+import CheckoutPage from '@/components/organisms/BookingStep/Step2'
+
 
 export const AppRouter = () => {
   return (
@@ -103,7 +105,8 @@ export const AppRouter = () => {
           {/*CASHIER */}
           <Route path={ROUTES.APPOINMENT_MANAGEMENT} element={<AppointmentManagementPage />} />
           <Route path={ROUTES.APPOINTMENT_DETAIL} element={<AppointmentDetailPage />} />
-          <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingForm />} />
+          <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingPage/>} />
+          <Route path={ROUTES.CHECKOUT_PAGE} element={<CheckoutPage/>} />
 
           {/* SERVICES'S CATEGORY */}
           <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />

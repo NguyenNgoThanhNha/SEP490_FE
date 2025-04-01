@@ -1,4 +1,4 @@
-import { get, post,ResponseProps } from './root'
+import { get, post,put,ResponseProps } from './root'
 
 interface OrderProps {
   pageIndex: number
@@ -30,7 +30,27 @@ const createPurchase = async ({
   })
 }
 
+interface ConfirmAppointmentProps {
+  orderId: number,
+  totalAmount: string,
+}
+
+const confirmAppointment = async ({orderId, totalAmount}:ConfirmAppointmentProps) : Promise<ResponseProps> =>{
+  return await post('Order/confirm-order-appointment', {orderId,totalAmount})
+}
+
+interface UpdatePaymentMethodProps {
+  orderId: number,
+  paymentMethod?: string,
+  note? : string
+}
+
+const updatePaymentMethod = async ({orderId, paymentMethod, note}: UpdatePaymentMethodProps) : Promise<ResponseProps> =>{
+  return await put('Order/confirm-order-appointment', {orderId,paymentMethod, note})
+}
 export default {
   getAllPurchase,
-  createPurchase
+  createPurchase,
+  confirmAppointment,
+  updatePaymentMethod
 }

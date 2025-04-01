@@ -46,7 +46,6 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
             { label: t("addService"), icon: <ShoppingBag />, path: "/create-service" },
           ],
         },
-        { label: t("saleReport"), icon: <DashboardIcon />, path: "/sales" },
         {
           label: t("employee"),
           icon: <PersonIcon />,
@@ -55,22 +54,22 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
             { label: t("addEmployee"), icon: <PersonIcon />, path: "/create-staff" },
           ],
         },
-        {
-          label: t("blog"),
-          icon: <ArchiveIcon />,
-          submenu: [
-            { label: t("manageBlog"), icon: <ArchiveIcon />, path: "/blog" },
-            { label: t("createBlog"), icon: <ArchiveIcon />, path: "/create-blog" },
-          ],
-        },
-        {
-          label: t("order"),
-          icon: <DashboardIcon />,
-          submenu: [
-            { label: t("manageOrder"), icon: <DashboardIcon />, path: "/order" },
-            { label: t("createOrder"), icon: <DashboardIcon />, path: "/create-blog" },
-          ],
-        },
+        // {
+        //   label: t("blog"),
+        //   icon: <ArchiveIcon />,
+        //   submenu: [
+        //     { label: t("manageBlog"), icon: <ArchiveIcon />, path: "/blog" },
+        //     { label: t("createBlog"), icon: <ArchiveIcon />, path: "/create-blog" },
+        //   ],
+        // },
+        // {
+        //   label: t("order"),
+        //   icon: <DashboardIcon />,
+        //   submenu: [
+        //     { label: t("manageOrder"), icon: <DashboardIcon />, path: "/order" },
+        //     { label: t("createOrder"), icon: <DashboardIcon />, path: "/create-blog" },
+        //   ],
+        // },
         { label: t("customer"), icon: <PersonIcon />, path: "/customers-management" },
         {
           label: t("promote"),
@@ -82,7 +81,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         },
         { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
         { label: t("manageAppoinment"), icon: <BookIcon />, path: "/appoinments-management" },
-        { label: t("manageBranch"), icon: <BookIcon />, path: "/branchs-management" },
+        // { label: t("manageBranch"), icon: <BookIcon />, path: "/branchs-management" },
         { label: t("manageRoutine"), icon: <BookIcon />, path: "/routine-management" },
         { label: t("settings"), icon: <GearIcon />, path: "/settings" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
