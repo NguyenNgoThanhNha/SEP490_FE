@@ -43,6 +43,7 @@ export enum ROUTES {
 
   // Order
   ORDER_MANAGEMENT = 'order',
+ 
 
   // Blog
   BLOG_MANAGEMENT = 'blog',
@@ -64,5 +65,6 @@ export enum ROUTES {
   // Others
   CHAT = 'chat',
   CASHIER_BOOOKING = 'booking-form',
-  ROUTINE_MANAGEMENT = 'routine-management',  
+  ROUTINE_MANAGEMENT = 'routine-management', 
+  CHECKOUT_PAGE ='checkout', 
 }

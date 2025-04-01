@@ -51,9 +51,9 @@ const AboutUs: React.FC = () => {
         <h2 className="text-3xl font-bold text-center text-[#5C7848]">Meet Our Experts</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
           {[
-            { name: "Sophia Lee", role: "Massage Specialist", img: "https://i.pinimg.com/736x/30/6c/8f/306c8f861702e3656bb6883d717eb244.jpg" },
-            { name: "Daniel Smith", role: "Skincare Expert", img: "https://i.pinimg.com/736x/6b/9f/17/6b9f17f48cf1e1cf5e5153ef89744e7e.jpg" },
-            { name: "Emily Johnson", role: "Wellness Coach", img: "https://i.pinimg.com/736x/a3/77/5e/a3775e6c0a3ebec51f2d9ff74eb92122.jpg" },
+            { name: "Hồ Thị B", role: "Massage Specialist", img: "https://i.pinimg.com/736x/5e/b4/43/5eb443c26a194f92d7a9b6962eba7a28.jpg" },
+            { name: "Daniel Smith", role: "Skincare Expert", img: "https://i.pinimg.com/736x/91/b0/7a/91b07a0d4b6ea6076f165dca5bba9c9a.jpg" },
+            { name: "Emily Johnson", role: "Wellness Coach", img: "https://i.pinimg.com/736x/f0/b4/c5/f0b4c5cc4bcd32b815b2880604e4a88a.jpg" },
           ].map((expert, index) => (
             <div key={index} className="bg-white p-6 rounded-xl shadow-lg text-center">
               <img src={expert.img} alt={expert.name} className="rounded-full w-32 h-32 mx-auto shadow-md mb-4" />
@@ -74,25 +74,25 @@ const AboutUs: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
           {[
             {
-              img: "https://i.pinimg.com/736x/6e/9c/d1/6e9cd133a5c8de75e1d9b69b83c8d7c2.jpg",
-              city: "New York City",
-              address: "123 Fifth Ave, NY 10001",
+              img: "https://i.pinimg.com/736x/59/d6/32/59d632e9b70b43c2aaa504e7e5a7ff1f.jpg",
+              city: "Hồ Chí Minh",
+              address: "123 Đường Lê Lợi, Quận 1",
               phone: "+1 (212) 555-1234",
               hours: "Mon-Sun: 9 AM - 9 PM",
               mapLink: "https://goo.gl/maps/xyz123",
             },
             {
-              img: "https://i.pinimg.com/736x/b2/58/4d/b2584df732c90919b9ef5b8a6e7648a7.jpg",
-              city: "Los Angeles",
-              address: "456 Sunset Blvd, LA 90028",
+              img: "https://i.pinimg.com/736x/74/39/1d/74391d37d6853a1a977274c5ad770e48.jpg",
+              city: "Hồ Chí Minh",
+              address: "456 Đường Nguyễn Đình Chiểu, Quận 3",
               phone: "+1 (323) 555-5678",
               hours: "Mon-Sun: 10 AM - 8 PM",
               mapLink: "https://goo.gl/maps/abc456",
             },
             {
-              img: "https://i.pinimg.com/736x/c9/3e/9f/c93e9f6fa4fd53e2fd3c4e08d7f60d3e.jpg",
-              city: "Miami",
-              address: "789 Ocean Drive, FL 33139",
+              img: "https://i.pinimg.com/736x/48/41/e2/4841e21215adb9b7731dd2ed54c70944.jpg",
+              city: "Hồ Chí Minh",
+              address: "789 Đường Trần Hưng Đạo, Quận 5",
               phone: "+1 (305) 555-7890",
               hours: "Mon-Sun: 8 AM - 10 PM",
               mapLink: "https://goo.gl/maps/def789",

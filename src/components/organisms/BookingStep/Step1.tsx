@@ -1,140 +1,258 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchBranches, setBranchId } from "@/store/slice/branchSlice";
-import { RootState, AppDispatch } from "@/store";
-import { Select} from "antd";
-import toast from "react-hot-toast";
-import authService from "@/services/authService";
+import { Button } from "@/components/atoms/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/atoms/ui/card";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/ui/form";
+import { Form } from "@/components/atoms/ui/form copy";
+import { Input } from "@/components/atoms/ui/input";
+import branchService from "@/services/branchService";
 import serviceService from "@/services/serviceService";
 import staffService from "@/services/staffService";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/ui/card";
-import { Input } from "@/components/atoms/ui/input";
-import dayjs from "dayjs";
+import { TBranch } from "@/types/branch.type";
+import { TService } from "@/types/serviceType";
+import { TStaff } from "@/types/staff.type";
+import { useEffect, useState } from "react";
+import { useForm, useWatch, Controller } from "react-hook-form";
+import { Select } from "antd";
+import { TAppointment } from "@/types/appoinment.type";
+import { formatPrice } from "@/utils/formatPrice";
 
-interface FormValues {
-  phone: string;
-  name: string;
-  branchId: number;
-  serviceId: number;
-  staffId: number;
-  appointmentTime: string;
+const { Option } = Select;
+
+interface BookingFormProps {
+  onSubmit: (data: TAppointment) =>  Promise<void>;
 }
 
-const BookingForm: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { branches, branchId, loading } = useSelector((state: RootState) => state.branch);
-  const [services, setServices] = useState([]);
-  const [staffs, setStaffs] = useState([]);
-  const [customerExists, setCustomerExists] = useState<boolean | null>(null);
-  const form = useForm<FormValues>();
-  const { handleSubmit, watch, setValue } = form;
-  const phoneNumber = watch("phone");
-  const appointmentTime = watch("appointmentTime");
+const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
+  const [branches, setBranches] = useState<TBranch[] | null>(null);
+  const [staffs, setStaff] = useState<TStaff[] | null>(null);
+  const [services, setServices] = useState<TService[] | null>(null);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      branch: "",
+      staff: "",
+      service: [],
+      date: "",
+      time: "",
+      notes: "",
+      voucher: "",
+    },
+  });
+
+  const selectedBranch = useWatch({ control: form.control, name: "branch" });
+  useEffect(() => {
+    if (form.watch("service").length > 0 && services) {
+      const selectedServices = form.watch("service").map((id) =>
+        services.find((s) => s.serviceId === id)
+      );
+      const price = selectedServices.reduce((sum, service) => sum + (service?.price || 0), 0);
+      setTotalPrice(price);
+    } else {
+      setTotalPrice(0);
+    }
+  }, [form.watch("service"), services]);
 
   useEffect(() => {
-    dispatch(fetchBranches({ status: "active", page: 1, pageSize: 10 }));
-  }, [dispatch]);
+    const fetchBranches = async () => {
+      try {
+        const branchRes = await branchService.getAllBranch({
+          status: "Active",
+          page: 1,
+          pageSize: 200,
+        });
+        setBranches(branchRes.result?.data || []);
+      } catch (error) {
+        console.error("Error fetching branches", error);
+      }
+    };
+
+    fetchBranches();
+  }, []);
 
   useEffect(() => {
-    if (branchId) {
-      fetchServicesForTime(appointmentTime);
-      fetchStaffsByBranch(branchId);
-    }
-  }, [branchId, appointmentTime]);
+    if (!selectedBranch) return;
 
-  const fetchServicesForTime = async (time: string) => {
-    if (!time) return;
-    const hour = dayjs(time).hour();
-    if (hour < 9 || hour >= 17) {
-      toast.error("Lịch hẹn chỉ được đặt từ 9h - 17h");
-      return;
-    }
-    try {
-      const response = await serviceService.getServiceByTime({ hour });
-      setServices(response.result?.data || []);
-    } catch {
-      toast.error("Lỗi lấy danh sách dịch vụ.");
-    }
-  };
+    const fetchStaffAndServices = async () => {
+      try {
+        const [staffRes, serviceRes] = await Promise.all([
+          staffService.getStaffByBranch({ branchId: Number(selectedBranch) }),
+          serviceService.getAllServiceForBranch({
+            branchId: Number(selectedBranch),
+            page: 1,
+            pageSize: 50,
+          }),
+        ]);
+        setStaff(staffRes.result?.data);
+        setServices(serviceRes.result?.data);
+      } catch (error) {
+        console.error("Error fetching staff or services", error);
+      }
+    };
 
-  const fetchStaffsByBranch = async (branchId: number) => {
-    try {
-      const response = await staffService.getStaffByBranch({ branchId });
-      setStaffs(response.result?.data || []);
-    } catch {
-      toast.error("Lỗi lấy danh sách nhân viên.");
-    }
-  };
-
-  const checkCustomerExists = async () => {
-    try {
-      if (!phoneNumber) return;
-      const response = await authService.checkCustomer({ phone: phoneNumber });
-      setCustomerExists(response.exists);
-      if (response.exists) toast.success("Khách hàng đã có tài khoản.");
-    } catch {
-      setCustomerExists(false);
-    }
-  };
-
-  const onSubmit = (data: FormValues) => {
-    console.log("Lịch hẹn đã đặt:", data);
-    toast.success("Đặt lịch thành công!");
-  };
+    fetchStaffAndServices();
+  }, [selectedBranch]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen ">
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-8 rounded-lg shadow-lg w-[600px] space-y-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl font-bold text-center">Đặt Lịch Hẹn</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Input
-              placeholder="Nhập số điện thoại"
-              {...form.register("phone")}
-              onBlur={checkCustomerExists}
+    <Card className="w-full max-w-md mx-auto shadow-md">
+      <CardHeader className="text-lg font-semibold">Booking Appointment Form</CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {customerExists === false && (
-              <Input placeholder="Nhập tên khách hàng" {...form.register("name")} />
-            )}
+            <FormField
+              control={form.control}
+              name="branch"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Branch</FormLabel>
+                  <Controller
+                    control={form.control}
+                    name="branch"
+                    render={({ field }) => (
+                      <Select
+                        placeholder="Select branch"
+                        value={field.value}
+                        onChange={(value) => field.onChange(Number(value))}
+                        style={{ width: "100%" }}
+                      >
+                        {branches?.map((branch) => (
+                          <Option key={branch.branchId} value={branch.branchId}>
+                            {branch.branchName}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <Select value={branchId} onChange={(value) => dispatch(setBranchId(value))} loading={loading} placeholder="Chọn chi nhánh">
-              {branches.map((branch) => (
-                <Select.Option key={branch.branchId} value={branch.branchId}>
-                  {branch.branchName}
-                </Select.Option>
-              ))}
-            </Select>
+            <FormField
+              control={form.control}
+              name="staff"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Staff</FormLabel>
+                  <Controller
+                    control={form.control}
+                    name="staff"
+                    render={({ field }) => (
+                      <Select
+                        placeholder="Select staff"
+                        value={field.value}
+                        onChange={(value) => field.onChange(Number(value))}
+                        style={{ width: "100%" }}
+                      >
+                        {staffs?.map((staff) => (
+                          <Option key={staff.staffId} value={staff.staffId}>
+                            {staff.staffInfo.userName}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="service"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Service</FormLabel>
+                  <Controller
+                    control={form.control}
+                    name="service"
+                    render={({ field }) => (
+                      <>
+                        <Select
+                          mode="multiple"
+                          allowClear
+                          placeholder="Select service"
+                          value={field.value}
+                          onChange={(values) => field.onChange(values.map(Number))}
+                          style={{ width: "100%" }}
+                        >
+                          {services?.map((service) => (
+                            <Option key={service.serviceId} value={service.serviceId}>
+                              {service.name} -  {formatPrice(service.price)} VND
+                            </Option>
+                          ))}
+                        </Select>
+                        <p className="text-right font-semibold mt-2">Total Price: {formatPrice(totalPrice)} VND</p>
+                      </>
+                    )}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            
-            <Select placeholder="Chọn dịch vụ" {...form.register("serviceId")} className="mr-2">
-              {services.map((service) => (
-                <Select.Option key={service.serviceId} value={service.serviceId}>
-                  {service.serviceName}
-                </Select.Option>
-              ))}
-            </Select>
 
-            <Select placeholder="Chọn nhân viên" {...form.register("staffId")}>
-              {staffs.map((staff) => (
-                <Select.Option key={staff.staffId} value={staff.staffId}>
-                  {staff.staffInfo?.userName}
-                </Select.Option>
-              ))}
-            </Select>
-            <Input type="datetime-local" {...form.register("appointmentTime")} onChange={(e) => fetchServicesForTime(e.target.value)} />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="time"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Time</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Note</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Note" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          </CardContent>
-          <div className="flex justify-center p-4">
-            <button type="submit" className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition">
-              Đặt lịch
-            </button>
-          </div>
-        </Card>
-      </form>
-    </div>
+            <Button type="submit" className="w-full">
+              Book Now
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 
