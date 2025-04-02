@@ -7,7 +7,7 @@ import {
   ExitIcon,
   ChatBubbleIcon,
 } from "@radix-ui/react-icons";
-import { AlignJustify, BookIcon, ShoppingBag, SquareMenu, TicketPercent } from "lucide-react";
+import { AlignJustify, BookIcon, Calendar, ShoppingBag, SquareMenu, TicketPercent } from "lucide-react";
 import { MenuItemComponent } from "@/components/molecules/MenuItem";
 import { useTranslation } from "react-i18next";
 import solace from "@/assets/images/solace.png";
@@ -90,6 +90,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
       return [
         { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
         { label: t("manageOrder"), icon: <ShoppingBag />, path: "/order" },
+        { label: t("manageCalendar"), icon: <Calendar/>, path: "/staff-calendar"},
         { label: t("manageBranchPromotion"), icon: <ShoppingBag />, path: "/branch-promotion-management" },
         { label: t("manageSchedule"), icon: <BookIcon />, path: "/schedule-management" },
         { label: t("manageChat"), icon: <ChatBubbleIcon />, path: "/chat" },

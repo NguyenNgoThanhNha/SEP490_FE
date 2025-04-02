@@ -91,11 +91,11 @@ const ServicesCateManagementPage = () => {
       label: "Description",
       key: "description",
     },
-    {
-      label: "Thumbnail",
-      key: "thumbnail",
-      render: (thumbnail: string) => <img src={thumbnail} alt="Thumbnail" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
-    },
+    // {
+    //   label: "Thumbnail",
+    //   key: "thumbnail",
+    //   render: (thumbnail: string) => <img src={thumbnail} alt="Thumbnail" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
+    // },
     {
       label: "Status",
       key: "status",
