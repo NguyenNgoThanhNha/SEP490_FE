@@ -46,6 +46,7 @@ import AppointmentDetailPage from '@/components/pages/AppoinmentManagement/Appoi
 import CreateEmployeePage from '@/components/pages/Employee/CreateEmployee'
 import BookingPage from '@/components/pages/CashierBooking/CashierBooking'
 import CheckoutPage from '@/components/organisms/BookingStep/Step2'
+import StaffCalendar from '@/components/pages/StaffCalendar/StaffCalendar'
 
 
 export const AppRouter = () => {
@@ -90,6 +91,7 @@ export const AppRouter = () => {
           <Route path={ROUTES.STAFF_MANAGEMENT} element={<EmployeePage />} />
           <Route path={ROUTES.STAFF_DETAIL} element={<EmployeeDetail />} />
           <Route path={ROUTES.CREATE_STAFF} element={<CreateEmployeePage />} />
+          <Route path={ROUTES.STAFF_CALENDAR} element={<StaffCalendar />} />
 
           {/* PROMOTION MANAGEMENT */}
           <Route path={ROUTES.PROMOTION_MANAGEMENT} element={<PromotionPage />} />

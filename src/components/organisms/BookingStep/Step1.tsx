@@ -246,7 +246,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-[#516D19]">
               Book Now
             </Button>
           </form>

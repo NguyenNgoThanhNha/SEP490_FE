@@ -34,7 +34,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ events, onEventClick, l
           onSelectEvent={onEventClick}
           step={15}
           timeslots={4}
-          className="custom-calendar"
           components={{
             toolbar: CustomToolbar,
           }}
@@ -62,12 +61,9 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ events, onEventClick, l
             const isCurrentMonth = moment(date).month() === currentMonth; 
             return {
               style: {
-                padding: "5px",
                 fontSize: "14px",
-                fontWeight: "bold",
                 color: "#333",
                 borderRadius: "8px",
-                margin: "2px",
                 backgroundColor: isCurrentMonth ? "#F5F5DC" : "transparent",
               },
             };

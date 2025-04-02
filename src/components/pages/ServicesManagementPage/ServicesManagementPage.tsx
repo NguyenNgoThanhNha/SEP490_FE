@@ -94,7 +94,7 @@ const ServicesManagementPage = () => {
       render: (price: number) =>formatPrice(price), 
       sortable: true 
     },
-    { label: "Duration", key: "duration" },
+    { label: "Duration", key: "duration",  render: (duration: number) => `${duration} minutes `},
   ];
   return (
     <div className="p-6 min-h-screen">
@@ -129,13 +129,7 @@ const ServicesManagementPage = () => {
               </button>
             </>
           )}
-          filters={[
-            {
-              key: 'duration', // Specify the key for the filter (e.g., 'duration')
-              values: ['60 phút', '75 phút', '90 phút'], // Values to filter by
-              type: 'default', // Type can be 'time' or 'default', adjust as needed
-            },
-          ]}
+    
         />
       </div>
       <div className="absolute right-10 mt-3">

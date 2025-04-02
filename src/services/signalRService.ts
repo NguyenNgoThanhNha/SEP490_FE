@@ -43,3 +43,4 @@ export const stopConnection = async () => {
     console.log("SignalR connection stopped");
   }
 };
+export const getConnection = () => connection;

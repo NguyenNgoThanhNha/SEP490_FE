@@ -41,7 +41,7 @@ const ChatPage = () => {
 
     try {
       await sendMessageToChannel(
-        selectedChannel.id,
+        "67e52aa8143ee9e921d3b5a9",
         currentUserId,
         messageContent,
         messageType

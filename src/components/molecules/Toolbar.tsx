@@ -31,14 +31,8 @@ const CustomToolbar: React.FC<ToolbarProps<Event>> = (toolbar) => {
 
       <div className="flex space-x-2 ml-4">
         <Button
-          onClick={() => handleViewChange("month")}
-          className={`px-3 py-1 ${toolbar.view === "month" ? "bg-[#F5F5DC] text-[#4B4B11]" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
-        >
-          Month
-        </Button>
-        <Button
           onClick={() => handleViewChange("week")}
-          className={`px-3 py-1 ${toolbar.view === "week" ? "bg-[#F5F5DC] text-[#4B4B11]" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
+          className={`px-3 py-1 ${toolbar.view === "week" ? "bg-[#F5F5DC] text-[#4B4B11] hover:bg-[#E6E6B3]" : "bg-gray-200 text-gray-800 hover:bg-[#D4E157]"}`}
         >
           Week
         </Button>
