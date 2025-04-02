@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import {Route, Routes } from 'react-router-dom'
 import Loading from '@/components/templates/Loading.tsx'
 import { Suspense } from 'react'
 import { ROUTES } from '@/constants/RouterEndpoint.ts'
@@ -47,6 +47,8 @@ import CreateEmployeePage from '@/components/pages/Employee/CreateEmployee'
 import BookingPage from '@/components/pages/CashierBooking/CashierBooking'
 import CheckoutPage from '@/components/organisms/BookingStep/Step2'
 import StaffCalendar from '@/components/pages/StaffCalendar/StaffCalendar'
+import PrivateRoute from './privateRoute'
+import NotFoundPage from '@/components/pages/Error/NotFoundPage'
 
 
 export const AppRouter = () => {
@@ -69,66 +71,67 @@ export const AppRouter = () => {
           <Route path={ROUTES.CONTACT} element={<ContactPage />} />
           <Route path={ROUTES.TERMS_AND_POLICIES} element={<InformationPage />} />
         </Route>
+          <Route path={ROUTES.ROOT} element={<MainLayout />}>
+          <Route element={<PrivateRoute />}>
+            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            {/* PRODUCT MANAGEMENT */}
+            <Route path={ROUTES.PRODUCT_MANAGEMNT} element={<ProductManagementPage />} />
+            <Route path={ROUTES.CREATE_PRODUCT} element={<CreateProductPage />} />
+            <Route path={ROUTES.PRODUCT_DETAIL} element={<ProductDetailPage />} />
 
-        <Route path={ROUTES.ROOT} element={<MainLayout />}>
-          <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-          {/* PRODUCT MANAGEMENT */}
-          <Route path={ROUTES.PRODUCT_MANAGEMNT} element={<ProductManagementPage />} />
-          <Route path={ROUTES.CREATE_PRODUCT} element={<CreateProductPage />} />
-          <Route path={ROUTES.PRODUCT_DETAIL} element={<ProductDetailPage />} />
+            {/* SERVICES MANAGEMENT */}
+            <Route path={ROUTES.SERVICES_MANAGEMENT} element={<ServicesManagementPage />} />
+            <Route path={ROUTES.CREATE_SERVICE} element={<CreateServiceForm />} />
+            <Route path={ROUTES.SERVICE_DETAIL} element={<ServiceDetail />} />
 
-          {/* SERVICES MANAGEMENT */}
-          <Route path={ROUTES.SERVICES_MANAGEMENT} element={<ServicesManagementPage />} />
-          <Route path={ROUTES.CREATE_SERVICE} element={<CreateServiceForm />} />
-          <Route path={ROUTES.SERVICE_DETAIL} element={<ServiceDetail />} />
+            {/* BLOG MANAGEMENT */}
+            <Route path={ROUTES.BLOG_MANAGEMENT} element={<BlogList />} />
+            <Route path={ROUTES.CREATE_BLOG} element={<CreateBlogPage />} />
+            <Route path={ROUTES.BLOG_DETAIL} element={<BlogDetailPage />} />
 
-          {/* BLOG MANAGEMENT */}
-          <Route path={ROUTES.BLOG_MANAGEMENT} element={<BlogList />} />
-          <Route path={ROUTES.CREATE_BLOG} element={<CreateBlogPage />} />
-          <Route path={ROUTES.BLOG_DETAIL} element={<BlogDetailPage />} />
+            {/* STAFF MANAGEMENT */}
+            <Route path={ROUTES.STAFF_MANAGEMENT} element={<EmployeePage />} />
+            <Route path={ROUTES.STAFF_DETAIL} element={<EmployeeDetail />} />
+            <Route path={ROUTES.CREATE_STAFF} element={<CreateEmployeePage />} />
+            <Route path={ROUTES.STAFF_CALENDAR} element={<StaffCalendar />} />
 
-          {/* STAFF MANAGEMENT */}
-          <Route path={ROUTES.STAFF_MANAGEMENT} element={<EmployeePage />} />
-          <Route path={ROUTES.STAFF_DETAIL} element={<EmployeeDetail />} />
-          <Route path={ROUTES.CREATE_STAFF} element={<CreateEmployeePage />} />
-          <Route path={ROUTES.STAFF_CALENDAR} element={<StaffCalendar />} />
+            {/* PROMOTION MANAGEMENT */}
+            <Route path={ROUTES.PROMOTION_MANAGEMENT} element={<PromotionPage />} />
+            <Route path={ROUTES.PROMOTION_DETAIL} element={<PromotionDetail />} />
+            <Route path={ROUTES.CREATE_PROMOTION} element={<CreatePromotion />} />
 
-          {/* PROMOTION MANAGEMENT */}
-          <Route path={ROUTES.PROMOTION_MANAGEMENT} element={<PromotionPage />} />
-          <Route path={ROUTES.PROMOTION_DETAIL} element={<PromotionDetail />} />
-          <Route path={ROUTES.CREATE_PROMOTION} element={<CreatePromotion />} />
+            {/* ORDER MANAGEMENT */}
+            <Route path={ROUTES.ORDER_MANAGEMENT} element={<OrderPage />} />
 
-          {/* ORDER MANAGEMENT */}
-          <Route path={ROUTES.ORDER_MANAGEMENT} element={<OrderPage />} />
+            {/* USER MANAGEMENT */}
+            <Route path={ROUTES.CUSTOMER_MANAGEMENT} element={<CustomerManagementPage />} />
 
-          {/* USER MANAGEMENT */}
-          <Route path={ROUTES.CUSTOMER_MANAGEMENT} element={<CustomerManagementPage />} />
+            {/*CASHIER */}
+            <Route path={ROUTES.APPOINMENT_MANAGEMENT} element={<AppointmentManagementPage />} />
+            <Route path={ROUTES.APPOINTMENT_DETAIL} element={<AppointmentDetailPage />} />
+            <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingPage />} />
+            <Route path={ROUTES.CHECKOUT_PAGE} element={<CheckoutPage />} />
 
-          {/*CASHIER */}
-          <Route path={ROUTES.APPOINMENT_MANAGEMENT} element={<AppointmentManagementPage />} />
-          <Route path={ROUTES.APPOINTMENT_DETAIL} element={<AppointmentDetailPage />} />
-          <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingPage/>} />
-          <Route path={ROUTES.CHECKOUT_PAGE} element={<CheckoutPage/>} />
+            {/* SERVICES'S CATEGORY */}
+            <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
 
-          {/* SERVICES'S CATEGORY */}
-          <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
+            {/* BRANCH MANAGEMENT */}
+            <Route path={ROUTES.BRANCH_MANAGEMENT} element={<BranchComponent />} />
 
-          {/* BRANCH MANAGEMENT */}
-          <Route path={ROUTES.BRANCH_MANAGEMENT} element={<BranchComponent />} />
+            {/* BRANCH PROMOTION MANAGEMENT */}
+            <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
 
-          {/* BRANCH PROMOTION MANAGEMENT */}
-          <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
+            {/* SCHEDULE MANAGEMENT  */}
+            <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
 
-          {/* SCHEDULE MANAGEMENT  */}
-          <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
+            {/* CHAT */}
+            <Route path={ROUTES.CHAT} element={<ChatPage />} />
 
-          {/* CHAT */}
-          <Route path={ROUTES.CHAT} element={<ChatPage />} />
-          
-          {/* ROUTINE MANAGEMENT */}
-          <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
+            {/* ROUTINE MANAGEMENT */}
+            <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
+          </Route>
         </Route>
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<NotFoundPage/>} />
       </Routes>
     </Suspense>
   )

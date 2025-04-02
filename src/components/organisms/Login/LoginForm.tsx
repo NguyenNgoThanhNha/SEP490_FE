@@ -44,14 +44,12 @@ const LoginForm = () => {
       const userInfo = await authService.getUserInfo()
 
       if (!userInfo.success) {
-        localStorage.removeItem('accessToken')
         toast.error('Failed to fetch user info')
         return
       }
       localStorage.setItem("user", JSON.stringify(userInfo?.result?.data));
       dispatch(loginSuccess({ user: userInfo?.result?.data, token: response?.result?.data }));
       toast.success('Login successful!')
-
       navigate('/dashboard')
 
     } catch  {
