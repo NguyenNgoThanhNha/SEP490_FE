@@ -48,9 +48,40 @@ interface UpdatePaymentMethodProps {
 const updatePaymentMethod = async ({orderId, paymentMethod, note}: UpdatePaymentMethodProps) : Promise<ResponseProps> =>{
   return await put('Order/confirm-order-appointment', {orderId,paymentMethod, note})
 }
+interface CreateOrderFullProps {
+  userId: number;
+  totalAmount: number;
+  paymentMethod: string;
+  shippingCost: number;
+  products: {
+    productBranchId: number;
+    quantity: number;
+  }[];
+}
+const createOrderFull = async (data: CreateOrderFullProps) : Promise<ResponseProps> =>{
+  return await post('Order/create-full', data)
+}
+
+interface ConfirmOrderProduct {
+  orderId: number;
+  totalAmount: string;
+  request: {
+    returnUrl: string,
+    cancelUrl: string,
+  }
+}
+const confirmOrderProduct = async (data: ConfirmOrderProduct) : Promise<ResponseProps> =>{
+  return await post('Order/confirm-order-product', data)
+}
+
+
+
 export default {
   getAllPurchase,
   createPurchase,
   confirmAppointment,
-  updatePaymentMethod
+  updatePaymentMethod,
+  createOrderFull,
+  confirmOrderProduct
+
 }

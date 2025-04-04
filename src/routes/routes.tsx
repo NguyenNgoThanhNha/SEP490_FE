@@ -49,6 +49,7 @@ import CheckoutPage from '@/components/organisms/BookingStep/Step2'
 import StaffCalendar from '@/components/pages/StaffCalendar/StaffCalendar'
 import PrivateRoute from './privateRoute'
 import NotFoundPage from '@/components/pages/Error/NotFoundPage'
+import EmployeeStore from '@/components/pages/CashierBooking/CreateOrder'
 
 
 export const AppRouter = () => {
@@ -111,7 +112,7 @@ export const AppRouter = () => {
             <Route path={ROUTES.APPOINTMENT_DETAIL} element={<AppointmentDetailPage />} />
             <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingPage />} />
             <Route path={ROUTES.CHECKOUT_PAGE} element={<CheckoutPage />} />
-
+            <Route path={ROUTES.CASHIER_CREATE_ORDER} element={<EmployeeStore />} />
             {/* SERVICES'S CATEGORY */}
             <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
 

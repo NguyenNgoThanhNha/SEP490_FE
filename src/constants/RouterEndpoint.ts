@@ -65,6 +65,7 @@ export enum ROUTES {
   // Others
   CHAT = 'chat',
   CASHIER_BOOOKING = 'booking-form',
+  CASHIER_CREATE_ORDER = 'create-order',
   ROUTINE_MANAGEMENT = 'routine-management', 
   CHECKOUT_PAGE ='checkout', 
 }

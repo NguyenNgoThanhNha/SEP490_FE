@@ -100,11 +100,27 @@ const updateProduct = async ({
 const deleteProduct = async (productId: number): Promise<ResponseProps> => {
   return await del(`Product/${productId}`)
 }
+interface FilterProductProps {
+  branchId: number;
+  categoryId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  sortBy?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+const filterProducts = async (params: FilterProductProps): Promise<ResponseProps> => {
+  const query = new URLSearchParams(params as any).toString();
+  return await get(`Product/filter?${query}`);
+};
 
 export default {
   getAllProduct,
   createProduct,
   getProductDetail,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  filterProducts,
+
 }
