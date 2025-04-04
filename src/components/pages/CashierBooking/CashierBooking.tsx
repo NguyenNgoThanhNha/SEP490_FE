@@ -18,7 +18,7 @@ const BookingPage: React.FC = () => {
     const [, setAppointmentData] = useState<AppointmentData | null>(null);
     const navigate = useNavigate();
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data) => {
         try {
             const formattedData: AppointmentData = {
                 staffId: data.staff ? [Number(data.staff)] : [],

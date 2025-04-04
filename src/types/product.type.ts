@@ -1,4 +1,5 @@
 export type TProduct = {
+    stockQuantity: number;
     productId: number; 
     productName: string; 
     productDescription: string; 
@@ -14,7 +15,7 @@ export type TProduct = {
     status: "Active" | "Sold Out"; 
     createdDate: string; 
     updatedDate: string; 
-    images: File[];
+    images: string[];
     
   };
   
