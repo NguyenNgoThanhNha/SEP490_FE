@@ -1,13 +1,13 @@
 import * as signalR from "@microsoft/signalr";
 
-const hubUrl = "https://solaceapi.ddnsking.com/chat"; 
+const hubUrl = import.meta.env.VITE_SIGNALR_URL || "http://localhost:5001/chat";
 
 let connection: signalR.HubConnection | null = null;
 
 export const startConnection = async () => {
   try {
     connection = new signalR.HubConnectionBuilder()
-      .withUrl(hubUrl)
+      .withUrl(hubUrl + "?userId=1")
       .configureLogging(signalR.LogLevel.Information)
       .withAutomaticReconnect()
       .build();
@@ -33,7 +33,7 @@ export const sendMessageToChannel = async (channelId: string, senderId: string, 
 };
 export const sendMessage = async (senderId: string, recipientId: string, content: string) => {
   if (!connection) return;
-  await connection.invoke("SendMessage",  senderId, recipientId, content);
+  await connection.invoke("SendMessage", senderId, recipientId, content);
 
 }
 

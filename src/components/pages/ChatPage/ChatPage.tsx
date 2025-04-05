@@ -21,8 +21,8 @@ const ChatPage = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data && data.result) {
-          setSelectedChannel(data.result);
-          setMessages(data.result || []);
+          setSelectedChannel(data.result.data);
+          setMessages(data.result.data || []);
         }
       })
       .catch((err) => console.error(err));
@@ -113,7 +113,7 @@ const ChatPage = () => {
                 <EmojiPicker
                   onEmojiClick={(emoji) => {
                     setNewMessage((prev) => prev + emoji.emoji);
-                    setShowEmojiPicker(false); 
+                    setShowEmojiPicker(false);
                   }}
                 />
               </div>
