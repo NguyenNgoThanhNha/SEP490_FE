@@ -96,6 +96,9 @@ const assignStaffRole = async ({ staffId, roleId}: AssignStaffRoleProps): Promis
   return await get(`Staff/assign-role?staffId=${staffId}&roleId=${roleId}`)
 }
 
+const staffWorkingSlot = async (branchId: number, month: number, year: number): Promise<ResponseProps> => {
+  return await get(`Staff/working-slots?branchId=${branchId}&month=${month}&year=${year}`)
+}
 export default {
   createStaff,
   updateStaff,
@@ -105,5 +108,6 @@ export default {
   getStaffByBranchAndService,
   getStaffByBranch,
   getStaffBusyTime,
-  assignStaffRole
+  assignStaffRole,
+  staffWorkingSlot
 }
