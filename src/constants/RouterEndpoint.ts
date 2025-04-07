@@ -68,4 +68,8 @@ export enum ROUTES {
   CASHIER_CREATE_ORDER = 'create-order',
   ROUTINE_MANAGEMENT = 'routine-management', 
   CHECKOUT_PAGE ='checkout', 
+
+  //Voucher
+  VOUCHER_MANAGEMENT = 'voucher-management',
+  ADD_VOUCHER = 'add-voucher'
 }

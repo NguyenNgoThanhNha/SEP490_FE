@@ -50,6 +50,8 @@ import StaffCalendar from '@/components/pages/StaffCalendar/StaffCalendar'
 import PrivateRoute from './privateRoute'
 import NotFoundPage from '@/components/pages/Error/NotFoundPage'
 import EmployeeStore from '@/components/pages/CashierBooking/CreateOrder'
+import VoucherManagementPage from '@/components/pages/VoucherManagement/VoucherManagement'
+import CreateVoucherPage from '@/components/pages/VoucherManagement/CreateVoucher'
 
 
 export const AppRouter = () => {
@@ -130,6 +132,11 @@ export const AppRouter = () => {
 
             {/* ROUTINE MANAGEMENT */}
             <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
+
+            {/* VOUCHER MANAGEMENT */}
+            <Route path={ROUTES.VOUCHER_MANAGEMENT} element={<VoucherManagementPage />}/>
+            <Route path={ROUTES.ADD_VOUCHER} element={<CreateVoucherPage/>}/>
+
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage/>} />
