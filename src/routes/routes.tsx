@@ -52,6 +52,7 @@ import NotFoundPage from '@/components/pages/Error/NotFoundPage'
 import EmployeeStore from '@/components/pages/CashierBooking/CreateOrder'
 import VoucherManagementPage from '@/components/pages/VoucherManagement/VoucherManagement'
 import CreateVoucherPage from '@/components/pages/VoucherManagement/CreateVoucher'
+import CreateBranchPage from '@/components/pages/BranchManagement/CreateBranch'
 
 
 export const AppRouter = () => {
@@ -120,10 +121,11 @@ export const AppRouter = () => {
 
             {/* BRANCH MANAGEMENT */}
             <Route path={ROUTES.BRANCH_MANAGEMENT} element={<BranchComponent />} />
+            <Route path={ROUTES.ADD_BRANCH} element={<CreateBranchPage />} />
 
             {/* BRANCH PROMOTION MANAGEMENT */}
             <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
-
+            
             {/* SCHEDULE MANAGEMENT  */}
             <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
 

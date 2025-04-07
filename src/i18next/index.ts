@@ -44,7 +44,8 @@ export const locales = {
         manageCalendar: "Manage Calendar",
         manageVoucher: "Manage Voucher",
         addVoucher:"Create Voucher",
-        voucher: "Voucher"
+        voucher: "Voucher",
+        manageBranch: "Manage Branch",
 
       }
     },
@@ -81,11 +82,12 @@ export const locales = {
         manageSchedule: "Quản lý lịch làm việc",
         manageChat: "Tin nhắn",
         indeskBooking: "Tạo đơn hàng",
-        manageRoutine: "Quản lí gói dịch vụ",
+        manageRoutine: "Quản lý gói dịch vụ",
         manageCalendar: "Quản lý lịch hẹn",
         manageVoucher: "Quản lý mã giảm giá",
         addVoucher: "Tạo mã giảm giá",
         voucher: "Mã giảm giá",
+        manageBranch: "Quản lý chi nhánh"
 
       }
     }

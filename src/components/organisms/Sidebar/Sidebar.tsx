@@ -79,9 +79,16 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
             { label: t("addPromote"), icon: <TicketPercent />, path: "/create-promote" },
           ],
         },
+        {
+          label: t("branch"),
+          icon: <TicketPercent />,
+          submenu: [
+            { label: t("manageBranch"), icon: <TicketPercent />, path: "/branchs-management" },
+            { label: t("addBranch"), icon: <TicketPercent />, path: "/add-branch" },
+          ],
+        },
         { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
         { label: t("manageAppoinment"), icon: <BookIcon />, path: "/appoinments-management" },
-        // { label: t("manageBranch"), icon: <BookIcon />, path: "/branchs-management" },
         { label: t("manageRoutine"), icon: <BookIcon />, path: "/routine-management" },
         {
           label: t("voucher"),
