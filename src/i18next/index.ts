@@ -42,6 +42,10 @@ export const locales = {
         indeskBooking: "Create Booking",
         manageRoutine: "Manage Routine",
         manageCalendar: "Manage Calendar",
+        manageVoucher: "Manage Voucher",
+        addVoucher:"Create Voucher",
+        voucher: "Voucher"
+
       }
     },
     vi: {
@@ -78,7 +82,10 @@ export const locales = {
         manageChat: "Tin nhắn",
         indeskBooking: "Tạo đơn hàng",
         manageRoutine: "Quản lí gói dịch vụ",
-        manageCalendar: "Quản lý lịch hẹn"
+        manageCalendar: "Quản lý lịch hẹn",
+        manageVoucher: "Quản lý mã giảm giá",
+        addVoucher: "Tạo mã giảm giá",
+        voucher: "Mã giảm giá",
 
       }
     }

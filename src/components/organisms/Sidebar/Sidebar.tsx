@@ -7,7 +7,7 @@ import {
   ExitIcon,
   ChatBubbleIcon,
 } from "@radix-ui/react-icons";
-import { AlignJustify, BookIcon, Calendar, ShoppingBag, SquareMenu, TicketPercent } from "lucide-react";
+import { AlignJustify, BookIcon, Calendar, ShoppingBag, SquareMenu, TicketIcon, TicketPercent, TicketPlus } from "lucide-react";
 import { MenuItemComponent } from "@/components/molecules/MenuItem";
 import { useTranslation } from "react-i18next";
 import solace from "@/assets/images/solace.png";
@@ -83,6 +83,14 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         { label: t("manageAppoinment"), icon: <BookIcon />, path: "/appoinments-management" },
         // { label: t("manageBranch"), icon: <BookIcon />, path: "/branchs-management" },
         { label: t("manageRoutine"), icon: <BookIcon />, path: "/routine-management" },
+        {
+          label: t("voucher"),
+          icon: <PersonIcon />,
+          submenu: [
+            { label: t("manageVoucher"), icon: <TicketIcon/>, path: "/voucher-management" },
+            { label: t("addVoucher"), icon: <TicketPlus/>, path: "/add-voucher" },
+          ],
+        },
         { label: t("settings"), icon: <GearIcon />, path: "/settings" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
       ];

@@ -153,10 +153,10 @@ export const Table = React.memo(<T extends Record<string, unknown>>({
         {/* Import/Export Icons */}
         <div className="flex items-center space-x-4">
           <button onClick={onImport} className="p-2 hover:bg-indigo-100 rounded-lg">
-            <FileDown className="w-5 h-5 text-indigo-600" />
-          </button>
-          <button onClick={onExport} className="p-2 hover:bg-indigo-100 rounded-lg">
             <FileUp className="w-5 h-5 text-indigo-600" />
+          </button>
+          <button   onClick={() => onExport?.(selectedRows)} className="p-2 hover:bg-indigo-100 rounded-lg">
+            <FileDown className="w-5 h-5 text-indigo-600" />
           </button>
           <div className="relative">
             <button
