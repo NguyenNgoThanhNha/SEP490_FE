@@ -6,7 +6,8 @@ export type TBranch = {
     longAddress: string,
     latAddress: string,
     status: string,
-    createdDate: string,
-    updatedDate: string,
-    managerId: number
+    managerId: number,
+    companyId: number,
+    district: number,
+    wardCode: number
 }

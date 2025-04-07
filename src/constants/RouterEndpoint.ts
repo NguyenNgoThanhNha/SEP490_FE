@@ -60,6 +60,7 @@ export enum ROUTES {
   
   // Branch
   BRANCH_MANAGEMENT = 'branchs-management',
+  ADD_BRANCH = 'add-branch',
   BRANCH_PROMOTION_MANAGEMENT = 'branch-promotion-management',
   
   // Others
