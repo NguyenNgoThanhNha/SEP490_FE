@@ -31,8 +31,20 @@ interface CreateAppointmentProps {
 const createAppointment = async({staffId, serviceId, branchId, appointmentsTime, notes, feedback, voucherId, status}: CreateAppointmentProps) : Promise<ResponseProps> => {
     return await post('Appointments/create', {staffId, serviceId,branchId, appointmentsTime, notes, feedback, voucherId, status})
 }
+
+interface GetAppointmentByBranchProps {
+    BranchId: number,
+    Page: number,
+    PageSize: number
+}
+
+const getAppointmentByBranch = async({BranchId, Page , PageSize}: GetAppointmentByBranchProps) : Promise<ResponseProps> => {
+    return await get(`Appointments/by-branch?BranchId=${BranchId}&Page=${Page}&PageSize=${PageSize}`)
+}
+
 export default {
     getAllAppointment,
     getAppointmentDetail,
-    createAppointment
+    createAppointment,
+    getAppointmentByBranch,
 }
