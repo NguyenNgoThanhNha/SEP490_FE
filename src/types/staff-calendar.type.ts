@@ -1,17 +1,17 @@
-export type Appoinment = {
-  id: string
-  service: { name: string }
-  orderDetail: {
-    workDay: string
-    time: string
-    duration: number
-    customerName: string
-    note: string
-    staff: string
-  }
-  status: boolean
+export type TSlotWorking  ={
+  staffId: number,
+  staffName: string,
+  slots: [
+    {
+      workDate: string,
+      dayOfWeek: number,
+      shiftId: number,
+      shiftName: string,
+      startTime: string,
+      endTime: string,
+    }
+  ]
 }
-
 export type Event = {
   id: string
   title: string
