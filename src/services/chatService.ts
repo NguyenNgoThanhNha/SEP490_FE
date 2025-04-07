@@ -44,11 +44,11 @@ const addManyMember = async ({ channelId, customerIds }: AddManyMemberProps): Pr
 }
 
 interface GetCustomerInfoProps {
-  customerId: number
+  userId: number
 }
 
-const getCustomerInfo = async ({ customerId }: GetCustomerInfoProps): Promise<ResponseProps> => {
-  return await post('Hub/get-customer-info', { customerId })
+const getCustomerInfo = async ({ userId }: GetCustomerInfoProps): Promise<ResponseProps> => {
+  return await get(`Hub/get-customer-info/${userId}`)
 }
 
 interface getUserChannelsProps {
@@ -56,7 +56,7 @@ interface getUserChannelsProps {
 }
 
 const getUserChannels = async ({ customerId }: getUserChannelsProps): Promise<ResponseProps> => {
-  return await post('Hub/channel-messages', { customerId })
+  return await get(`Hub/user-channels/${ customerId }`)
 }
 
 interface getChannelProps {
@@ -72,7 +72,7 @@ interface getChannelMessageProps {
 }
 
 const getMessageChannels = async ({ channelId }: getChannelMessageProps): Promise<ResponseProps> => {
-  return await post(`Hub/channel-messages/${channelId}`)
+  return await get(`Hub/channel-messages/${channelId}`)
 }
 
 const checkExistChannel = async (appointmentId: number): Promise<ResponseProps> => {

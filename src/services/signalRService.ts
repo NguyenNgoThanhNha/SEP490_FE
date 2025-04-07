@@ -1,46 +1,64 @@
-import * as signalR from "@microsoft/signalr";
+import { useChatStore } from '@/store/slice/chatSlice';
+import * as signalR from '@microsoft/signalr';
 
-const hubUrl = import.meta.env.VITE_SIGNALR_URL || "http://localhost:5001/chat";
+const hubUrl = import.meta.env.VITE_SIGNALR_URL || 'http://localhost:5001/chat';
 
 let connection: signalR.HubConnection | null = null;
 
-export const startConnection = async () => {
+export const startConnection = async (userId: number) => {
   try {
     connection = new signalR.HubConnectionBuilder()
-      .withUrl(hubUrl + "?userId=1")
+      .withUrl(`${hubUrl}?userId=${userId}`)
       .configureLogging(signalR.LogLevel.Information)
       .withAutomaticReconnect()
       .build();
 
     await connection.start();
-    console.log("Connected to SignalR Hub!");
+    console.log('Connected to SignalR Hub');
+    setupSignalRListeners();
   } catch (error) {
-    console.error("Connection error: ", error);
+    console.error('Connection error:', error);
   }
 };
 
-export const sendMessageToChannel = async (channelId: string, senderId: string, content: string, messageType: string) => {
-  if (!connection) {
-    console.error("SignalR connection is not established.");
+const setupSignalRListeners = () => {
+  if (!connection || connection.state !== signalR.HubConnectionState.Connected) {
+    console.error('SignalR connection is not established.');
     return;
   }
+  connection.on('receiveChannelMessage', (message: never) => {
+    console.log("📥 New message from SignalR:", message);
+    useChatStore.getState().addMessage(message);
+  });
+};
+
+export const sendMessageToChannel = async (
+  channelId: string,
+  senderId: string,
+  content: string,
+  messageType: string = 'text',
+  fileUrl: string | null = null
+) => {
+  if (!connection || connection.state !== signalR.HubConnectionState.Connected) {
+    console.error('SignalR connection is not established.');
+    return;
+  }
+
   try {
-    console.log("Sending message to server:", { channelId, senderId, content, messageType: "text" });
-    await connection.invoke("SendMessageToChannel", channelId, senderId, content, messageType, null);
+    await connection.invoke('SendMessageToChannel', channelId, senderId, content, messageType, fileUrl);
   } catch (error) {
-    console.error("Error sending message:", error);
+    console.error('Error sending message to channel:', error);
   }
 };
-export const sendMessage = async (senderId: string, recipientId: string, content: string) => {
-  if (!connection) return;
-  await connection.invoke("SendMessage", senderId, recipientId, content);
-
-}
 
 export const stopConnection = async () => {
   if (connection) {
-    await connection.stop();
-    console.log("SignalR connection stopped");
+    try {
+      await connection.stop();
+    } catch (error) {
+      console.error('Error stopping SignalR connection:', error);
+    }
   }
 };
+
 export const getConnection = () => connection;
