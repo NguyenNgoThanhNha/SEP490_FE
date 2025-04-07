@@ -106,7 +106,7 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="discountAmount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Discount Amount</FormLabel>
+                  <FormLabel>Discount Amount (%)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
