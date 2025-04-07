@@ -8,7 +8,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null, // Fix lỗi parse
+  user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null, 
   token: localStorage.getItem("accessToken") || null,
   isAuthenticated: !!localStorage.getItem("accessToken"),
 };
