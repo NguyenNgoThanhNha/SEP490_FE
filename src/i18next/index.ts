@@ -46,7 +46,8 @@ export const locales = {
         addVoucher:"Create Voucher",
         voucher: "Voucher",
         manageBranch: "Manage Branch",
-
+        addBranch: "Create Branch",
+        manageBranchProduct: "Manage Branch Product"
       }
     },
     vi: {
@@ -78,7 +79,7 @@ export const locales = {
         manageAppoinment: "Quản lý lịch hẹn",
         manageRoom: "Quản lý phòng",
         manageCateSer: "Quản lý loại dịch vụ",
-        manageBranchPromotion: "Quản lý khuyến mãi",
+        manageBranchPromotion: "Quản lý mã giảm của chi nhánh",
         manageSchedule: "Quản lý lịch làm việc",
         manageChat: "Tin nhắn",
         indeskBooking: "Tạo đơn hàng",
@@ -87,7 +88,9 @@ export const locales = {
         manageVoucher: "Quản lý mã giảm giá",
         addVoucher: "Tạo mã giảm giá",
         voucher: "Mã giảm giá",
-        manageBranch: "Quản lý chi nhánh"
+        manageBranch: "Quản lý chi nhánh",
+        addBranch: "Tạo chi nhánh",
+        manageBranchProduct: "Quản lý sản phẩm chi nhánh",
 
       }
     }

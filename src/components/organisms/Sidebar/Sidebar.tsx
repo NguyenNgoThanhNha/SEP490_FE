@@ -26,6 +26,7 @@ interface MenuItem {
   submenu?: MenuItem[];
 }
 const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuItem[] => {
+  
   switch (roleID) {
     case 1: // Admin
       return [
@@ -94,8 +95,8 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
           label: t("voucher"),
           icon: <PersonIcon />,
           submenu: [
-            { label: t("manageVoucher"), icon: <TicketIcon/>, path: "/voucher-management" },
-            { label: t("addVoucher"), icon: <TicketPlus/>, path: "/add-voucher" },
+            { label: t("manageVoucher"), icon: <TicketIcon />, path: "/voucher-management" },
+            { label: t("addVoucher"), icon: <TicketPlus />, path: "/add-voucher" },
           ],
         },
         { label: t("settings"), icon: <GearIcon />, path: "/settings" },
@@ -105,14 +106,15 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
       return [
         { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
         { label: t("manageOrder"), icon: <ShoppingBag />, path: "/order" },
-        { label: t("manageCalendar"), icon: <Calendar/>, path: "/staff-calendar"},
+        { label: t("manageCalendar"), icon: <Calendar />, path: "/staff-calendar" },
         { label: t("manageBranchPromotion"), icon: <ShoppingBag />, path: "/branch-promotion-management" },
+        { label: t("manageBranchProduct"), icon: <ShoppingBag />, path: "/branch-product-management" },
         { label: t("manageSchedule"), icon: <BookIcon />, path: "/schedule-management" },
         { label: t("manageChat"), icon: <ChatBubbleIcon />, path: "/chat" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
 
       ];
-      case 3: // Cashier
+    case 3: // Cashier
       return [
         { label: t("indeskBooking"), icon: <BookIcon />, path: "/booking-form" },
         { label: t("chat"), icon: <BookIcon />, path: "/chat" },

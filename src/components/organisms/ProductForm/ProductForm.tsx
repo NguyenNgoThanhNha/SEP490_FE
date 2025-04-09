@@ -40,6 +40,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
       categoryId: 0,
       companyId: 1,
       images: [],
+      skintypesuitable: "", 
     },
   });
   const handleFormSubmit = async (data: ProductType) => {
