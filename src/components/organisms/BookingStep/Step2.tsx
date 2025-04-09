@@ -42,12 +42,15 @@ const CheckoutPage: React.FC = () => {
             const response = await orderService.confirmAppointment({
                 orderId,
                 totalAmount: totalAmount.toString(),
-                paymentMethod,
+                request: {
+                    returnUrl: `${window.location.origin}/payment-success`,
+                    cancelUrl: `${window.location.origin}/payment-cancel`,
+                  },
             });
 
-            if (response?.success) {
+            if (response?.success && response.result?.data) {
                 message.success("Đặt lịch thành công!");
-                navigate("/confirmation", { state: { orderId, paymentMethod } });
+                window.location.href = response.result.data;
             } else {
                 message.error("Xác nhận thất bại, vui lòng thử lại.");
             }

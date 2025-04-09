@@ -18,6 +18,7 @@ const getAppointmentDetail = async({appointmentId}: AppointmentDetailProps) : Pr
 }
 
 interface CreateAppointmentProps {
+    userId: number
     staffId: [],
     serviceId: [],
     branchId: number,
@@ -28,8 +29,8 @@ interface CreateAppointmentProps {
     voucherId?: number
 }
 
-const createAppointment = async({staffId, serviceId, branchId, appointmentsTime, notes, feedback, voucherId, status}: CreateAppointmentProps) : Promise<ResponseProps> => {
-    return await post('Appointments/create', {staffId, serviceId,branchId, appointmentsTime, notes, feedback, voucherId, status})
+const createAppointment = async(data: CreateAppointmentProps) : Promise<ResponseProps> => {
+    return await post('Appointments/create', data)
 }
 
 interface GetAppointmentByBranchProps {

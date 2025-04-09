@@ -33,10 +33,14 @@ const createPurchase = async ({
 interface ConfirmAppointmentProps {
   orderId: number,
   totalAmount: string,
+  request: {
+    returnUrl: string,
+    cancelUrl: string,
+  }
 }
 
-const confirmAppointment = async ({orderId, totalAmount}:ConfirmAppointmentProps) : Promise<ResponseProps> =>{
-  return await post('Order/confirm-order-appointment', {orderId,totalAmount})
+const confirmAppointment = async (data:ConfirmAppointmentProps) : Promise<ResponseProps> =>{
+  return await post('Order/confirm-order-appointment', data)
 }
 
 interface UpdatePaymentMethodProps {

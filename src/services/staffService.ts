@@ -21,7 +21,7 @@ interface CreateStaffProps {
   userName: string
   fullName: string
   email: string
-  branchId: number,
+  branchId: number
   roleId: number
 }
 
@@ -32,7 +32,7 @@ const createStaff = async ({
   branchId,
   roleId
 }: CreateStaffProps): Promise<ResponseProps> => {
-  return await post(`Staff/create`, { userName, fullName, email, branchId, roleId})
+  return await post(`Staff/create`, { userName, fullName, email, branchId, roleId })
 }
 
 interface UpdateStaffProps {
@@ -59,16 +59,13 @@ const deleteStaff = async (staffId: number): Promise<ResponseProps> => {
   return await del(`Staff/${staffId}`)
 }
 
-interface GetStaffByBranchAndServiceProps {
+interface GetStaffByServiceCategoryProps {
   branchId: number
-  serviceId: number
+  serviceCategoryIds: number[]
 }
 
-const getStaffByBranchAndService = async ({
-  branchId,
-  serviceId
-}: GetStaffByBranchAndServiceProps): Promise<ResponseProps> => {
-  return await get(`Staff/get-list?branchId=${branchId}&serviceId=${serviceId}`)
+const getStaffByServiceCategory = async (data: GetStaffByServiceCategoryProps): Promise<ResponseProps> => {
+  return await post(`Staff/staff-by-service-category`, data)
 }
 
 interface StaffByBranchProps {
@@ -85,29 +82,42 @@ interface StaffBusyTimeProps {
 }
 
 const getStaffBusyTime = async ({ staffId, date }: StaffBusyTimeProps): Promise<ResponseProps> => {
-  return await get(`Staff/staff-busy-time?staffId=${staffId}&date=${date}`)
+  return await get(`Staff/staff-busy-times?staffId=${staffId}&date=${date}`)
 }
+
+interface GetStaffFreeInTimeProps {
+  branchId: number,
+  serviceIds: number[],
+  startTimes: string
+}
+
+const getStaffFreeInTime = async (data:  GetStaffFreeInTimeProps): Promise<ResponseProps> => {
+  return await post(`Staff/staff-free-in-time`, data);
+}
+
 interface AssignStaffRoleProps {
-  staffId: number,
+  staffId: number
   roleId: number
 }
 
-const assignStaffRole = async ({ staffId, roleId}: AssignStaffRoleProps): Promise<ResponseProps> => {
+const assignStaffRole = async ({ staffId, roleId }: AssignStaffRoleProps): Promise<ResponseProps> => {
   return await get(`Staff/assign-role?staffId=${staffId}&roleId=${roleId}`)
 }
 
 const staffWorkingSlot = async (branchId: number, month: number, year: number): Promise<ResponseProps> => {
   return await get(`Staff/working-slots?branchId=${branchId}&month=${month}&year=${year}`)
 }
+
 export default {
   createStaff,
   updateStaff,
   deleteStaff,
   getAllStaff,
   getStaffDetail,
-  getStaffByBranchAndService,
   getStaffByBranch,
   getStaffBusyTime,
   assignStaffRole,
-  staffWorkingSlot
+  staffWorkingSlot,
+  getStaffByServiceCategory,
+  getStaffFreeInTime
 }
