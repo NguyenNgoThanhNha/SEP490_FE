@@ -98,26 +98,31 @@ const confirmDeleteAccount = async ({ email, otp }: ConfirmDeleteAccountProps): 
 const loginWithFB = async ({ data }: LoginWithGGProps): Promise<ResponseProps> => {
   return await post('Auth/login-facebook', data)
 }
-interface CustomerAccountProps {
-  phone: string,
-  fullName: string,
+interface CreateAccountWithPhoneProps {
+  phoneNumber: string,
+  userName: string,
+  password: string
 }
-const generateRandomEmail = (phone: string) => `guest_${phone}@example.com`;
-const createCustomerAccount = async ({ phone, fullName }: CustomerAccountProps): Promise<ResponseProps> => {
-  const email = generateRandomEmail(phone);
-  const data = {
-    email,
-    userName: phone,
-    password: "123456",
-    fullName,
-    phone,
-    city: "",
-    address: "",
-    link: FRONT_END,
-    typeAccount: "Customer"
-  };
-  return await post("Auth/first-step", data);
+
+const createAccountWithPhone = async ( data :CreateAccountWithPhoneProps): Promise<ResponseProps> => {
+  return await post('Auth/create-account-with-phone', data)
 }
+
+interface GetUserByPhoneEmailProps {
+  phone?: string,
+  email?: string
+}
+
+const getUserByPhone = async ({ phone, email }: GetUserByPhoneEmailProps): Promise<ResponseProps> => {
+  const queryParams = new URLSearchParams();
+
+  if (phone) queryParams.append("Phone", phone);
+  if (email) queryParams.append("Email", email);
+
+  const queryString = queryParams.toString();
+  return await get(`Auth/get-user-by-phone-email?${queryString}`);
+};
+
 export default {
   register,
   verify,
@@ -130,7 +135,8 @@ export default {
   getRefresh,
   deleteAccount,
   loginWithFB,
-  createCustomerAccount,
   confirmDeleteAccount,
+  createAccountWithPhone,
+  getUserByPhone
 
 }

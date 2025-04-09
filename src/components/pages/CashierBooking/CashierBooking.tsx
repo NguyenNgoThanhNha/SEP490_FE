@@ -4,6 +4,7 @@ import appoinmentService from "@/services/appoinmentService";
 import BookingForm from "@/components/organisms/BookingStep/Step1";
 
 interface AppointmentData {
+    userId: number;
     staffId: number[];
     serviceId: number[];
     branchId: number;
@@ -19,24 +20,15 @@ const BookingPage: React.FC = () => {
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
-        try {
-            const formattedData: AppointmentData = {
-                staffId: data.staff ? [Number(data.staff)] : [],
-                serviceId: data.service?.map(Number) || [],
-                branchId: Number(data.branch),
-                appointmentsTime: [`${data.date}T${data.time}`],
-                notes: data.notes || "",
-                status: "Pending",
-                ...(data.voucher ? { voucherId: Number(data.voucher) } : {}),
-            };
 
-            const response = await appoinmentService.createAppointment(formattedData);
+        try {
+            const response = await appoinmentService.createAppointment(data);
 
             if (response?.success && response.result?.data) {
                 const orderId = response.result.data;
                 setOrderId(orderId);
-                setAppointmentData(formattedData);
-                navigate("/checkout", { state: { orderId, appointmentData: formattedData } });
+                setAppointmentData(data);
+                navigate("/checkout", { state: { orderId, appointmentData: data } });
             } else {
                 alert("Failed to create appointment. Please try again.");
             }
