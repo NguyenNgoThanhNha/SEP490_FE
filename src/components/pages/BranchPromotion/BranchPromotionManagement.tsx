@@ -7,11 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
 import { TBranchPromotion } from "@/types/branchPromotion.type";
 import branchPromotionService from "@/services/branchPromotionService";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import BranchComponent from "../BranchManagement/BranchManagement";
 import { format } from "date-fns";
 import AddPromotionModal from "./CreateBranchPromotion";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const BranchPromotionManagementPage = () => {
   const [branchPromtions, setBranchPromtions] = useState<TBranchPromotion[]>([]);
@@ -21,10 +20,8 @@ const BranchPromotionManagementPage = () => {
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-  const branchId = useSelector((state: RootState) => state.branch.branchId);
-
+  const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
+  const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
   const fetchBranchPromotion = async (branchId: number, page: number, pageSize: number) => {
     try {
       setLoading(true);
@@ -91,7 +88,7 @@ const BranchPromotionManagementPage = () => {
 
   useEffect(() => {
     if (branchId) {
-      fetchBranchPromotion(branchId, page, pageSize);
+      fetchBranchPromotion(1,1,100);
     }
   }, [branchId, page, pageSize]);
 
@@ -178,7 +175,6 @@ const BranchPromotionManagementPage = () => {
   return (
     <div className="p-6 min-h-screen">
       <div className="my-4 flex justify-between items-center">
-        <BranchComponent />
         <button
           className="px-4 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-auto"
           onClick={() => setIsModalOpen(true)}

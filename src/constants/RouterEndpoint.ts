@@ -72,5 +72,8 @@ export enum ROUTES {
 
   //Voucher
   VOUCHER_MANAGEMENT = 'voucher-management',
-  ADD_VOUCHER = 'add-voucher'
+  ADD_VOUCHER = 'add-voucher',
+
+  //Branch Product
+  BRANCH_PRODUCT_MANAGEMENT = 'branch-product-management',
 }
