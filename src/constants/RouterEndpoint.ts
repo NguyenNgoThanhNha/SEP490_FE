@@ -6,6 +6,7 @@ export enum ROUTES {
   FORGOT_PASSWORD = '/forgot-password',
   VERIFY_CODE = '/verify-code',
   SET_PASSWORD = '/set-password',
+  SIGN_OUT = 'sign-out',
 
   // Dashboard
   HOME='home',
@@ -68,7 +69,8 @@ export enum ROUTES {
   CASHIER_BOOOKING = 'booking-form',
   CASHIER_CREATE_ORDER = 'create-order',
   ROUTINE_MANAGEMENT = 'routine-management', 
-  CHECKOUT_PAGE ='checkout', 
+  CHECKOUT_PAGE ='checkout',
+  PAYMENT_NOTI = 'payment-noti', 
 
   //Voucher
   VOUCHER_MANAGEMENT = 'voucher-management',

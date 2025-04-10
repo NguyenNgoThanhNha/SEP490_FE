@@ -10,7 +10,7 @@ export const ProductSchema = z.object({
   discount: z.number().min(0, 'Discount cannot be negative'),
   categoryId: z.number().positive('Category ID is required'),
   companyId: z.number().positive('Company ID is required'),
-  images: z.array(z.string()).optional(),
+  images: z.array(z.any()).optional(),
   skintypesuitable: z.string()
 })
 export type ProductType = z.infer<typeof ProductSchema>

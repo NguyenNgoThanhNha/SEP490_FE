@@ -6,13 +6,20 @@ import toast from "react-hot-toast";
 
 
 const CreateBranchPage = () => {
-  const [, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const createVoucher = async (data: BranchType) => {
+  const CreateBranch = async (data: BranchType) => {
     setLoading(true);
-    
+    console.log('====================================');
+    console.log("data", data);
+    console.log('====================================');
     try {
-      const response = await branchService.createBranch(data);
+      const response = await branchService.createBranch({
+        ...data,
+        status: "active", 
+        companyId: 1,    
+        managerId: 123,   
+      });
       if (response.success) {
         toast.success("Branch created successfully!");
       } else {
@@ -27,7 +34,8 @@ const CreateBranchPage = () => {
     <div>
       <BranchForm
       mode="create"
-      onSubmit={(values) => createVoucher(values)}
+      onSubmit={CreateBranch}
+      loading={loading}
       />
     </div>
   );

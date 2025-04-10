@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader } from "lucide-react";
 import categoryService from "@/services/categoryService";
 import { TCate } from "@/types/category.type";
-import { formatPrice } from "@/utils/formatPrice";
 
 interface ProductFormProps {
   mode: "create" | "update";
@@ -46,15 +45,30 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
   const handleFormSubmit = async (data: ProductType) => {
     setLoading(true);
     try {
-      await onSubmit(data);
+      const formData = new FormData();
+      formData.append("productName", data.productName);
+      formData.append("productDescription", data.productDescription);
+      formData.append("price", data.price.toString());
+      formData.append("volume", data.volume.toString());
+      formData.append("quantity", data.quantity.toString());
+      formData.append("discount", data.discount.toString());
+      formData.append("categoryId", data.categoryId.toString());
+      formData.append("companyId", data.companyId.toString());
+      formData.append("skintypesuitable", data.skintypesuitable);
+  
+      if (data.images && data.images.length > 0) {
+        formData.append("image", data.images[0]); 
+      }
+  
+      await onSubmit(formData as any); 
       navigate("/products-management");
     } catch {
       toast.error("Error submitting form:");
-
     } finally {
       setLoading(false);
     }
-  }
+  };
+  
   useEffect(() => {
 
     const fetchCategories = async () => {
@@ -78,10 +92,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
     }
   }, [initialData]);
   
-  const handleImageUpload = (files: File[]) => {
-    const newImages = files.map((file) => URL.createObjectURL(file));
-    setImages((prevImages) => [...prevImages, ...newImages]); 
-    form.setValue("images", [...form.getValues("images"), ...newImages]);
+  const handleImageUpload = (file: File) => {
+    setImages([URL.createObjectURL(file)]); 
+    form.setValue("images", file); 
   };
   
   console.log("Current images:", form.watch("images"));
@@ -151,12 +164,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>Price (VND)</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
                         placeholder="Enter price"
-                        value={field.value ? formatPrice(field.value) : ''}
                         onChange={(e) => field.onChange(Number(e.target.value.replace(/\D/g, '')))}
                       />
                     </FormControl>
