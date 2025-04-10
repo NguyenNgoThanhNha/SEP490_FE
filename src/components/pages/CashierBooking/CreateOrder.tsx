@@ -1,6 +1,7 @@
 import { Button } from "@/components/atoms/ui/button";
 import { Card, CardContent } from "@/components/atoms/ui/card";
 import { Input } from "@/components/atoms/ui/input";
+import RegisterWithPhoneOrEmail from "@/components/organisms/BookingStep/RegisterForm";
 import orderService from "@/services/orderService";
 import productService from "@/services/productService";
 import { TProduct } from "@/types/product.type";
@@ -19,6 +20,7 @@ const EmployeeStore: React.FC = () => {
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "payos">("cash");
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -66,7 +68,7 @@ const EmployeeStore: React.FC = () => {
       if (selectedProducts.length === 0) return;
 
       const orderPayload = {
-        userId: 1,
+        userId: userId,
         totalAmount,
         paymentMethod,
         shippingCost: 1,
@@ -94,7 +96,7 @@ const EmployeeStore: React.FC = () => {
           orderId,
           totalAmount: totalAmount.toString(),
           request: {
-            returnUrl: `${window.location.origin}/payment-success`,
+            returnUrl: `${window.location.origin}/payment-noti`,
             cancelUrl: `${window.location.origin}/payment-cancel`,
           },
         };
@@ -130,22 +132,22 @@ const EmployeeStore: React.FC = () => {
           {filteredProducts.map((product) => {
             return (
               <Card key={product.productId} className="p-2 hover:shadow-md transition-shadow h-full">
-              <CardContent className="flex flex-col items-center p-2 h-full">
-                <img
-                  src={product.images[0] || "/placeholder.png"}
-                  alt={product.productName}
-                  className="w-24 h-24 object-cover rounded mb-2"
-                />
-                <h3 className="text-sm font-semibold text-center line-clamp-2 min-h-[3rem]">{product.productName}</h3>
-                <p className="text-primary font-bold mt-1">{product.price.toLocaleString()} VND</p>
-                
-                <div className="flex-grow" />
-            
-                <Button onClick={() => updateProductQuantity(product, 1)} className="mt-auto w-full bg-[#516D19]">
-                  Thêm
-                </Button>
-              </CardContent>
-            </Card>
+                <CardContent className="flex flex-col items-center p-2 h-full">
+                  <img
+                    src={product.images[0] || "/placeholder.png"}
+                    alt={product.productName}
+                    className="w-24 h-24 object-cover rounded mb-2"
+                  />
+                  <h3 className="text-sm font-semibold text-center line-clamp-2 min-h-[3rem]">{product.productName}</h3>
+                  <p className="text-primary font-bold mt-1">{product.price.toLocaleString()} VND</p>
+
+                  <div className="flex-grow" />
+
+                  <Button onClick={() => updateProductQuantity(product, 1)} className="mt-auto w-full bg-[#516D19]">
+                    Thêm
+                  </Button>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
@@ -153,6 +155,11 @@ const EmployeeStore: React.FC = () => {
 
       <div className="md:w-1/3 w-full md:sticky md:top-4 md:self-start">
         <h2 className="text-xl font-bold mb-2">Giỏ hàng</h2>
+        <RegisterWithPhoneOrEmail
+          onRegisterSuccess={(id) => {
+            setUserId(id);
+          }}
+        />
         <div className="border p-4 rounded-lg bg-gray-50 shadow-sm">
           {selectedProducts.length > 0 ? (
             <>
@@ -187,7 +194,7 @@ const EmployeeStore: React.FC = () => {
                           className="text-red-500 ml-auto"
                           onClick={() => updateProductQuantity({ ...item } as TProduct, 0)}
                         >
-                          <Trash/>
+                          <Trash />
                         </Button>
                       </div>
                     </div>

@@ -73,7 +73,7 @@ const CheckoutPage: React.FC = () => {
                     orderService.updatePaymentMethod({ orderId, paymentMethod }),
                 ]);
                 message.success("Thanh toán thành công!");
-                navigate("/payment-success");
+                navigate("/payment-noti");
             }
         } catch (error) {
             console.error("Lỗi khi xác nhận", error);

@@ -82,7 +82,7 @@ export const locales = {
         manageBranchPromotion: "Quản lý mã giảm của chi nhánh",
         manageSchedule: "Quản lý lịch làm việc",
         manageChat: "Tin nhắn",
-        indeskBooking: "Tạo đơn hàng",
+        indeskBooking: "Tạo lịch hẹn",
         manageRoutine: "Quản lý gói dịch vụ",
         manageCalendar: "Quản lý lịch hẹn",
         manageVoucher: "Quản lý mã giảm giá",

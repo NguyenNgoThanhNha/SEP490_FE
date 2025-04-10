@@ -6,7 +6,7 @@ interface OrderProps {
 }
 
 const getAllPurchase = async ({ pageIndex, pageSize }: OrderProps): Promise<ResponseProps> => {
-  return await get(`Purchasae/get-list?page=${pageIndex}&pageSize=${pageSize}`)
+  return await get(`Purcharse/get-list?pageIndex=${pageIndex}&pageSize=${pageSize}`)
 }
 
 interface CreatePurchaseProps {

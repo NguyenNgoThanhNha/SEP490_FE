@@ -71,8 +71,8 @@ const OrderManagementPage = () => {
   }, [page, pageSize]);
 
   const headers = [
-    { label: "Image", key: "image", hiding: true },
-    { label: "Product Name", key: "productName" },
+    { label: "Customer", key: "customer.fullName", hiding: true },
+    { label: "Voucher", key: "voucher.code" },
     { label: "Price", key: "price", render: (price: number) => formatPrice(price), sortable: true },
     { label: "In stock", key: "quantity", sortable: true },
     { 

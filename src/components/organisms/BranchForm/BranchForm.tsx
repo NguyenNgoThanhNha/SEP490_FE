@@ -95,7 +95,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       if (!isReady) return;
 
       fetchCoordinates(branchAddress, provinceId, district, wardCode);
-    }, 800); // debounce 800ms
+    }, 800); 
 
     return () => clearTimeout(timeout);
   }, [form.watch("branchAddress"), form.watch("district"), form.watch("wardCode"), provinceId]);
@@ -140,7 +140,6 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       if (!data.latAddress || !data.longAddress) {
         await fetchCoordinates(data.branchAddress, provinceId, data.district, data.wardCode);
       }
-
       await onSubmit(form.getValues());
       toast.success(`${mode === "create" ? "Created" : "Updated"} branch successfully`);
       navigate("/branchs-management");
