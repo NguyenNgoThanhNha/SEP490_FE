@@ -134,7 +134,7 @@ const EmployeeStore: React.FC = () => {
               <Card key={product.productId} className="p-2 hover:shadow-md transition-shadow h-full">
                 <CardContent className="flex flex-col items-center p-2 h-full">
                   <img
-                    src={product.images[0] || "/placeholder.png"}
+                    src={product.images[0] || "https://i.pinimg.com/736x/fe/9f/c5/fe9fc53618e47885bf815cb9a2699b75.jpg"}
                     alt={product.productName}
                     className="w-24 h-24 object-cover rounded mb-2"
                   />
@@ -155,12 +155,15 @@ const EmployeeStore: React.FC = () => {
 
       <div className="md:w-1/3 w-full md:sticky md:top-4 md:self-start">
         <h2 className="text-xl font-bold mb-2">Giỏ hàng</h2>
-        <RegisterWithPhoneOrEmail
-          onRegisterSuccess={(id) => {
-            setUserId(id);
-          }}
-        />
+
         <div className="border p-4 rounded-lg bg-gray-50 shadow-sm">
+          <div className="mb-2">
+            <RegisterWithPhoneOrEmail
+              onRegisterSuccess={(id) => {
+                setUserId(id);
+              }}
+            />
+          </div>
           {selectedProducts.length > 0 ? (
             <>
               <div className="space-y-2 max-h-96 overflow-y-auto">

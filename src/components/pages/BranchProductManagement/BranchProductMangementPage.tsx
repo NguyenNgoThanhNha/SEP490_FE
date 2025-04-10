@@ -10,6 +10,7 @@ import { RootState } from "@/store";
 import AddProductModal from "./AddBranchProduct";
 import branchProductService from "@/services/branchProductService";
 import { TBranchProduct } from "@/types/branchProduct.type";
+import { formatPrice } from "@/utils/formatPrice";
 
 const BranchProductManagementPage = () => {
   const [branchProducts, setBranchProducts] = useState<TBranchProduct[]>([]);
@@ -26,11 +27,14 @@ const BranchProductManagementPage = () => {
   const fetchBranchProduct = async (branchId: number) => {
     try {
       setLoading(true);
-      const response = await branchProductService.getAllBranchProduct(branchId);
+      const response = await branchProductService.getAllBranchProduct(1);
       if (response?.success) {
         const activeProducts = response.result?.data.filter((item: TBranchProduct) => item.status === "Active") || [];
         setBranchProducts(activeProducts);
         setTotalPages(response.result?.pagination?.totalPage || 0);
+        console.log('====================================');
+        console.log("res", activeProducts);
+        console.log('====================================');
       } else {
         toast.error(response.result?.message || "Failed to fetch branch products.");
       }
@@ -88,10 +92,10 @@ const BranchProductManagementPage = () => {
   };
 
   useEffect(() => {
-    if (branchId) {
-      fetchBranchProduct(branchId);
+    {
+      fetchBranchProduct(1);
     }
-  }, [branchId, page, pageSize]);
+  }, []);
 
   const headers = [
     {
@@ -103,14 +107,12 @@ const BranchProductManagementPage = () => {
       label: "Price",
       key: "product.price",
       sortable: true,
-      render: (value: number) => `${value}VND`
+      render: (value: number) => `${formatPrice(value)}VND`
     },
     {
-      label: "Volume",
-      key: "product.volume",
+      label: "Dimension",
+      key: "product.dimension",
       sortable: true,
-      render: (value: string) =>
-       `${value}ml`
     },
     {
       label: "Quantity",

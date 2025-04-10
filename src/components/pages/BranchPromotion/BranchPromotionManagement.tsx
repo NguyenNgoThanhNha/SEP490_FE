@@ -87,10 +87,10 @@ const BranchPromotionManagementPage = () => {
   };
 
   useEffect(() => {
-    if (branchId) {
+    {
       fetchBranchPromotion(1,1,100);
     }
-  }, [branchId, page, pageSize]);
+  }, []);
 
   const headers = [
     {

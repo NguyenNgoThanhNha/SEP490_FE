@@ -42,7 +42,7 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
 
       const allPromotionsResponse = await promotionService.getAllPromotion({ page: 1, pageSize: 100 });
 
-      const branchPromotionsResponse = await branchPromotionService.getAllBranchPromotion({ branchId: branchId as number, page: 1, pageSize: 100 });
+      const branchPromotionsResponse = await branchPromotionService.getAllBranchPromotion({branchId: 1, page: 1, pageSize: 100 });
 
       if (allPromotionsResponse?.success && branchPromotionsResponse?.success) {
         const allPromotions = allPromotionsResponse.result?.data || [];
@@ -73,7 +73,7 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
 
       const response = await branchPromotionService.createBranchPromotion({
         promotionId: values.promotionId,
-        branchId: branchId, 
+        branchId: 1, 
         status: values.status,
         stockQuantity: values.stockQuantity,
       });

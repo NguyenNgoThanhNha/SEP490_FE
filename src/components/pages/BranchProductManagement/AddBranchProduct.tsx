@@ -24,17 +24,16 @@ interface ProductFormValues {
 const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-  const branchId = useSelector((state: RootState) => state.branch.branchId);
   const [availableProduct, setAvailableProducts] = useState<{
     productId: number; productName: string
   }[]>([]);
 
   useEffect(() => {
-    if (isOpen && branchId) {
+    if (isOpen && 1) {
       fetchAvailableProducts();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, branchId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, 1]);
 
   const fetchAvailableProducts = async () => {
     try {
@@ -42,7 +41,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
 
       const allProductResponse = await productService.getAllProduct({ page: 1, pageSize: 100 });
 
-      const productBranchResponse = await branchProductService.getAllBranchProduct({ branchId: branchId});
+      const productBranchResponse = await branchProductService.getAllBranchProduct(1);
 
       if (allProductResponse?.success && productBranchResponse?.success) {
         const allProduct = allProductResponse.result?.data || [];
@@ -52,10 +51,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
 
         setAvailableProducts(availableProduct);
       } else {
-        toast.error("Failed to fetch promotions.");
+        toast.error("Failed to fetch product.");
       }
     } catch {
-      toast.error("Failed to fetch promotions.");
+      toast.error("Failed to fetch product.");
     } finally {
       setLoading(false);
     }
@@ -64,16 +63,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
 
   const handleSubmit = async (values: ProductFormValues) => {
     try {
-      if (branchId === null) {
-        toast.error("Branch ID is invalid.");
-        return;
-      }
-
       setLoading(true);
-
       const response = await branchProductService.createBranchProduct({
         productId: values.branchProductId,
-        branchId: branchId, 
+        branchId: 1,
         status: values.status,
         stockQuantity: values.stockQuantity,
       });
