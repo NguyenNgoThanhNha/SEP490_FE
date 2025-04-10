@@ -27,7 +27,7 @@ interface CreateBranchProps {
   wardCode: number
 }
 const createBranch = async (data: CreateBranchProps): Promise<ResponseProps> => {
-  return await post(`Branch/delete`, {data})
+  return await post(`Branch/create`, {data})
 }
 
 

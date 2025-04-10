@@ -26,11 +26,25 @@ const setupSignalRListeners = () => {
     console.error('SignalR connection is not established.');
     return;
   }
-  connection.on('receiveChannelMessage', (message: never) => {
-    console.log("📥 New message from SignalR:", message);
-    useChatStore.getState().addMessage(message);
+
+  connection.off('receiveChannelMessage');
+
+  connection.on('receiveChannelMessage', (message: Message) => {
+    const currentMessages = useChatStore.getState().messages;
+
+    const isDuplicate = currentMessages.some(
+      (msg) =>
+        msg.timestamp === message.timestamp &&
+        msg.senderId === message.senderId &&
+        msg.content === message.content
+    );
+
+    if (!isDuplicate) {
+      useChatStore.getState().addMessage(message);
+    }
   });
 };
+
 
 export const sendMessageToChannel = async (
   channelId: string,

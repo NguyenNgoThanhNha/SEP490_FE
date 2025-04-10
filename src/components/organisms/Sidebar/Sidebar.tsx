@@ -100,7 +100,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
           ],
         },
         { label: t("settings"), icon: <GearIcon />, path: "/settings" },
-        { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
+        { label: t("signOut"), icon: <ExitIcon />, path: "/sign-out" },
       ];
     case 2: // Manager
       return [
@@ -111,14 +111,14 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         { label: t("manageBranchProduct"), icon: <ShoppingBag />, path: "/branch-product-management" },
         { label: t("manageSchedule"), icon: <BookIcon />, path: "/schedule-management" },
         { label: t("manageChat"), icon: <ChatBubbleIcon />, path: "/chat" },
-        { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
+        { label: t("signOut"), icon: <ExitIcon />, path: "/sign-out" },
 
       ];
     case 3: // Cashier
       return [
         { label: t("indeskBooking"), icon: <BookIcon />, path: "/booking-form" },
         { label: t("chat"), icon: <BookIcon />, path: "/chat" },
-        { label: t("signOut"), icon: <ExitIcon />, path: "/signout" },
+        { label: t("signOut"), icon: <ExitIcon />, path: "/sign-out" },
       ];
     default:
       return [];

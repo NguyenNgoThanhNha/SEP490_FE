@@ -27,6 +27,7 @@ interface CreateProductProps {
   discount: number
   categoryId: number
   companyId: number
+  skintypesuitable: string,
   images: string[]
 }
 
@@ -40,6 +41,7 @@ const createProduct = async ({
   discount,
   categoryId,
   companyId,
+  skintypesuitable,
   images
 }: CreateProductProps): Promise<ResponseProps> => {
   return await post('Product/create', {
@@ -52,6 +54,7 @@ const createProduct = async ({
     price,
     volume,
     quantity,
+    skintypesuitable,
     images
   })
 }

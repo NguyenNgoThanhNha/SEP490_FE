@@ -50,7 +50,7 @@ interface UpdatePaymentMethodProps {
 }
 
 const updatePaymentMethod = async ({orderId, paymentMethod, note}: UpdatePaymentMethodProps) : Promise<ResponseProps> =>{
-  return await put('Order/confirm-order-appointment', {orderId,paymentMethod, note})
+  return await put('Order/update-payment-method-or-note', {orderId,paymentMethod, note})
 }
 interface CreateOrderFullProps {
   userId: number;
@@ -78,7 +78,14 @@ const confirmOrderProduct = async (data: ConfirmOrderProduct) : Promise<Response
   return await post('Order/confirm-order-product', data)
 }
 
+interface UpdateOrderStatusProps {
+  orderId: number;
+  status: string;
+}
 
+const updateOrderStatus = async (data: UpdateOrderStatusProps) : Promise<ResponseProps> =>{
+  return await post('Order/update-status', data)
+}
 
 export default {
   getAllPurchase,
@@ -86,6 +93,7 @@ export default {
   confirmAppointment,
   updatePaymentMethod,
   createOrderFull,
-  confirmOrderProduct
+  confirmOrderProduct,
+  updateOrderStatus
 
 }

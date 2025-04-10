@@ -5,7 +5,7 @@ import { PlusCircleIcon } from "lucide-react";
 interface FileUploadProps {
   onImageUpload: (files: File[]) => void;
   multiple?: boolean;
-  initialData?: string[]; // <-- Nhận danh sách URL ảnh mặc định
+  initialData?: string[]; 
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false, initialData = [] }) => {

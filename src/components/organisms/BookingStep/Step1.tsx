@@ -32,7 +32,7 @@ interface BookingFormProps {
 }
 
 
-const BookingForm: React.FC<BookingFormProps> = ({onSubmit}) => {
+const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
   const [branches, setBranches] = useState<TBranch[]>([]);
   const [services, setServices] = useState<TService[]>([]);
   const [staffs, setStaffs] = useState<Record<number, TStaff[]>>({});
@@ -132,7 +132,7 @@ const BookingForm: React.FC<BookingFormProps> = ({onSubmit}) => {
     const baseDateTime = new Date(`${selectedDate}T${selectedTime}`);
     const selectedServices = form.getValues("service");
     let currentTime = baseDateTime;
-  
+
     const result = selectedServices.map((s) => {
       const svc = services?.find((ser) => ser.serviceId === s.serviceId);
       const newService = {
@@ -140,20 +140,40 @@ const BookingForm: React.FC<BookingFormProps> = ({onSubmit}) => {
         appointmentTime: currentTime.toISOString(),
       };
       if (svc?.duration) {
-        currentTime = new Date(currentTime.getTime() + svc.duration * 60000);
+        currentTime = new Date(currentTime.getTime() + (svc.duration + 6) * 60000);
       }
       return newService;
     });
-  
+
     return result;
   };
-  
+
 
   const handleSubmit = (data: TAppointment) => {
     const finalServiceData = computeAppointmentTimes();
-  
+
     console.log("🔎 finalServiceData", finalServiceData);
-  
+    const branchName = branches.find((b) => b.branchId === data.branchId)?.branchName || "";
+    const customerName = form.getValues("name") || ""; // nếu form có tên
+    const serviceDetails = finalServiceData.map((s) => {
+      const service = services.find((sv) => sv.serviceId === s.serviceId);
+      return {
+        serviceId: s.serviceId,
+        serviceName: service?.name || "",
+        price: service?.price || 0,
+        duration: service?.duration || 0,
+        appointmentTime: s.appointmentTime,
+      };
+    });
+    const staffInfo = finalServiceData.map((s) => {
+      const staff = staffs[s.serviceId]?.find((st) => st.staffId === s.staffId);
+      return {
+        serviceId: s.serviceId,
+        staffId: staff?.staffId || 0,
+        staffName: staff?.staffInfo.userName || "",
+      };
+    });
+
     const formatted = {
       userId: data.userId ?? 0,
       staffId: finalServiceData.map((s) => s.staffId ?? 0),
@@ -164,14 +184,15 @@ const BookingForm: React.FC<BookingFormProps> = ({onSubmit}) => {
       notes: data.notes || "",
       feedback: "",
       voucherId: data.voucher ? Number(data.voucher) : 0,
-      total: totalPrice, 
-
+      total: totalPrice,
+      branchName,
+      customerName,
+      serviceDetails,
+      staffInfo,
     };
-  
-    console.log("✅ formatted:", formatted); 
     onSubmit(formatted);
   };
-  
+
 
   const totalPrice = selectedServices.reduce((sum: number, s: any) => {
     const svc = services.find((sv) => sv.serviceId === s.serviceId);
@@ -190,8 +211,6 @@ const BookingForm: React.FC<BookingFormProps> = ({onSubmit}) => {
                 form.setValue("userId", id);
               }}
             />
-
-            {/* Branch Select */}
             <FormField
               control={form.control}
               name="branchId"

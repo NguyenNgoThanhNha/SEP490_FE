@@ -26,6 +26,7 @@ interface BranchFormProps {
   mode: "create" | "update";
   initialData?: BranchType;
   onSubmit: (data: BranchType) => Promise<void>;
+  loading?: boolean;
 }
 
 const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) => {
@@ -46,7 +47,6 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
   const [provinces, setProvinces] = useState<any[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
   const [wards, setWards] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const GHN_TOKEN = "e79a5ca7-014e-11f0-a9a7-7e45b9a2ff31";
@@ -74,65 +74,78 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       .then((res) => setDistricts(res.data.data))
       .catch((err) => console.error("Failed to fetch districts", err));
   }, [provinceId]);
+  useEffect(() => {
+    const district = form.getValues("district");
+    if (!district) return;
+
+    axios
+      .get("https://online-gateway.ghn.vn/shiip/public-api/master-data/ward", {
+        headers: { Token: GHN_TOKEN },
+        params: { district_id: district },
+      })
+      .then((res) => setWards(res.data.data))
+      .catch((err) => console.error("Failed to fetch wards", err));
+  }, [form.watch("district")]);
 
   useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
-      if (name === "district" && value.district) {
-        axios
-          .get("https://online-gateway.ghn.vn/shiip/public-api/master-data/ward", {
-            headers: { Token: GHN_TOKEN },
-            params: { district_id: value.district },
-          })
-          .then((res) => setWards(res.data.data))
-          .catch((err) => console.error("Failed to fetch wards", err));
-      }
-
-      const { branchAddress, district, wardCode } = value;
+    const timeout = setTimeout(() => {
+      const { branchAddress, district, wardCode } = form.getValues();
       const isReady = provinceId && district && wardCode && branchAddress;
 
-      if (isReady) {
-        const provinceName = provinces.find(p => p.ProvinceID.toString() === provinceId)?.ProvinceName;
-        const districtName = districts.find(d => d.DistrictID === district)?.DistrictName;
-        const wardName = wards.find(w => w.WardCode === wardCode)?.WardName;
+      if (!isReady) return;
 
-        if (!provinceName || !districtName || !wardName) return;
+      fetchCoordinates(branchAddress, provinceId, district, wardCode);
+    }, 800); // debounce 800ms
 
-        const fullAddress = `${branchAddress}, ${wardName}, ${districtName}, ${provinceName}`;
+    return () => clearTimeout(timeout);
+  }, [form.watch("branchAddress"), form.watch("district"), form.watch("wardCode"), provinceId]);
 
-        axios.get("https://rsapi.goong.io/geocode", {
-          params: {
-            address: fullAddress,
-            api_key: GOONG_API_KEY,
-          },
-        })
-          .then(res => {
-            console.log("Goong API response:", res.data);
 
-            const result = res.data.results[0];
-            if (result) {
-              form.setValue("latAddress", result.geometry.location.lat.toString());
-              form.setValue("longAddress", result.geometry.location.lng.toString());
-            }
-          })
-          .catch(err => {
-            console.error("Failed to fetch coordinates from Goong", err);
-          });
+  const fetchCoordinates = async (
+    branchAddress: string,
+    provinceId: string,
+    district: number,
+    wardCode: number
+  ) => {
+    const provinceName = provinces.find(p => String(p.ProvinceID) === String(provinceId))?.ProvinceName;
+    const districtName = districts.find(d => d.DistrictID === Number(district))?.DistrictName;
+    const wardName = wards.find(w => Number(w.WardCode) === Number(wardCode))?.WardName;
+
+    if (!provinceName || !districtName || !wardName) return;
+
+    const fullAddress = `${branchAddress}, ${wardName}, ${districtName}, ${provinceName}`;
+    console.log("Full address:", fullAddress);
+
+    try {
+      const res = await axios.get("https://rsapi.goong.io/geocode", {
+        params: {
+          address: fullAddress,
+          api_key: GOONG_API_KEY,
+        },
+      });
+
+      const result = res.data.results[0];
+      if (result) {
+        form.setValue("latAddress", result.geometry.location.lat.toString());
+        form.setValue("longAddress", result.geometry.location.lng.toString());
       }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [form, provinceId, districts, wards, provinces]);
+    } catch (err) {
+      console.error("Failed to fetch coordinates from Goong", err);
+    }
+  };
 
   const handleFormSubmit = async (data: BranchType) => {
-    setLoading(true);
+    console.log("Form submitted with data:", data);
     try {
-      await onSubmit(data);
+      if (!data.latAddress || !data.longAddress) {
+        await fetchCoordinates(data.branchAddress, provinceId, data.district, data.wardCode);
+      }
+
+      await onSubmit(form.getValues());
       toast.success(`${mode === "create" ? "Created" : "Updated"} branch successfully`);
       navigate("/branchs-management");
     } catch {
       toast.error("Something went wrong while submitting branch");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -264,11 +277,11 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         <div className="flex justify-end">
           <button
             type="submit"
-            disabled={loading}
             className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
           >
-            {loading ? "Submitting..." : "Submit"}
+            {mode === "create" ? "Create Branch" : "Update Branch"}
           </button>
+
         </div>
       </form>
     </Form>

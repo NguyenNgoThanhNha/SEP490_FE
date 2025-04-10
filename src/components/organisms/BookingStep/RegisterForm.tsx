@@ -125,7 +125,7 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
 
             <button
               type="button"
-              className="px-4 py-2 bg-blue-600 text-white rounded mt-2"
+              className="px-4 py-2 bg-[#516D19] text-white rounded mt-2"
               onClick={handleRegister}
               disabled={checking}
             >

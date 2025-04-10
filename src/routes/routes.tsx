@@ -54,6 +54,8 @@ import VoucherManagementPage from '@/components/pages/VoucherManagement/VoucherM
 import CreateVoucherPage from '@/components/pages/VoucherManagement/CreateVoucher'
 import CreateBranchPage from '@/components/pages/BranchManagement/CreateBranch'
 import BranchProductManagementPage from '@/components/pages/BranchProductManagement/BranchProductMangementPage'
+import PaymentSuccessPage from '@/components/organisms/BookingStep/PaymentSucces'
+import SignOut from '@/components/pages/SignOut/SignOut'
 
 
 export const AppRouter = () => {
@@ -67,6 +69,7 @@ export const AppRouter = () => {
         <Route path={ROUTES.VERIFY_CODE} element={<VerifyCodePage />} />,
         <Route path={ROUTES.SET_PASSWORD} element={<SetPasswordPage />} />
         <Route path={ROUTES.DELETE_ACCOUNT} element={<DeleteAccountPage />} />
+        <Route path={ROUTES.SIGN_OUT} element={<SignOut/>}/>
 
         {/* ROOT */}
         <Route path="/" element={<Layout />}>
@@ -117,6 +120,8 @@ export const AppRouter = () => {
             <Route path={ROUTES.CASHIER_BOOOKING} element={<BookingPage />} />
             <Route path={ROUTES.CHECKOUT_PAGE} element={<CheckoutPage />} />
             <Route path={ROUTES.CASHIER_CREATE_ORDER} element={<EmployeeStore />} />
+            <Route path={ROUTES.PAYMENT_NOTI} element={<PaymentSuccessPage />} />
+
             {/* SERVICES'S CATEGORY */}
             <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
 
