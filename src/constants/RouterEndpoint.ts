@@ -63,7 +63,7 @@ export enum ROUTES {
   BRANCH_MANAGEMENT = 'branchs-management',
   ADD_BRANCH = 'add-branch',
   BRANCH_PROMOTION_MANAGEMENT = 'branch-promotion-management',
-  
+ 
   // Others
   CHAT = 'chat',
   CASHIER_BOOOKING = 'booking-form',
@@ -78,4 +78,5 @@ export enum ROUTES {
 
   //Branch Product
   BRANCH_PRODUCT_MANAGEMENT = 'branch-product-management',
+  BRANCH_PRODUCT_DETAIL ='/branch-product-management/:productBranchId',
 }

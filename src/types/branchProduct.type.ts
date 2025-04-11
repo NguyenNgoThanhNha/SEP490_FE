@@ -2,7 +2,7 @@ import { TBranch } from "./branch.type"
 import { TProduct } from "./product.type"
 
 export type TBranchProduct = {
-    id: string,
+    id: number,
     product: TProduct,
     branch: TBranch,
     promotion: number,
