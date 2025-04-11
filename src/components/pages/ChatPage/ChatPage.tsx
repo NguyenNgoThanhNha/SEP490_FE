@@ -89,18 +89,19 @@ const ChatPage = () => {
         messageContent,
         messageType
       );
-      const newMsg: Message = {
-        senderId: currentUserId.toString(),
-        content: messageContent,
-        messageType: messageType,
-        timestamp: new Date().toISOString(),
-        channelId: selectedChannel.id.toString(),
-      };
+   
+      // const newMsg: Message = {
+      //   senderId: currentUserId.toString(),
+      //   content: messageContent,
+      //   messageType: messageType,
+      //   timestamp: new Date().toISOString(),
+      //   channelId: selectedChannel.id.toString(),
+      // };
 
-      useChatStore.getState().setMessages([
-        ...useChatStore.getState().messages,
-        newMsg
-      ]);
+      // useChatStore.getState().setMessages([
+      //   ...useChatStore.getState().messages,
+      //   newMsg
+      // ]);
       setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -114,12 +115,9 @@ const ChatPage = () => {
         width={320}
         className="bg-white border-r border-gray-200 flex flex-col max-h-screen"
       >
-        {/* Fixed Search */}
         <div className="p-4 shrink-0 bg-white">
           <Input.Search placeholder="Search..." className="mb-4" />
         </div>
-
-        {/* Scrollable Channel List */}
         <div className="flex-1 overflow-y-auto px-4 pb-4">
           <List
             dataSource={channels}
@@ -128,12 +126,11 @@ const ChatPage = () => {
               const lastMessage = messages
                 .filter((msg) => msg.channelId === channel.id.toString())
                 .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
-
               return (
                 <List.Item
                   className={`p-3 rounded-lg mb-2 cursor-pointer transition-all duration-200 ${selectedChannel?.id === channel.id
-                      ? "bg-[#f0f0f0]"
-                      : "hover:bg-[#f9f9f9]"
+                    ? "bg-[#f0f0f0]"
+                    : "hover:bg-[#f9f9f9]"
                     }`}
                   onClick={() => setSelectedChannel(channel)}
                 >

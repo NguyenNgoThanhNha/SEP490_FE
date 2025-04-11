@@ -1,7 +1,11 @@
 import { del, get, post, put, ResponseProps } from './root'
 
-const getAllBranchProduct = async (branchId: number): Promise<ResponseProps> => {
-  return await get(`BranchProduct/get-all-product-in-branch/${branchId}`)
+const getAllBranchProduct = async (branchId: number,page: number, pageSize: number): Promise<ResponseProps> => {
+  return await get(`BranchProduct/get-all-product-in-branch/${branchId}?page=${page}&pageSize=${pageSize}`)
+}
+
+const getBranchProductDetail = async (productBranchId: number): Promise<ResponseProps> => {
+  return await get(`BranchProduct/get-by-idid/${productBranchId}`)
 }
 
 interface createBranchProductProps {
@@ -27,12 +31,15 @@ const updateBranchProduct = async ({
   return await put(`BranchProduct/update/${productBranchId}`, { status, stockQuantity })
 }
 
-const deleteBranchProduct = async (branchId: number): Promise<ResponseProps> => {
-    return await del(`BranchProduct/get-all-product-in-branch/${branchId}`)
+const deleteBranchProduct = async (productId: number): Promise<ResponseProps> => {
+    return await del(`BranchProduct/delete/${productId}`)
   }
+
+
 export default {
   getAllBranchProduct,
   createBranchProduct,
   updateBranchProduct,
-  deleteBranchProduct
+  deleteBranchProduct,
+  getBranchProductDetail
 }

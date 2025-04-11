@@ -5,8 +5,8 @@ import toast from "react-hot-toast";
 import { Modal, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/store";
 import AddProductModal from "./AddBranchProduct";
 import branchProductService from "@/services/branchProductService";
 import { TBranchProduct } from "@/types/branchProduct.type";
@@ -22,19 +22,16 @@ const BranchProductManagementPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
-  const branchId = useSelector((state: RootState) => state.branch.branchId);
-
-  const fetchBranchProduct = async (branchId: number) => {
+  // const branchId = useSelector((state: RootState) => state.branch.branchId);
+  const branchId = 1;
+  const fetchBranchProduct = async (branchId: number, page: number, pageSize: number) => {
     try {
       setLoading(true);
-      const response = await branchProductService.getAllBranchProduct(1);
+      const response = await branchProductService.getAllBranchProduct(branchId, page, pageSize);
       if (response?.success) {
-        const activeProducts = response.result?.data.filter((item: TBranchProduct) => item.status === "Active") || [];
+        const activeProducts = response.result?.data.data.filter((item: TBranchProduct) => item.status === "Active") || [];
         setBranchProducts(activeProducts);
-        setTotalPages(response.result?.pagination?.totalPage || 0);
-        console.log('====================================');
-        console.log("res", activeProducts);
-        console.log('====================================');
+        setTotalPages(response.result?.data.data.pagination?.totalPage || 0);
       } else {
         toast.error(response.result?.message || "Failed to fetch branch products.");
       }
@@ -69,8 +66,8 @@ const BranchProductManagementPage = () => {
     });
   };
 
-  const handleEdit = (branchProductId: number) => {
-    navigate(`/branch-product-management/${branchProductId}`);
+  const handleEdit = (productBranchId: number) => {
+    navigate(`/branch-product-management/${productBranchId}`);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -81,28 +78,24 @@ const BranchProductManagementPage = () => {
 
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
-      fetchBranchProduct(branchId);
     }
   };
 
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
     setPage(1);
-    fetchBranchProduct(1);
   };
-
   useEffect(() => {
-    {
-      fetchBranchProduct(1);
+    if (branchId) {
+      fetchBranchProduct(branchId, page, pageSize);
     }
-  }, []);
+  }, [branchId, page, pageSize]);
 
   const headers = [
     {
       label: "Product",
       key: "product.productName",
     },
-    { label: "Product Description", key: "product.productDescription" },
     {
       label: "Price",
       key: "product.price",

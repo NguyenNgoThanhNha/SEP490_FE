@@ -56,6 +56,7 @@ import CreateBranchPage from '@/components/pages/BranchManagement/CreateBranch'
 import BranchProductManagementPage from '@/components/pages/BranchProductManagement/BranchProductMangementPage'
 import PaymentSuccessPage from '@/components/organisms/BookingStep/PaymentSucces'
 import SignOut from '@/components/pages/SignOut/SignOut'
+import BranchProductDetail from '@/components/pages/BranchProductManagement/[id]'
 
 
 export const AppRouter = () => {
@@ -147,7 +148,8 @@ export const AppRouter = () => {
 
             {/* BRANCH PRODUCT MANAGEMENT */}
             <Route path={ROUTES.BRANCH_PRODUCT_MANAGEMENT} element={<BranchProductManagementPage/>}/>
-            
+            <Route path={ROUTES.BRANCH_PRODUCT_DETAIL} element={<BranchProductDetail/>}/>
+
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage/>} />
