@@ -109,6 +109,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         { label: t("manageCalendar"), icon: <Calendar />, path: "/staff-calendar" },
         { label: t("manageBranchPromotion"), icon: <ShoppingBag />, path: "/branch-promotion-management" },
         { label: t("manageBranchProduct"), icon: <ShoppingBag />, path: "/branch-product-management" },
+        { label: t("manageBranchService"), icon: <ShoppingBag />, path: "/branch-service-management" },
         { label: t("manageSchedule"), icon: <BookIcon />, path: "/schedule-management" },
         { label: t("manageChat"), icon: <ChatBubbleIcon />, path: "/chat" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/sign-out" },

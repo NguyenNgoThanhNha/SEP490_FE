@@ -1,4 +1,4 @@
-import {Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Loading from '@/components/templates/Loading.tsx'
 import { Suspense } from 'react'
 import { ROUTES } from '@/constants/RouterEndpoint.ts'
@@ -57,6 +57,8 @@ import BranchProductManagementPage from '@/components/pages/BranchProductManagem
 import PaymentSuccessPage from '@/components/organisms/BookingStep/PaymentSucces'
 import SignOut from '@/components/pages/SignOut/SignOut'
 import BranchProductDetail from '@/components/pages/BranchProductManagement/[id]'
+import BranchServiceManagementPage from '@/components/pages/BranchService/BranchServiceManagement'
+import BranchServiceDetail from '@/components/pages/BranchService/[id]'
 
 
 export const AppRouter = () => {
@@ -70,7 +72,7 @@ export const AppRouter = () => {
         <Route path={ROUTES.VERIFY_CODE} element={<VerifyCodePage />} />,
         <Route path={ROUTES.SET_PASSWORD} element={<SetPasswordPage />} />
         <Route path={ROUTES.DELETE_ACCOUNT} element={<DeleteAccountPage />} />
-        <Route path={ROUTES.SIGN_OUT} element={<SignOut/>}/>
+        <Route path={ROUTES.SIGN_OUT} element={<SignOut />} />
 
         {/* ROOT */}
         <Route path="/" element={<Layout />}>
@@ -80,7 +82,7 @@ export const AppRouter = () => {
           <Route path={ROUTES.CONTACT} element={<ContactPage />} />
           <Route path={ROUTES.TERMS_AND_POLICIES} element={<InformationPage />} />
         </Route>
-          <Route path={ROUTES.ROOT} element={<MainLayout />}>
+        <Route path={ROUTES.ROOT} element={<MainLayout />}>
           <Route element={<PrivateRoute />}>
             <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
             {/* PRODUCT MANAGEMENT */}
@@ -132,7 +134,7 @@ export const AppRouter = () => {
 
             {/* BRANCH PROMOTION MANAGEMENT */}
             <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
-            
+
             {/* SCHEDULE MANAGEMENT  */}
             <Route path={ROUTES.SCHEDULE_MANAGEMENT} element={<SchedulePage />} />
 
@@ -143,16 +145,19 @@ export const AppRouter = () => {
             <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
 
             {/* VOUCHER MANAGEMENT */}
-            <Route path={ROUTES.VOUCHER_MANAGEMENT} element={<VoucherManagementPage />}/>
-            <Route path={ROUTES.ADD_VOUCHER} element={<CreateVoucherPage/>}/>
+            <Route path={ROUTES.VOUCHER_MANAGEMENT} element={<VoucherManagementPage />} />
+            <Route path={ROUTES.ADD_VOUCHER} element={<CreateVoucherPage />} />
 
             {/* BRANCH PRODUCT MANAGEMENT */}
-            <Route path={ROUTES.BRANCH_PRODUCT_MANAGEMENT} element={<BranchProductManagementPage/>}/>
-            <Route path={ROUTES.BRANCH_PRODUCT_DETAIL} element={<BranchProductDetail/>}/>
+            <Route path={ROUTES.BRANCH_PRODUCT_MANAGEMENT} element={<BranchProductManagementPage />} />
+            <Route path={ROUTES.BRANCH_PRODUCT_DETAIL} element={<BranchProductDetail />} />
 
+            {/* BRANCH SERVICE MANAGEMENT */}
+            <Route path={ROUTES.BRANCH_SERVICE_MANAGEMENT} element={<BranchServiceManagementPage />} />
+            <Route path={ROUTES.BRANCH_SERVICE_DETAIL} element={<BranchServiceDetail />} />
           </Route>
         </Route>
-        <Route path="*" element={<NotFoundPage/>} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   )
