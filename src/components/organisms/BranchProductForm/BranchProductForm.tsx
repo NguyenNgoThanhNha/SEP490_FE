@@ -99,7 +99,7 @@ const handleCancel = () => {
               name="status"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-4">
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel className="mt-2">Status</FormLabel>
                   <FormControl>
                     <Switch
                       checked={field.value === "Active"}
