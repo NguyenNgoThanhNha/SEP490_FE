@@ -19,6 +19,7 @@ import { Table } from "@/components/organisms/Table/Table";
 import { TVoucher } from "@/types/voucher.type";
 import voucherService from "@/services/voucherService";
 import { formatDate } from "@/utils/formatDate";
+import { formatPrice } from "@/utils/formatPrice";
 
 const VoucherManagementPage = () => {
   const [vouchers, setVouchers] = useState<TVoucher[]>([]);
@@ -78,7 +79,7 @@ const VoucherManagementPage = () => {
   const handleExport = () => {
     const exportData = vouchers.map((voucher) => ({
       "Voucher Code": voucher.code,
-      "Discount": `${voucher.discountAmount}%`,
+      "Discount": `${voucher.discountAmount} VND`,
       "Description": voucher.description,
       "Quantity": voucher.quantity,
       "Remain Quantity": voucher.remainQuantity,
@@ -100,14 +101,14 @@ const VoucherManagementPage = () => {
     {
       label: "Discount",
       key: "discountAmount",
-      render: (price: number) => `${price}%`,
+      render: (price: number) => `${formatPrice(price)} VND`,
       sortable: true,
     },
     { label: "Description", key: "description" },
-    { label: "Quantity", key: "quantity" },
-    { label: "Remain Quantity", key: "remainQuantity" },
-    { label: "Valid from", key: "validFrom", render: formatDate },
-    { label: "Valid to", key: "validTo", render: formatDate },
+    { label: "Quantity", key: "quantity",  sortable: true, },
+    { label: "Remain Quantity", key: "remainQuantity",  sortable: true, },
+    { label: "Valid from", key: "validFrom", render: formatDate,  sortable: true, },
+    { label: "Valid to", key: "validTo", render: formatDate,  sortable: true, },
   ];
 
   return (

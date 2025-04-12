@@ -15,7 +15,8 @@ interface CreateVoucherProps {
   discountAmount: number
   validFrom: string
   validTo: string
-  status: 'Active'
+  status: 'Active',
+  remainQuantity: number
 }
 const createVoucher = async (data: CreateVoucherProps): Promise<ResponseProps> => {
   return await post('Voucher/create-voucher', data)

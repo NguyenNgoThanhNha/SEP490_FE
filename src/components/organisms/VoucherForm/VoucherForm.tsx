@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/ui/form copy";
 import { Input } from "@/components/atoms/ui/input";
+import FormDatePicker from "@/components/molecules/FormDatePicker";
 import { VoucherSchema, VoucherType } from "@/schemas/voucherSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
@@ -28,14 +29,19 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
       discountAmount: 0,
       validFrom: "",
       validTo: "",
-      status: "Active"
+      status: "Active",
+      remainQuantity: 0
     },
   });
 
   const handleFormSubmit = async (data: VoucherType) => {
     setLoading(true);
     try {
-      await onSubmit(data);
+      const payload = {
+        ...data,
+        remainQuantity: data.quantity, 
+      };
+      await onSubmit(payload);
       toast.success(`${mode === "create" ? "Created" : "Updated"} voucher successfully`);
       navigate("/voucher-management");
     } catch {
@@ -106,7 +112,7 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="discountAmount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Discount Amount (%)</FormLabel>
+                  <FormLabel>Discount Amount (VND)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -119,38 +125,9 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="validFrom"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Valid From</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="datetime-local"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="validTo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Valid To</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="datetime-local"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            <FormDatePicker name="validFrom" form={form} />
+            <FormDatePicker name="validTo" form={form} />
 
           </CardContent>
         </Card>

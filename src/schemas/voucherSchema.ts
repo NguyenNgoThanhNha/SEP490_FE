@@ -8,7 +8,8 @@ export const VoucherSchema = z
     discountAmount: z.number(),
     validFrom: z.string(),
     validTo: z.string(),
-    status: z.literal('Active')
+    status: z.literal('Active'),
+    remainQuantity: z.number().optional(),
   })
   .refine(
     (data) => new Date(data.validTo) > new Date(data.validFrom),
@@ -16,6 +17,9 @@ export const VoucherSchema = z
       message: "Valid to date must be later than valid from date",
       path: ["validTo"], 
     }
-  );
+  ).transform((data) => ({
+    ...data,
+    remainQuantity: data.quantity, 
+  }))
 
 export type VoucherType = z.infer<typeof VoucherSchema>;

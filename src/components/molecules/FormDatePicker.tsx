@@ -43,19 +43,19 @@ const FormDatePicker = <T extends FieldValues>({
                   variant={'outline'}
                   className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                 >
-                  {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                  {field.value ? format(field.value, 'dd/MM/yyyy') : <span>Pick a date</span>}
                   <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <FormLabel className='absolute font-normal bg-white blur-10 w-fit px-2 -top-5 py-1 rounded left-3 peer-focus:font-semibold'>
+            <FormLabel className='absolute font-medium bg-white blur-10 w-fit px-2 -top-5 py-1 rounded left-3 peer-focus:font-semibold'>
               {formatLabel(name as string)}
             </FormLabel>
             <PopoverContent className='w-auto p-0' align='start'>
               <Calendar
                 mode='single'
                 selected={field.value}
-                onSelect={field.onChange}
+                onSelect={(date) => field.onChange(date ? date.toISOString() : "")}
                 disabled={(date) =>
                   date > new Date(addDays(new Date(), addDay)) ||
                   date < new Date('2024-01-01') ||
