@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form, Select, Input } from "antd";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/store";
 import toast from "react-hot-toast";
 import productService from "@/services/productService";
 import branchProductService from "@/services/branchProductService";
@@ -14,14 +14,15 @@ interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   branchId: number;
+  onProductAdded: () => void;
 }
 interface ProductFormValues {
-  branchProductId: number;
+  productId: number;
   status: string;
   stockQuantity: number;
 }
 
-const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) => {
+const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onProductAdded }) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const [availableProduct, setAvailableProducts] = useState<{
@@ -41,14 +42,13 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
 
       const allProductResponse = await productService.getAllProduct({ page: 1, pageSize: 100 });
 
-      const productBranchResponse = await branchProductService.getAllBranchProduct(1);
+      const productBranchResponse = await branchProductService.getAllBranchProduct(1, 1, 100);
 
       if (allProductResponse?.success && productBranchResponse?.success) {
         const allProduct = allProductResponse.result?.data || [];
         const branchProduct = productBranchResponse.result?.data || [];
         const branchProductId = new Set(branchProduct.map((bp: TBranchProduct) => bp.product.productId));
         const availableProduct = allProduct.filter((promo: TProduct) => !branchProductId.has(promo.productId));
-
         setAvailableProducts(availableProduct);
       } else {
         toast.error("Failed to fetch product.");
@@ -65,7 +65,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
     try {
       setLoading(true);
       const response = await branchProductService.createBranchProduct({
-        productId: values.branchProductId,
+        productId: values.productId,
         branchId: 1,
         status: values.status,
         stockQuantity: values.stockQuantity,
@@ -75,6 +75,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
         toast.success("product added successfully!");
         onClose();
         form.resetFields();
+        onProductAdded();
       } else {
         toast.error(response.result?.message || "Failed to add product.");
       }

@@ -38,15 +38,11 @@ const ChatPage = () => {
     const fetchChatData = async () => {
       try {
         if (!currentUserId) return;
-
         const customerRes = await chatService.getCustomerInfo({ userId: Number(currentUserId) });
         const fetchedCustomerId = customerRes?.result?.data?.id;
         if (!fetchedCustomerId) return;
-
         setCustomerId(fetchedCustomerId);
-
         await startConnection(fetchedCustomerId);
-
         const channelsRes = await chatService.getUserChannels({ customerId: fetchedCustomerId });
         setChannels(channelsRes?.result?.data || []);
       } catch (error) {
