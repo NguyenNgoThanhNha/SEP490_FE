@@ -11,13 +11,14 @@ import AddProductModal from "./AddBranchProduct";
 import branchProductService from "@/services/branchProductService";
 import { TBranchProduct } from "@/types/branchProduct.type";
 import { formatPrice } from "@/utils/formatPrice";
+import { Badge } from "@/components/atoms/ui/badge";
 
 const BranchProductManagementPage = () => {
   const [branchProducts, setBranchProducts] = useState<TBranchProduct[]>([]);
   const [, setLoading] = useState(false);
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(6);
+  const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -29,9 +30,9 @@ const BranchProductManagementPage = () => {
       setLoading(true);
       const response = await branchProductService.getAllBranchProduct(branchId, page, pageSize);
       if (response?.success) {
-        const activeProducts = response.result?.data.filter((item: TBranchProduct) => item.status === "Active") || [];
+        const activeProducts = response.result?.data
         setBranchProducts(activeProducts);
-        setTotalPages(response.result?.data.pagination?.totalPage || 0);
+        setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
         toast.error(response.result?.message || "Failed to fetch branch products.");
       }
@@ -105,7 +106,7 @@ const BranchProductManagementPage = () => {
       label: "Price",
       key: "product.price",
       sortable: true,
-      render: (value: number) => `${formatPrice(value)}VND`
+      render: (value: number) => `${formatPrice(value)} VND`
     },
     {
       label: "Dimension",
@@ -116,8 +117,16 @@ const BranchProductManagementPage = () => {
       label: "Quantity",
       key: "stockQuantity",
       sortable: true,
+    },
+    {
+      label: "Status",
+      key: "status",
+      render: (status: string) => (
+        <Badge variant={status === "Active" ? "active" : "inactive"}>
+          {status}
+        </Badge>
+      ),
     }
-
   ];
 
   const renderPagination = () => {
@@ -178,7 +187,7 @@ const BranchProductManagementPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         branchId={branchId ?? 0}
-        onProductAdded={handleProductAdded} 
+        onProductAdded={handleProductAdded}
       />
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
