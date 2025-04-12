@@ -44,7 +44,7 @@ const addManyMember = async ({ channelId, customerIds }: AddManyMemberProps): Pr
 }
 
 interface GetCustomerInfoProps {
-  userId: number
+  userId: string
 }
 
 const getCustomerInfo = async ({ userId }: GetCustomerInfoProps): Promise<ResponseProps> => {

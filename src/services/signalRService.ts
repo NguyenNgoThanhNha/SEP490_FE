@@ -1,5 +1,6 @@
-import { useChatStore } from '@/store/slice/chatSlice'
 import * as signalR from '@microsoft/signalr'
+import { addMessage, Message } from '@/store/slice/chatSlice.ts'
+import store from '@/store'
 
 const hubUrl = import.meta.env.VITE_SIGNALR_URL || 'http://localhost:5001/chat'
 
@@ -12,7 +13,7 @@ export const startConnection = async (userId: number) => {
       .configureLogging(signalR.LogLevel.Information)
       .withAutomaticReconnect()
       .build()
-
+    
     await connection.start()
     console.log('Connected to SignalR Hub')
     setupSignalRListeners()
@@ -27,16 +28,15 @@ const setupSignalRListeners = () => {
     return
   }
   connection.on('receiveChannelMessage', (message: Message) => {
-    const currentMessages = useChatStore.getState().messages;
-    const isDuplicate = currentMessages.some((msg) => msg.id === message.id);
-    if (!isDuplicate) {
-      useChatStore.getState().addMessage(message);
-      setTimeout(() => {
-        const chatEnd = document.getElementById('chatEnd');
-        chatEnd?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    }
-  });
+    
+    store.dispatch(addMessage(message))
+    
+    setTimeout(() => {
+      const chatEnd = document.getElementById('chatEnd')
+      chatEnd?.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
+    // }
+  })
 }
 
 export const sendMessageToChannel = async (
@@ -47,16 +47,19 @@ export const sendMessageToChannel = async (
   fileUrl: string | null = null
 ) => {
   if (!connection || connection.state !== signalR.HubConnectionState.Connected) {
-    console.error('SignalR connection is not established.')
-    return
+    console.error('SignalR connection is not established.');
+    return;
   }
-
+  
   try {
-    await connection.invoke('SendMessageToChannel', channelId, senderId, content, messageType, fileUrl)
+    await connection.invoke('SendMessageToChannel', channelId, senderId, content, messageType, fileUrl);
+   
   } catch (error) {
-    console.error('Error sending message to channel:', error)
+    console.error(error);
+    
   }
-}
+};
+
 
 export const stopConnection = async () => {
   if (connection) {

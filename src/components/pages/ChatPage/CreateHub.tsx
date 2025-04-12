@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 const CreateChannel = ({ onCreate }) => {
-  const [channelName, setChannelName] = useState("");
-  const [customerIds, setCustomerIds] = useState("");
-
+  const [channelName, setChannelName] = useState('')
+  const [customerIds, setCustomerIds] = useState('')
+  
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const customerIdsArray = customerIds.split(",").map(Number);
-    onCreate(channelName, customerIdsArray);
-  };
-
+    e.preventDefault()
+    const customerIdsArray = customerIds.split(',').map(Number)
+    onCreate(channelName, customerIdsArray)
+  }
+  
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
       <input
@@ -30,7 +30,7 @@ const CreateChannel = ({ onCreate }) => {
         Create Channel
       </button>
     </form>
-  );
-};
+  )
+}
 
-export default CreateChannel;
+export default CreateChannel
