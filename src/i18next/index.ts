@@ -47,7 +47,8 @@ export const locales = {
         voucher: "Voucher",
         manageBranch: "Manage Branch",
         addBranch: "Create Branch",
-        manageBranchProduct: "Manage Branch Product"
+        manageBranchProduct: "Manage Branch Product",
+        manageBranchService: "Manage Branch Service",
       }
     },
     vi: {
@@ -91,7 +92,7 @@ export const locales = {
         manageBranch: "Quản lý chi nhánh",
         addBranch: "Tạo chi nhánh",
         manageBranchProduct: "Quản lý sản phẩm chi nhánh",
-
+        manageBranchService: "Quản lý dịch vụ chi nhánh",
       }
     }
   }

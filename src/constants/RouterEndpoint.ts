@@ -79,4 +79,9 @@ export enum ROUTES {
   //Branch Product
   BRANCH_PRODUCT_MANAGEMENT = 'branch-product-management',
   BRANCH_PRODUCT_DETAIL ='/branch-product-management/:productBranchId',
+
+  // Branch Service
+  BRANCH_SERVICE_MANAGEMENT =   'branch-service-management',
+  BRANCH_SERVICE_DETAIL ='/branch-service-management/:branchServiceId',
+
 }
