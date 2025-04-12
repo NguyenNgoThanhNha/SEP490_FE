@@ -40,6 +40,9 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       wardCode: 0,
       longAddress: "",
       latAddress: "",
+      status: "Active",
+      managerId: 1,
+      companyId: 1
     },
   });
 
@@ -135,19 +138,32 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
   };
 
   const handleFormSubmit = async (data: BranchType) => {
-    console.log("Form submitted with data:", data);
+      const payload = {
+      BranchName: data.branchName,
+      BranchPhone: data.branchPhone,
+      BranchAddress: data.branchAddress,
+      District: data.district,
+      WardCode: data.wardCode,
+      LatAddress: data.latAddress,
+      LongAddress: data.longAddress,
+      Status: data.status,
+      ManagerId: data.managerId,
+      CompanyId: data.companyId,
+    };
+  
     try {
       if (!data.latAddress || !data.longAddress) {
         await fetchCoordinates(data.branchAddress, provinceId, data.district, data.wardCode);
       }
-      await onSubmit(form.getValues());
+  
+      await onSubmit(payload as any); 
       toast.success(`${mode === "create" ? "Created" : "Updated"} branch successfully`);
       navigate("/branchs-management");
     } catch {
       toast.error("Something went wrong while submitting branch");
     }
   };
-
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -276,7 +292,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+            className="bg-[#516d19] text-white px-6 py-2 rounded hover:bg-green-700"
           >
             {mode === "create" ? "Create Branch" : "Update Branch"}
           </button>

@@ -10,16 +10,8 @@ const CreateBranchPage = () => {
 
   const CreateBranch = async (data: BranchType) => {
     setLoading(true);
-    console.log('====================================');
-    console.log("data", data);
-    console.log('====================================');
     try {
-      const response = await branchService.createBranch({
-        ...data,
-        status: "active", 
-        companyId: 1,    
-        managerId: 123,   
-      });
+      const response = await branchService.createBranch(data);
       if (response.success) {
         toast.success("Branch created successfully!");
       } else {
