@@ -5,7 +5,7 @@ const getAllBranchProduct = async (branchId: number,page: number, pageSize: numb
 }
 
 const getBranchProductDetail = async (productBranchId: number): Promise<ResponseProps> => {
-  return await get(`BranchProduct/get-by-idid/${productBranchId}`)
+  return await get(`BranchProduct/get-by-id/${productBranchId}`)
 }
 
 interface createBranchProductProps {
@@ -20,7 +20,7 @@ const createBranchProduct = async (data: createBranchProductProps): Promise<Resp
 }
 interface updateBranchProductProps {
   productBranchId: number
-  status?: ''
+  status?: string
   stockQuantity?: number
 }
 const updateBranchProduct = async ({

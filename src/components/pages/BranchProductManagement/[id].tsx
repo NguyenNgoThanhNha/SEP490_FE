@@ -7,72 +7,80 @@ import BranchProductForm from "@/components/organisms/BranchProductForm/BranchPr
 import { Loader2 } from "lucide-react";
 
 const BranchProductDetail = () => {
-  const { id } = useParams();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [branchProduct, setBranchProduct] = useState<TBranchProduct | null>(null);
+    const { productBranchId } = useParams();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [branchProduct, setBranchProduct] = useState<TBranchProduct | null>(null);
+    console.log("productBranchId", productBranchId, typeof productBranchId);
 
-  useEffect(() => {
-    const fetchBranchProductDetail = async () => {
-      if (!id) return;
+    useEffect(() => {
+        const fetchBranchProductDetail = async () => {
+            if (!productBranchId) return;
 
-      setLoading(true);
-      try {
-        const response = await branchProductService.getBranchProductDetail({
-          branchProductId: Number(id),
-        });
+            setLoading(true);
+            try {
+                const response = await branchProductService.getBranchProductDetail(Number(productBranchId))
+                if (response.success && response.result) {
+                    setBranchProduct(response.result.data);
+                } else {
+                    toast.error("Failed to fetch branch product data.");
+                }
+            } catch (error) {
+                console.error("Error fetching branch product:", error);
+                toast.error("Something went wrong while fetching branch product.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        if (response.success && response.result) {
-          setBranchProduct(response.result.data);
-        } else {
-          toast.error("Failed to fetch branch product data.");
+        fetchBranchProductDetail();
+    }, [productBranchId]);
+
+    const handleUpdate = async (values: Partial<TBranchProduct>) => {
+        if (!branchProduct) return;
+
+        setLoading(true);
+        try {
+            const response = await branchProductService.updateBranchProduct({
+                ...branchProduct,
+                ...values,
+                productBranchId: branchProduct.id,
+            });
+
+            if (response.success) {
+                toast.success("Branch product updated successfully");
+                setBranchProduct((prev) => ({
+                    ...prev!,
+                    ...values,
+                    product: {
+                      ...prev!.product,
+                      ...values.product,
+                    },
+                  }));
+            } else {
+                toast.error(response?.result?.message || "Failed to update branch product");
+            }
+        } catch (error) {
+            console.error("Update error:", error);
+            toast.error("An error occurred while updating branch product");
+        } finally {
+            setLoading(false);
         }
-      } catch (error) {
-        console.error("Error fetching branch product:", error);
-        toast.error("Something went wrong while fetching branch product.");
-      } finally {
-        setLoading(false);
-      }
     };
 
-    fetchBranchProductDetail();
-  }, [id]);
-
-  const handleUpdate = async (values: Partial<TBranchProduct>) => {
-    if (!branchProduct) return;
-
-    setLoading(true);
-    try {
-      const response = await branchProductService.updateBranchProduct({
-        ...branchProduct,
-        ...values,
-        id: Number(branchProduct.id),
-      });
-
-      if (response.success) {
-        toast.success("Branch product updated successfully");
-      } else {
-        toast.error(response?.result?.message || "Failed to update branch product");
-      }
-    } catch (error) {
-      console.error("Update error:", error);
-      toast.error("An error occurred while updating branch product");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="p-4">
-      {loading && (
-        <div className="flex justify-center items-center gap-2 text-muted-foreground mb-4">
-          <Loader2 className="animate-spin h-4 w-4" />
-          Loading...
-        </div>
-      )}
+  <div className="p-4">
+    {loading && (
+      <div className="flex justify-center items-center gap-2 text-muted-foreground mb-4">
+        <Loader2 className="animate-spin h-4 w-4" />
+        Loading...
+      </div>
+    )}
+    {!loading && !branchProduct && <div>No branch product data found.</div>}
 
-      {!loading && !branchProduct && <div>No branch product data found.</div>}
+    {branchProduct && (
+      <div>
+       
 
-      {branchProduct && (
         <BranchProductForm
           initialData={{
             name: branchProduct.product?.productName ?? "",
@@ -81,12 +89,15 @@ const BranchProductDetail = () => {
             dimension: branchProduct.product?.dimension ?? "",
             status: branchProduct.status,
             stockQuantity: branchProduct.stockQuantity,
+            skinTypeSuitable: branchProduct.product.skinTypeSuitable ?? ""
           }}
-          onSubmit={handleUpdate}
+          onSubmit={(values) => handleUpdate(values)}
         />
-      )}
-    </div>
-  );
+      </div>
+    )}
+  </div>
+);
+
 };
 
 export default BranchProductDetail;

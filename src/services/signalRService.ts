@@ -26,9 +26,6 @@ const setupSignalRListeners = () => {
     console.error('SignalR connection is not established.')
     return
   }
-
-  connection.off('receiveChannelMessage')
-
   connection.on('receiveChannelMessage', (message: Message) => {
     const currentMessages = useChatStore.getState().messages;
     const isDuplicate = currentMessages.some((msg) => msg.id === message.id);

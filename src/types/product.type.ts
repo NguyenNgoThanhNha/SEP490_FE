@@ -16,6 +16,7 @@ export type TProduct = {
     createdDate: string; 
     updatedDate: string; 
     images: string[];
+    skinTypeSuitable: string;
     
   };
   

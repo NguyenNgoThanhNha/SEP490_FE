@@ -29,9 +29,9 @@ const BranchProductManagementPage = () => {
       setLoading(true);
       const response = await branchProductService.getAllBranchProduct(branchId, page, pageSize);
       if (response?.success) {
-        const activeProducts = response.result?.data.data.filter((item: TBranchProduct) => item.status === "Active") || [];
+        const activeProducts = response.result?.data.filter((item: TBranchProduct) => item.status === "Active") || [];
         setBranchProducts(activeProducts);
-        setTotalPages(response.result?.data.data.pagination?.totalPage || 0);
+        setTotalPages(response.result?.data.pagination?.totalPage || 0);
       } else {
         toast.error(response.result?.message || "Failed to fetch branch products.");
       }
@@ -90,6 +90,11 @@ const BranchProductManagementPage = () => {
       fetchBranchProduct(branchId, page, pageSize);
     }
   }, [branchId, page, pageSize]);
+  const handleProductAdded = () => {
+    if (branchId) {
+      fetchBranchProduct(branchId, page, pageSize);
+    }
+  };
 
   const headers = [
     {
@@ -163,7 +168,7 @@ const BranchProductManagementPage = () => {
     <div className="p-6 min-h-screen">
       <div className="my-4 flex justify-between items-center">
         <button
-          className="px-4 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-auto"
+          className="px-4 py-1 bg-[#516d19] text-white rounded-lg hover:bg-green-700 ml-auto"
           onClick={() => setIsModalOpen(true)}
         >
           Add Product
@@ -173,6 +178,7 @@ const BranchProductManagementPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         branchId={branchId ?? 0}
+        onProductAdded={handleProductAdded} 
       />
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
