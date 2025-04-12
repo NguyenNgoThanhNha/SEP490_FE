@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
 import { TStaff } from "@/types/staff.type";
 import staffService from "@/services/staffService";
+import { formatDate } from "@/utils/formatDate";
 
 const EmployeeManagementPage = () => {
   const [staffs, setStaffs] = useState<TStaff[]>([]);
@@ -82,12 +83,11 @@ const EmployeeManagementPage = () => {
   }, [page, pageSize]);
 
   const headers = [
-    { label: "Avatar", key: "avatar"},
     { label: "Staff Name", key: "staffInfo.userName", sortable: true },
     { label: "Email", key: "staffInfo.email" },
     { label: "Gender", key: "staffInfo.gender"},
     { label: "Phone Number", key: "staffInfo.phoneNumber"},
-    { label: "Birth Date", key: "staffInfo.birthDate",sortable: true },
+    { label: "Birth Date", key: "staffInfo.birthDate" , render: (value: string) => formatDate(value), sortable: true} 
   ];
 
   const renderPagination = () => {
