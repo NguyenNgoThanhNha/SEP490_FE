@@ -68,7 +68,6 @@ export enum ROUTES {
   CHAT = 'chat',
   CASHIER_BOOOKING = 'booking-form',
   CASHIER_CREATE_ORDER = 'create-order',
-  ROUTINE_MANAGEMENT = 'routine-management', 
   CHECKOUT_PAGE ='checkout',
   PAYMENT_NOTI = 'payment-noti', 
 
@@ -83,5 +82,8 @@ export enum ROUTES {
   // Branch Service
   BRANCH_SERVICE_MANAGEMENT =   'branch-service-management',
   BRANCH_SERVICE_DETAIL ='/branch-service-management/:branchServiceId',
-
+  
+  //Routine Management
+  ROUTINE_MANAGEMENT = 'routine-management', 
+  CREATE_ROUTINE = 'create-routine'
 }
