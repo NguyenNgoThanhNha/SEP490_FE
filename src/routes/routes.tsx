@@ -59,6 +59,7 @@ import SignOut from '@/components/pages/SignOut/SignOut'
 import BranchProductDetail from '@/components/pages/BranchProductManagement/[id]'
 import BranchServiceManagementPage from '@/components/pages/BranchService/BranchServiceManagement'
 import BranchServiceDetail from '@/components/pages/BranchService/[id]'
+import { CreateRoutine } from '@/components/pages/RoutineManagement/CreateRoutine'
 
 
 export const AppRouter = () => {
@@ -143,6 +144,7 @@ export const AppRouter = () => {
 
             {/* ROUTINE MANAGEMENT */}
             <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
+            <Route path={ROUTES.CREATE_ROUTINE} element={<CreateRoutine />} />
 
             {/* VOUCHER MANAGEMENT */}
             <Route path={ROUTES.VOUCHER_MANAGEMENT} element={<VoucherManagementPage />} />

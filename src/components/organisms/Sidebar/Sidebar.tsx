@@ -90,7 +90,14 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         },
         { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
         { label: t("manageAppoinment"), icon: <BookIcon />, path: "/appoinments-management" },
-        { label: t("manageRoutine"), icon: <BookIcon />, path: "/routine-management" },
+        {
+          label: t("routine"),
+          icon: <PersonIcon />,
+          submenu: [
+            { label: t("manageRoutine"), icon: <BookIcon />, path: "/routine-management" },
+            { label: t("addRoutine"), icon: <TicketPlus />, path: "/create-routine" },
+          ],
+        },
         {
           label: t("voucher"),
           icon: <PersonIcon />,
