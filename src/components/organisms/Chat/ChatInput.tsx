@@ -1,82 +1,71 @@
-import type { UploadProps } from 'antd'
-import { Button, Image, Input, Upload } from 'antd'
-import { CloseCircleOutlined, PictureOutlined, SendOutlined } from '@ant-design/icons'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { Button, Input } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
+import EmojiPicker from 'emoji-picker-react';
 
 interface ChatInputProps {
-  newMessage: string
-  setNewMessage: (value: string) => void
-  onSendMessage: (fileUrl?: string | null) => void
+  newMessage: string;
+  setNewMessage: (value: string) => void;
+  onSendMessage: (message: string) => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
-                                               newMessage,
-                                               setNewMessage,
-                                               onSendMessage
-                                             }) => {
-  const [previewImage, setPreviewImage] = useState<string | null>(null)
-  
-  const beforeUpload: UploadProps['beforeUpload'] = (file) => {
-    const reader = new FileReader()
-    reader.onload = () => {
-      setPreviewImage(reader.result as string)
-    }
-    reader.readAsDataURL(file)
-    return false // Ngăn upload mặc định
-  }
-  
+  newMessage,
+  setNewMessage,
+  onSendMessage,
+}) => {
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
   const handleSend = () => {
-    onSendMessage(previewImage)
-    setPreviewImage(null) // Reset ảnh sau khi gửi
-  }
-  
+    if (newMessage.trim()) {
+      onSendMessage(newMessage);
+      setNewMessage('');
+    }
+  };
+
   return (
-    <div className="p-4 border-t bg-white flex flex-col gap-2">
-      {/* Ảnh preview */}
-      {previewImage && (
-        <div className="relative w-fit">
-          <Image
-            src={previewImage}
-            alt="Preview"
-            width={100}
-            height={100}
-            style={{ borderRadius: 8 }}
-            preview={false}
+    <div className="relative p-4 border-t bg-white flex flex-col gap-2">
+      {showEmojiPicker && (
+        <div className="absolute bottom-16 left-0 bg-white shadow-lg rounded-md z-50">
+          <EmojiPicker
+            onEmojiClick={(emoji) => {
+              setNewMessage(newMessage + emoji.emoji);
+              setShowEmojiPicker(false);
+            }}
           />
-          <CloseCircleOutlined
-            className="absolute top-0 right-0 text-red-500 cursor-pointer"
-            onClick={() => setPreviewImage(null)}
-          />
+
         </div>
       )}
-      
       <div className="flex items-center">
-        <Upload showUploadList={false} beforeUpload={beforeUpload}>
-          <Button icon={<PictureOutlined />} />
-        </Upload>
-        
+        <Button
+          onClick={() => setShowEmojiPicker((prev) => !prev)}
+          className="mx-2"
+        >
+          🙂
+        </Button>
+
         <Input
           placeholder="Type a message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault()
-              handleSend()
+              e.preventDefault();
+              handleSend();
             }
           }}
           className="flex-1 mx-2"
         />
-        
         <Button
           type="primary"
           icon={<SendOutlined />}
           onClick={handleSend}
-          disabled={!newMessage && !previewImage}
+          disabled={!newMessage.trim()}
+          className='bg-[#516d19]'
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ChatInput
+export default ChatInput;
