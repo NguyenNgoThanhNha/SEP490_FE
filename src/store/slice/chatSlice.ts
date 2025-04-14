@@ -1,55 +1,60 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface Message {
-  id?: string;
-  channelId: string;
-  sender: string;
-  content: string;
-  messageType: string;
-  timestamp?: string;
+  senderCustomer: {
+    id: string
+    email: string
+    password: string
+    fullName: string
+    userId: number
+    image: string
+  }
+  id?: string
+  channelId: string
+  sender: string
+  content: string
+  messageType: string
+  timestamp?: string
 }
 
 interface Channel {
-  id: string;
-  name: string;
+  unreadCount: number
+  lastMessage: string
+  id: string
+  name: string
 }
 
 interface ChatState {
-  selectedChannel: Channel | null;
-  channels: Channel[];
-  messages: Message[];
+  selectedChannel: Channel | null
+  channels: Channel[]
+  messages: Message[]
 }
 
 const initialState: ChatState = {
   selectedChannel: null,
   channels: [],
-  messages: [],
-};
+  messages: []
+}
 
 const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
     setSelectedChannel: (state, action: PayloadAction<Channel>) => {
-      state.selectedChannel = action.payload;
+      state.selectedChannel = action.payload
     },
     setChannels: (state, action: PayloadAction<Channel[]>) => {
-      state.channels = action.payload;
+      state.channels = action.payload
     },
     setMessages: (state, action: PayloadAction<Message[]>) => {
-      state.messages = action.payload;
+      state.messages = action.payload
     },
     addMessage: (state, action: PayloadAction<Message>) => {
-      state.messages.push(action.payload);
-    },
-  },
-});
+      state.messages.push(action.payload)
+    }
+  }
+})
 
-export const {
-  setSelectedChannel,
-  setChannels,
-  setMessages,
-  addMessage,
-} = chatSlice.actions;
+export const { setSelectedChannel, setChannels, setMessages, addMessage } = chatSlice.actions
 
-export default chatSlice.reducer;
+export default chatSlice.reducer
