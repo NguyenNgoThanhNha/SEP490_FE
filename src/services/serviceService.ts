@@ -77,11 +77,17 @@ interface GetAllServiceForBranchProps {
 const getAllServiceForBranch = async({branchId, page, pageSize}: GetAllServiceForBranchProps): Promise<ResponseProps> => {
   return await get(`Service/get-all-services-for-branch?branchId=${branchId}&page=${page}&pageSize=${pageSize}`)
 }
+
+const elasticSearchService =  async (keyword: string): Promise<ResponseProps> => {
+  return await get(`Service/elasticsearch?keyword=${keyword}`)
+}
+
 export default {
   getAllService,
   getServiceDetail,
   createService,
   updateService,
   deleteService,
-  getAllServiceForBranch
+  getAllServiceForBranch,
+  elasticSearchService
 }
