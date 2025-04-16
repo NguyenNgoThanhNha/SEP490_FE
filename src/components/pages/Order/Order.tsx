@@ -67,9 +67,31 @@ const OrderManagementPage = () => {
 
   const headers = [
     { label: "Customer", key: "customer.userName" },
-    { label: "Price", key: "totalAmount", render: (price: number) => formatPrice(price), sortable: true },
-    { label: "Status", key: "status", sortable: true },
+    { label: "Price", key: "totalAmount", render: (price: number) =>`${formatPrice(price)} VND`, sortable: true },
     {
+      label: "Status",
+      key: "status",
+      sortable: true,
+      render: (status: string) => {
+        let variant: "active" | "inactive" | "pending" | "default";
+        switch (status.toLowerCase()) {
+          case "completed":
+            variant = "active";
+            break;
+          case "pending":
+            variant = "pending";
+            break;
+          case "cancelled":
+            variant = "inactive";
+            break;
+          default:
+            variant = "default";
+        }
+    
+        return <Badge variant={variant}>{status}</Badge>;
+      },
+    },
+        {
       label: "Payment method",
       key: "paymentMethod",
       render: (status: string) => (
