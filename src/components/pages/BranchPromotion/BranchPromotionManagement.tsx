@@ -83,14 +83,14 @@ const BranchPromotionManagementPage = () => {
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
     setPage(1);
-    fetchBranchPromotion(1, 1, value);
+    fetchBranchPromotion(branchId, page, value);
   };
 
   useEffect(() => {
-    {
-      fetchBranchPromotion(1,1,100);
+    if (branchId) {
+      fetchBranchPromotion(branchId, page, pageSize);
     }
-  }, []);
+  }, [branchId, page, pageSize]);
 
   const headers = [
     {
@@ -176,7 +176,7 @@ const BranchPromotionManagementPage = () => {
     <div className="p-6 min-h-screen">
       <div className="my-4 flex justify-between items-center">
         <button
-          className="px-4 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-auto"
+          className="px-4 py-1 bg-[#516d19] text-white rounded-lg hover:bg-green-700 ml-auto"
           onClick={() => setIsModalOpen(true)}
         >
           Add Promotion
@@ -196,7 +196,7 @@ const BranchPromotionManagementPage = () => {
             key: "status",
             values: {
               Active: { label: "Active", color: "green", textColor: "white" },
-              SoldOut: { label: "Sold Out", color: "red", textColor: "white" },
+              SoldOut: { label: "Expired", color: "red", textColor: "white" },
             },
           }}
           actions={(row) => (

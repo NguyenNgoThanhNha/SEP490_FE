@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux'
 import { loginSuccess } from '@/store/slice/authSlice.ts'
 import { ROUTES } from '@/constants/RouterEndpoint.ts'
 import branchService from '@/services/branchService'
+import { TBranch } from '@/types/branch.type'
 
 const LoginForm = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -46,10 +47,9 @@ const LoginForm = () => {
       const userId = userInfo?.result?.data?.userId;
       const branchRes = await branchService.getAllBranch({ status: "Active",  page: 1, pageSize: 100});
       const branches = branchRes?.result?.data || [];
-      const userBranch = branches.find((branch) => branch.userId === userId);
+      const userBranch = branches.find((branch: TBranch) => branch.managerId === userId);
       if (userBranch) {
         localStorage.setItem("branchId", userBranch.branchId);
-    
       }
       if (!userInfo.success) {
         toast.error('Failed to fetch user info')
