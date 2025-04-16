@@ -5,13 +5,13 @@ import toast from "react-hot-toast";
 import { Modal, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
-// import { useSelector } from "react-redux";
-// import { RootState } from "@/store";
 import AddProductModal from "./AddBranchProduct";
 import branchProductService from "@/services/branchProductService";
 import { TBranchProduct } from "@/types/branchProduct.type";
 import { formatPrice } from "@/utils/formatPrice";
 import { Badge } from "@/components/atoms/ui/badge";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const BranchProductManagementPage = () => {
   const [branchProducts, setBranchProducts] = useState<TBranchProduct[]>([]);
@@ -21,10 +21,10 @@ const BranchProductManagementPage = () => {
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
+  const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
 
 
-  // const branchId = useSelector((state: RootState) => state.branch.branchId);
-  const branchId = 1;
   const fetchBranchProduct = async (branchId: number, page: number, pageSize: number) => {
     try {
       setLoading(true);

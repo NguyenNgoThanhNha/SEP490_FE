@@ -5,8 +5,8 @@ import toast from "react-hot-toast";
 import { Modal, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
-// import { useSelector } from "react-redux";
-// import { RootState } from "@/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import { formatPrice } from "@/utils/formatPrice";
 import { Badge } from "@/components/atoms/ui/badge";
 import AddServiceModal from "./AddBranchService";
@@ -21,10 +21,9 @@ const BranchServiceManagementPage = () => {
     const [pageSize, setPageSize] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-    // const branchId = useSelector((state: RootState) => state.branch.branchId);
-    const branchId = 2;
+    const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
+    const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
+  
     const fetchBranchService = async (branchId: number, page: number, pageSize: number) => {
         try {
             setLoading(true);
