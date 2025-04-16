@@ -118,6 +118,9 @@ const filterProducts = async (params: FilterProductProps): Promise<ResponseProps
   return await get(`Product/filter?${query}`);
 };
 
+const elasticSearchProduct =  async (keyword: string): Promise<ResponseProps> => {
+  return await get(`Product/elasticsearch?keyword=${keyword}`)
+}
 export default {
   getAllProduct,
   createProduct,
@@ -125,5 +128,6 @@ export default {
   updateProduct,
   deleteProduct,
   filterProducts,
+  elasticSearchProduct
 
 }

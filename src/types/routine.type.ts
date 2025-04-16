@@ -2,7 +2,9 @@ export type TRoutine = {
     skincareRoutineId: number,
     name: string,
     description: string,
-    steps: string,
-    frequency: string,
-    targetSkintypes: string
+    targetSkinTypes: string[],
+    createdDate: string,
+    updatedDate: string,
+    totalSteps: number,
+    totalPrice: number
 }
