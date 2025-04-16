@@ -86,6 +86,17 @@ interface UpdateOrderStatusProps {
 const updateOrderStatus = async (data: UpdateOrderStatusProps) : Promise<ResponseProps> =>{
   return await post('Order/update-status', data)
 }
+interface GetAllOrderProps {
+  OrderType?: string,
+  OrderStatus?: string,
+  PaymentStatus?: string
+  BranchId?: number
+  PageSize?: number
+  PageIndex?: number
+}
+const getAllOrder  = async (params: GetAllOrderProps = {}) : Promise<ResponseProps> =>{
+  return await get('Order/get-all-order', params)
+}
 
 export default {
   getAllPurchase,
@@ -94,6 +105,7 @@ export default {
   updatePaymentMethod,
   createOrderFull,
   confirmOrderProduct,
-  updateOrderStatus
+  updateOrderStatus,
+  getAllOrder
 
 }

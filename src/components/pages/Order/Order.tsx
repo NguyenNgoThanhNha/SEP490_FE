@@ -1,85 +1,85 @@
 import { useEffect, useState } from "react";
-import { Edit, Trash } from "lucide-react";
+import { Edit } from "lucide-react";
 import ReusableAreaChart from "@/components/molecules/AreaChart";
 import RechartsPieChart from "@/components/molecules/PieChart";
 import { Table } from "@/components/organisms/Table/Table";
 import { formatPrice } from "@/utils/formatPrice";
 import toast from "react-hot-toast";
-import { Modal, Select } from "antd";
+import { Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
 import { TOrder } from "@/types/order.type";
 import orderService from "@/services/orderService";
+import { Badge } from "@/components/atoms/ui/badge";
 
 const OrderManagementPage = () => {
-  const [products, setProducts] = useState<TOrder[]>([]);
-  const [, setLoading] = useState(false);  
+  const [orders, setOrders] = useState<TOrder[]>([]);
+  const [, setLoading] = useState(false);
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
+  const [orderTypeFilter, ] = useState<string[]>([]);
 
-  const fetchProducts = async (pageIndex: number, pageSize: number) => {
+  const fetchOrders = async (PageIndex: number, PageSize: number, OrderType?: string) => {
     try {
       setLoading(true);
-      const response = await orderService.getAllPurchase({ pageIndex, pageSize });
+      const response = await orderService.getAllOrder({
+        PageIndex,
+        PageSize,
+        OrderType: OrderType,
+      });
+
       if (response?.success) {
-        const activeProducts = response.result?.data.filter(
-          (product: TOrder) => product.status === "Active"
-        ) || [];
-        setProducts(activeProducts);
+        setOrders(response.result?.data);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || "Failed to fetch products.");
+        toast.error(response.result?.message || "Failed to fetch orders.");
       }
     } catch {
-      toast.error("Failed to fetch products.");
+      toast.error("Failed to fetch orders.");
     } finally {
       setLoading(false);
     }
   };
-  
 
-  const handleDelete = (orderId: number) => {
-    Modal.confirm({
-      title: "Are you sure?",
-      content: "This action cannot be undone.",
-      okText: "Yes, delete",
-      cancelText: "Cancel",
-    });
-  };
 
   const handleEdit = (orderId: number) => {
-    navigate(`/products-management/${orderId}`);
+    navigate(`/order-management/${orderId}`);
   };
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
-      fetchProducts(newPage, pageSize); 
+      fetchOrders(newPage, pageSize);
     }
   };
 
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
     setPage(1);
-    fetchProducts(1, value); 
+    fetchOrders(1, value);
   };
 
   useEffect(() => {
-    fetchProducts(page, pageSize);
+    fetchOrders(page, pageSize);
   }, [page, pageSize]);
 
   const headers = [
-    { label: "Customer", key: "customer.fullName", hiding: true },
-    { label: "Voucher", key: "voucher.code" },
-    { label: "Price", key: "price", render: (price: number) => formatPrice(price), sortable: true },
-    { label: "In stock", key: "quantity", sortable: true },
-    { 
-      label: "Category", 
-      key: "category.name", 
-      render: (value: string) => <span className="font-sm">{value}</span> 
+    { label: "Customer", key: "customer.userName" },
+    { label: "Price", key: "totalAmount", render: (price: number) => formatPrice(price), sortable: true },
+    { label: "Status", key: "status", sortable: true },
+    {
+      label: "Payment method",
+      key: "paymentMethod",
+      render: (status: string) => (
+        <Badge variant={status === "PayOs" ? "active" : "inactive"}>
+            {status}
+        </Badge>
+    ),
     },
+    { label: "Order Type", key: "orderType" },
+
   ];
 
   const renderPagination = () => {
@@ -153,9 +153,14 @@ const OrderManagementPage = () => {
 
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
-          headers={headers}
+          filters={[
+            {
+              key: "orderType", 
+              values: orderTypeFilter,
+            },
+          ]} headers={headers}
           selectable={true}
-          data={products.length > 0 ? products : []}
+          data={orders.length > 0 ? orders : []}
           badgeConfig={{
             key: "status",
             values: {
@@ -167,9 +172,6 @@ const OrderManagementPage = () => {
             <>
               <button className="text-blue-500 hover:text-blue-700" onClick={() => handleEdit(row.productId as number)}>
                 <Edit className="w-5 h-5" />
-              </button>
-              <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(row.productId as number)}>
-                <Trash className="w-5 h-5" />
               </button>
             </>
           )}

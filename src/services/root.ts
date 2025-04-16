@@ -66,17 +66,20 @@ const handleApiError = (error: AxiosError) => {
   }
 }
 
-export const get = async <T>(url: string): Promise<T | ResponseProps> => {
+export const get = async <T>(url: string, params?: Record<string, any>): Promise<T | ResponseProps> => {
   try {
-    const response: AxiosResponse<T> = await api.get<T>(url)
-    return response.data
+    const response: AxiosResponse<T> = await api.get<T>(url, {
+      params,
+    });
+    return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
-      return handleApiError(error)
+      return handleApiError(error);
     }
-    throw error
+    throw error;
   }
-}
+};
+
 
 export const post = async <T>(url: string, data?: unknown): Promise<T | ResponseProps> => {
   try {

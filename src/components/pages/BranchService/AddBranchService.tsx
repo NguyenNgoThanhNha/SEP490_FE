@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form, Select } from "antd";
-// import { useSelector } from "react-redux";
-// import { RootState } from "@/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import toast from "react-hot-toast";
 import serviceService from "@/services/serviceService";
 import serviceBranchService from "@/services/serviceBranchService";
@@ -25,6 +25,8 @@ interface ServiceFormValues {
 const AddServiceModal: React.FC<AddServiceModalProps> = ({ isOpen, onClose, onServiceAdded }) => {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
+    const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
+    const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
     const [availableService, setAvailableServices] = useState<{
         serviceId: number, name: string
     }[]>([]);
@@ -42,7 +44,7 @@ const AddServiceModal: React.FC<AddServiceModalProps> = ({ isOpen, onClose, onSe
 
             const allServiceResponse = await serviceService.getAllService({ page: 1, pageSize: 100 });
 
-            const serviceBranchResponse = await serviceBranchService.getAllBranchService(1, 1, 100);
+            const serviceBranchResponse = await serviceBranchService.getAllBranchService(branchId, 1, 100);
 
             if (allServiceResponse?.success && serviceBranchResponse?.success) {
                 const allServices = allServiceResponse.result?.data || [];

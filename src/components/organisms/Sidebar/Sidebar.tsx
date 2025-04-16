@@ -55,6 +55,8 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
             { label: t("addEmployee"), icon: <PersonIcon />, path: "/create-staff" },
           ],
         },
+        { label: t("manageOrder"), icon: <ShoppingBag />, path: "/order" },
+
         // {
         //   label: t("blog"),
         //   icon: <ArchiveIcon />,
@@ -112,7 +114,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
     case 2: // Manager
       return [
         { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
-        // { label: t("manageOrder"), icon: <ShoppingBag />, path: "/order" },
+        { label: t("manageOrder"), icon: <ShoppingBag />, path: "/branch-order-management" },
         { label: t("manageCalendar"), icon: <Calendar />, path: "/staff-calendar" },
         { label: t("manageBranchPromotion"), icon: <ShoppingBag />, path: "/branch-promotion-management" },
         { label: t("manageBranchProduct"), icon: <ShoppingBag />, path: "/branch-product-management" },
