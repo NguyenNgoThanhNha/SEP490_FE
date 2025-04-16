@@ -35,11 +35,6 @@ const createBranch = async (data: CreateBranchProps): Promise<ResponseProps> => 
   return await post(`Branch/create`, data);
 };
 
-// -----------------------------
-// External API Integrations
-// -----------------------------
-
-// Get Provinces from GHN
 const getProvinces = async (): Promise<ResponseProps[]> => {
   const res = await axios.get("https://online-gateway.ghn.vn/shiip/public-api/master-data/province", {
     headers: { Token: GHN_TOKEN },

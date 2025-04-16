@@ -7,6 +7,8 @@ import productService from "@/services/productService";
 import branchProductService from "@/services/branchProductService";
 import { TBranchProduct } from "@/types/branchProduct.type";
 import { TProduct } from "@/types/product.type";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const { Option } = Select;
 
@@ -25,6 +27,8 @@ interface ProductFormValues {
 const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onProductAdded }) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
+  const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
   const [availableProduct, setAvailableProducts] = useState<{
     productId: number; productName: string
   }[]>([]);
@@ -42,7 +46,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onPr
 
       const allProductResponse = await productService.getAllProduct({ page: 1, pageSize: 100 });
 
-      const productBranchResponse = await branchProductService.getAllBranchProduct(1, 1, 100);
+      const productBranchResponse = await branchProductService.getAllBranchProduct(branchId, 1, 100);
 
       if (allProductResponse?.success && productBranchResponse?.success) {
         const allProduct = allProductResponse.result?.data || [];

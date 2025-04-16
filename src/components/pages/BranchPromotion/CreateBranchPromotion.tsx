@@ -24,7 +24,8 @@ interface PromotionFormValues {
 const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-  const branchId = useSelector((state: RootState) => state.branch.branchId);
+  const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
+  const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
   const [availablePromotions, setAvailablePromotions] = useState<{
     promotionId: number; promotionName: string
   }[]>([]);
@@ -33,7 +34,7 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
     if (isOpen && branchId) {
       fetchAvailablePromotions();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, branchId]);
 
   const fetchAvailablePromotions = async () => {
@@ -42,7 +43,7 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
 
       const allPromotionsResponse = await promotionService.getAllPromotion({ page: 1, pageSize: 100 });
 
-      const branchPromotionsResponse = await branchPromotionService.getAllBranchPromotion({branchId: 1, page: 1, pageSize: 100 });
+      const branchPromotionsResponse = await branchPromotionService.getAllBranchPromotion({ branchId, page: 1, pageSize: 100 });
 
       if (allPromotionsResponse?.success && branchPromotionsResponse?.success) {
         const allPromotions = allPromotionsResponse.result?.data || [];
@@ -73,7 +74,7 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
 
       const response = await branchPromotionService.createBranchPromotion({
         promotionId: values.promotionId,
-        branchId: 1, 
+        branchId: 1,
         status: values.status,
         stockQuantity: values.stockQuantity,
       });
@@ -123,7 +124,7 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
 
         <div className="flex justify-end space-x-2">
           <Button onClick={onClose}>Cancel</Button>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit" loading={loading} className="bg-[#516d19]">
             Add Promotion
           </Button>
         </div>
