@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form, Select, Input } from "antd";
-// import { useSelector } from "react-redux";
-// import { RootState } from "@/store";
 import toast from "react-hot-toast";
 import productService from "@/services/productService";
 import branchProductService from "@/services/branchProductService";

@@ -10,6 +10,7 @@ import { Modal, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { TProduct } from "@/types/product.type";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/atoms/ui/pagination";
+import { useTranslation } from "react-i18next";
 
 const ProductManagementPage = () => {
   const [products, setProducts] = useState<TProduct[]>([]);
@@ -18,6 +19,7 @@ const ProductManagementPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
+  const {t} = useTranslation();
 
   const fetchProducts = async (page: number, pageSize: number) => {
     try {
@@ -84,12 +86,12 @@ const ProductManagementPage = () => {
   }, [page, pageSize]);
 
   const headers = [
-    { label: "Image", key: "image", hiding: true },
-    { label: "Product Name", key: "productName" },
-    { label: "Price", key: "price", render: (price: number) => formatPrice(price), sortable: true },
-    { label: "In stock", key: "quantity", sortable: true },
+    { label: t("Image"), key: "image", hiding: true },
+    { label: t("Product"), key: "productName" },
+    { label: t("Price"), key: "price", render: (price: number) => formatPrice(price), sortable: true },
+    { label: t("Quantity"), key: "quantity", sortable: true },
     { 
-      label: "Category", 
+      label: t("category"), 
       key: "category.name", 
       render: (value: string) => <span className="font-sm">{value}</span> 
     },

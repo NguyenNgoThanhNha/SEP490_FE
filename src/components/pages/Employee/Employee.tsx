@@ -9,6 +9,7 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import { TStaff } from "@/types/staff.type";
 import staffService from "@/services/staffService";
 import { formatDate } from "@/utils/formatDate";
+import { useTranslation } from "react-i18next";
 
 const EmployeeManagementPage = () => {
   const [staffs, setStaffs] = useState<TStaff[]>([]);
@@ -17,6 +18,7 @@ const EmployeeManagementPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
+  const { t } = useTranslation();
 
   const fetchStaff = async (pageIndex: number, pageSize: number) => {
     try {
@@ -41,10 +43,10 @@ const EmployeeManagementPage = () => {
 
   const handleDelete = (staffId: number) => {
     Modal.confirm({
-      title: "Are you sure?",
-      content: "This action cannot be undone.",
-      okText: "Yes, delete",
-      cancelText: "Cancel",
+      title: t("Areyousure?"),
+      content: t("Thisactioncannotbeundone."),
+      okText: t("Yesdelete"),
+      cancelText: t("Cancel"),
       onOk: async () => {
         try {
           const response = await staffService.deleteStaff(staffId);
@@ -83,11 +85,11 @@ const EmployeeManagementPage = () => {
   }, [page, pageSize]);
 
   const headers = [
-    { label: "Staff Name", key: "staffInfo.userName", sortable: true },
-    { label: "Email", key: "staffInfo.email" },
-    { label: "Gender", key: "staffInfo.gender"},
-    { label: "Phone Number", key: "staffInfo.phoneNumber"},
-    { label: "Birth Date", key: "staffInfo.birthDate" , render: (value: string) => formatDate(value), sortable: true} 
+    { label: t("StaffName"), key: "staffInfo.userName", sortable: true },
+    { label: t("Email"), key: "staffInfo.email" },
+    { label: t("Gender"), key: "staffInfo.gender" },
+    { label: t("PhoneNumber"), key: "staffInfo.phoneNumber" },
+    { label: t("BirthDate"), key: "staffInfo.birthDate", render: (value: string) => formatDate(value), sortable: true },    
   ];
 
   const renderPagination = () => {

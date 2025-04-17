@@ -12,6 +12,7 @@ import { formatPrice } from "@/utils/formatPrice";
 import { Badge } from "@/components/atoms/ui/badge";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { useTranslation } from "react-i18next";
 
 const BranchProductManagementPage = () => {
   const [branchProducts, setBranchProducts] = useState<TBranchProduct[]>([]);
@@ -23,7 +24,7 @@ const BranchProductManagementPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
-
+  const {t} = useTranslation();
 
   const fetchBranchProduct = async (branchId: number, page: number, pageSize: number) => {
     try {
@@ -99,27 +100,27 @@ const BranchProductManagementPage = () => {
 
   const headers = [
     {
-      label: "Product",
+      label: t("Product"),
       key: "product.productName",
     },
     {
-      label: "Price",
+      label: t("Price"),
       key: "product.price",
       sortable: true,
       render: (value: number) => `${formatPrice(value)} VND`
     },
     {
-      label: "Dimension",
+      label: t("Dimension"),
       key: "product.dimension",
       sortable: true,
     },
     {
-      label: "Quantity",
+      label: t("Quantity"),
       key: "stockQuantity",
       sortable: true,
     },
     {
-      label: "Status",
+      label: t("Status"),
       key: "status",
       render: (status: string) => (
         <Badge variant={status === "Active" ? "active" : "inactive"}>

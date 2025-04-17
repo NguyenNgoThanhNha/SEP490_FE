@@ -13,6 +13,7 @@ import orderService from "@/services/orderService";
 import { Badge } from "@/components/atoms/ui/badge";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { useTranslation } from "react-i18next";
 
 const BranchOrderManagementPage = () => {
   const [orders, setOrders] = useState<TOrder[]>([]);
@@ -24,6 +25,7 @@ const BranchOrderManagementPage = () => {
   const [orderTypeFilter, ] = useState<string[]>([]);
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const BranchId = branchIdRedux || Number(localStorage.getItem("branchId"));
+  const { t } = useTranslation();
 
   const fetchOrders = async (BranchId: number, PageIndex: number, PageSize: number, OrderType?: string) => {
     try {
@@ -71,11 +73,11 @@ const BranchOrderManagementPage = () => {
   }, [BranchId, page, pageSize]);
 
   const headers = [
-    { label: "Customer", key: "customer.userName" },
-    { label: "Price", key: "totalAmount", render: (price: number) => formatPrice(price), sortable: true },
-    { label: "Status", key: "status", sortable: true },
+    { label: t("Customer"), key: "customer.userName" },
+    { label: t("Price"), key: "totalAmount", render: (price: number) => formatPrice(price), sortable: true },
+    { label: t("Status"), key: "status", sortable: true },
     {
-      label: "Payment method",
+      label: t("Paymentmethod"),
       key: "paymentMethod",
       render: (status: string) => (
         <Badge variant={status === "PayOs" ? "active" : "inactive"}>
@@ -83,7 +85,7 @@ const BranchOrderManagementPage = () => {
         </Badge>
     ),
     },
-    { label: "Order Type", key: "orderType" },
+    { label: t("OrderType"), key: "orderType" },
 
   ];
 

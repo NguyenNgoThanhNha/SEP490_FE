@@ -5,7 +5,6 @@ import { TService } from "@/types/serviceType";
 import serviceService from "@/services/serviceService";
 import { Edit, Trash } from "lucide-react";
 import toast from "react-hot-toast";
-// import RechartsPieChart from "@/components/molecules/PieChart";
 import { Select } from "antd";
 import {
   Pagination,
@@ -17,13 +16,14 @@ import {
 } from "@/components/atoms/ui/pagination";
 import { Table } from "@/components/organisms/Table/Table";
 import { formatPrice } from "@/utils/formatPrice";
+import { useTranslation } from "react-i18next";
 
 const ServicesManagementPage = () => {
   const [services, setServices] = useState<TService[]>([]);
   const [, setLoading] = useState(false);
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10); 
+  const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
 
   const fetchServices = async (page: number, pageSize: number) => {
@@ -34,10 +34,10 @@ const ServicesManagementPage = () => {
         setServices(response.result?.data || []);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || "Failed to fetch services.");
+        toast.error(response.result?.message || t("Failedtofetchservices"));
       }
     } catch {
-      toast.error("Failed to fetch services.");
+      toast.error(t("Failedtofetchservices"));
     } finally {
       setLoading(false);
     }
@@ -45,21 +45,21 @@ const ServicesManagementPage = () => {
 
   const handleDelete = (serviceId: number) => {
     Modal.confirm({
-      title: "Are you sure?",
-      content: "This action cannot be undone.",
-      okText: "Yes, delete",
-      cancelText: "Cancel",
+      title: t("Areyousure?"),
+      content: t("Thisactioncannotbeundone."),
+      okText: t("Yesdelete"),
+      cancelText: t("Cancel"),
       onOk: async () => {
         try {
           const response = await serviceService.deleteService(serviceId);
           if (response?.success) {
-            toast.success("Service deleted successfully.");
-            fetchServices(page, pageSize); 
+            toast.success(t("Servicedeletedsuccessfully"));
+            fetchServices(page, pageSize);
           } else {
-            toast.error(response.result?.message || "Failed to delete service.");
+            toast.error(response.result?.message || t("Failedtodeleteservice"));
           }
         } catch {
-          toast.error("Failed to delete service.");
+          toast.error(t("Failedtodeleteservice"));
         }
       },
     });
@@ -72,42 +72,35 @@ const ServicesManagementPage = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
-      fetchServices(newPage, pageSize); 
+      fetchServices(newPage, pageSize);
     }
   };
 
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
     setPage(1);
-    fetchServices(1, value); 
+    fetchServices(1, value);
   };
 
   useEffect(() => {
     fetchServices(page, pageSize);
   }, [page, pageSize]);
 
+  const { t } = useTranslation();
+
   const headers = [
-    { label: "Service Name", key: "name", searchable: true },
-    { 
-      label: "Price", 
-      key: "price", 
-      render: (price: number) =>formatPrice(price), 
-      sortable: true 
+    { label: t("ServiceName"), key: "name", searchable: true },
+    {
+      label: t("Price"),
+      key: "price",
+      render: (price: number) => formatPrice(price),
+      sortable: true,
     },
-    { label: "Duration", key: "duration",  render: (duration: number) => `${duration} minutes `},
+    { label: t("Duration"), key: "duration", render: (duration: number) => `${duration} ${t('minutes')}` },
   ];
+
   return (
     <div className="p-6 min-h-screen">
-      {/* <div className="flex space-x-6">
-        <div className="w-1/2 p-4">
-          <RechartsPieChart
-            title="Type distribution"
-            subtitle="Service Type"
-            labels={["Body", "Facial", "Others"]}
-            data={[59, 20, 21]}
-          />
-        </div>
-      </div> */}
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}
@@ -129,13 +122,12 @@ const ServicesManagementPage = () => {
               </button>
             </>
           )}
-    
         />
       </div>
       <div className="absolute right-10 mt-3">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-          <span className="whitespace-nowrap text-gray-400 text-sm">Number of rows per page</span>
+            <span className="whitespace-nowrap text-gray-400 text-sm">{t("Numberofrowsperpage")}</span>
             <Select
               defaultValue={pageSize}
               onChange={handlePageSizeChange}
@@ -143,7 +135,7 @@ const ServicesManagementPage = () => {
             >
               {[5, 10, 15, 20].map((size) => (
                 <Select.Option key={size} value={size}>
-                  {size} items
+                  {size} {t("items")}
                 </Select.Option>
               ))}
             </Select>
@@ -154,7 +146,7 @@ const ServicesManagementPage = () => {
                 onClick={() => handlePageChange(page - 1)}
                 isDisabled={page === 1}
               >
-                Prev
+                {t("Prev")}
               </PaginationPrevious>
               {Array.from({ length: totalPages }, (_, index) => (
                 <PaginationItem key={index}>
@@ -170,13 +162,12 @@ const ServicesManagementPage = () => {
                 onClick={() => handlePageChange(page + 1)}
                 isDisabled={page === totalPages}
               >
-                Next
+                {t("Next")}
               </PaginationNext>
             </PaginationContent>
           </Pagination>
         </div>
       </div>
-
     </div>
   );
 };

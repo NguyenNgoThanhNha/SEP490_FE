@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
 
 import { cn } from '@/utils/cn'
 import { ButtonProps, buttonVariants } from '@/components/atoms/ui/button'
+import { useTranslation } from 'react-i18next'
 
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
@@ -47,7 +48,16 @@ const PaginationLink = ({ className, isActive, size = 'icon', ...props }: Pagina
 )
 PaginationLink.displayName = 'PaginationLink'
 
-const PaginationPrevious = ({ className, onClick, isDisabled, ...props }: { onClick?: () => void; isDisabled?: boolean } & React.ComponentProps<typeof PaginationLink>) => (
+
+const PaginationPrevious = ({
+  className,
+  onClick,
+  isDisabled,
+  ...props
+}: { onClick?: () => void; isDisabled?: boolean } & React.ComponentProps<typeof PaginationLink>) => {
+  const { t } = useTranslation();  // This is now outside the return statement
+
+  return (
     <PaginationLink
       aria-label="Go to previous page"
       size="default"
@@ -56,9 +66,11 @@ const PaginationPrevious = ({ className, onClick, isDisabled, ...props }: { onCl
       {...props}
     >
       <ChevronLeft className="h-4 w-4" />
-      <span>Previous</span>
+      <span>{t("Previous")}</span>
     </PaginationLink>
-  )
+  );
+};
+
 
 PaginationPrevious.displayName = 'PaginationPrevious'
 

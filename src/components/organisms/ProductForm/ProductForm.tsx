@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader } from "lucide-react";
 import categoryService from "@/services/categoryService";
 import { TCate } from "@/types/category.type";
+import { useTranslation } from "react-i18next";
 
 interface ProductFormProps {
   mode: "create" | "update";
@@ -24,7 +25,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
   const navigate = useNavigate();
   const [categories, setCategories] = useState<TCate[] | null>(null);
   const [, setImages] = useState<string[]>(initialData?.images || []);
-
+  const {t} = useTranslation();
 
   const form = useForm<ProductType>({
     resolver: zodResolver(ProductSchema),
@@ -106,7 +107,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? "Create Product" : "Update Product"}
+                {mode === "create" ? t("CreateProduct")  : t("UpdateProduct")}
               </CardTitle>
             </div>
           </CardHeader>
@@ -118,9 +119,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="productName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Product Name</FormLabel>
+                    <FormLabel>{t('Product')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter product name" {...field} />
+                      <Input placeholder={t("Enterproductname")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -131,9 +132,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="productDescription"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Product Description</FormLabel>
+                    <FormLabel>{t('productDes')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter product description" {...field} />
+                      <Input placeholder={t("Enterproductdes")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -144,11 +145,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="volume"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Volume</FormLabel>
+                    <FormLabel>{t("Dimension")} (ml)</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="Enter volume"
+                        placeholder={t("Entervolume")}
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
@@ -164,11 +165,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price (VND)</FormLabel>
+                    <FormLabel>{t("Price")} (VND)</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter price"
+                        placeholder={t("Enterprice")}
                         onChange={(e) => field.onChange(Number(e.target.value.replace(/\D/g, '')))}
                       />
                     </FormControl>
@@ -182,11 +183,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quantity</FormLabel>
+                    <FormLabel>{t('Quantity')}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="Enter quantity"
+                        placeholder={t("Enterquantity")}
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
@@ -200,11 +201,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="discount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Discount (%)</FormLabel>
+                    <FormLabel>{t('Discount')} (%)</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="Enter discount"
+                        placeholder={t("Enterdiscount")}
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
@@ -218,14 +219,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="categoryId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel>{t('Category')}</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
                       value={field.value ? field.value.toString() : undefined}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
+                          <SelectValue placeholder={t("Selectcategory")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -252,7 +253,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
             onClick={() => navigate("/products-management")}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
-            Cancel
+           {t('Cancel')} 
           </button>
           <button
             type="submit"
@@ -264,7 +265,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 <Loader className="animate-spin h-5 w-5 text-white" />
               </div>
             ) : (
-              mode === "create" ? "Create Product" : "Update Product"
+              mode === "create" ? t("CreateProduct")  : t("UpdateProduct")
             )}
           </button>
         </div>

@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import AddPromotionModal from "./CreateBranchPromotion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { useTranslation } from "react-i18next";
 
 const BranchPromotionManagementPage = () => {
   const [branchPromtions, setBranchPromtions] = useState<TBranchPromotion[]>([]);
@@ -22,6 +23,8 @@ const BranchPromotionManagementPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
+  const {t} = useTranslation();
+
   const fetchBranchPromotion = async (branchId: number, page: number, pageSize: number) => {
     try {
       setLoading(true);
@@ -94,7 +97,7 @@ const BranchPromotionManagementPage = () => {
 
   const headers = [
     {
-      label: "Image",
+      label: t("Image"),
       key: "promotion.image",
       render: (value: string) => (
         <img
@@ -104,22 +107,22 @@ const BranchPromotionManagementPage = () => {
         />
       )
     },
-    { label: "Promotion", key: "promotion.promotionName" },
+    { label: t("PromotionName"), key: "promotion.promotionName" },
     {
-      label: "Discount",
+      label: t("Discount"),
       key: "promotion.discountPercent",
       sortable: true,
       render: (value: number) => `${value}%`
     },
     {
-      label: "Start Date",
+      label: t("StartDate"),
       key: "promotion.startDate",
       sortable: true,
       render: (value: string) =>
         value ? format(new Date(value), "dd/MM/yyyy HH:mm") : "Invalid Date"
     },
     {
-      label: "End Date",
+      label: t("EndDate"),
       key: "promotion.endDate",
       sortable: true,
       render: (value: string) =>

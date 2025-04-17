@@ -1,15 +1,17 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { setSelectedChannel } from "@/store/slice/chatSlice";
+import { useTranslation } from "react-i18next";
 
 export default function ChatSidebar() {
   const dispatch = useDispatch();
   const channels = useSelector((state: RootState) => state.chat.channels);
   const selectedChannel = useSelector((state: RootState) => state.chat.selectedChannel);
+  const {t} = useTranslation();
 
   return (
     <div className="w-[300px] border-r bg-white h-screen flex flex-col">
-      <h2 className="text-xl font-bold p-4 border-b">Tin nhắn</h2>
+      <h2 className="text-xl font-bold p-4 border-b">{t("message")}</h2>
       <ul className="flex-1 overflow-y-auto p-2 space-y-2">
         {channels.map((channel) => {
           const isSelected = selectedChannel?.id === channel.id;

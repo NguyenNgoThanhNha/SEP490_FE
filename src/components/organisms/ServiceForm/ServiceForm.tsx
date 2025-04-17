@@ -9,6 +9,7 @@ import { Loader } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 interface ServiceFormProps {
@@ -34,19 +35,19 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
   const handleFormSubmit = async (data: ServiceType) => {
     console.log("Form data:", data);
     setLoading(true);
-  
+
     try {
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("description", data.description);
       formData.append("duration", data.duration);
       formData.append("price", data.price.toString());
-  
+
       data.images.forEach((image) => {
-        formData.append("images", image); 
+        formData.append("images", image);
       });
-  
-      await onSubmit(formData as never); 
+
+      await onSubmit(formData as never);
       navigate("/services-management");
     } catch {
       toast.error("Error submitting form:");
@@ -54,7 +55,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
       setLoading(false);
     }
   };
-  
+  const { t } = useTranslation();
+
 
   return (
     <Form {...form}>
@@ -63,7 +65,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? "Create Service" : "Update Service"}
+                {mode === "create" ? t("CreateService") : t("UpdateService")}
               </CardTitle>
             </div>
           </CardHeader>
@@ -73,9 +75,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Service Name</FormLabel>
+                  <FormLabel>{t("ServiceName")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter service name" {...field} />
+                    <Input placeholder={t("Enterservicename")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -90,7 +92,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
                     <FileUpload
                       multiple={true}
                       onImageUpload={(selectedFiles) => {
-                        field.onChange(selectedFiles); 
+                        field.onChange(selectedFiles);
                       }}
                     />
                   </FormControl>
@@ -103,9 +105,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Service Description</FormLabel>
+                  <FormLabel>{t('ServiceDescription')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter service description" {...field} />
+                    <Input placeholder={t("Enterservicedescription" )}{...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -116,9 +118,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
               name="duration"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Duration</FormLabel>
+                  <FormLabel>{t("Duration")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter service duration" {...field} />
+                    <Input placeholder={t("Enterserviceduration")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -129,13 +131,13 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>{t("Price")}</FormLabel>
                   <FormControl>
                     <Input
                       type="text"
                       value={formatPrice(field.value)}
                       onChange={(e) => field.onChange(Number(e.target.value.replace(/,/g, "")))}
-                      placeholder="Enter price"
+                      placeholder={t("Enterprice")}
                     />
                   </FormControl>
                   <FormMessage />
@@ -150,7 +152,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
             onClick={() => navigate("/dashboard/services")}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
-            Cancel
+            {t("Cancel")}
           </button>
           <button
             type="submit"
@@ -162,7 +164,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
                 <Loader className="animate-spin h-5 w-5 text-white" />
               </div>
             ) : (
-              mode === "create" ? "Create Service" : "Update Sevice"
+              mode === "create" ? t("CreateService") : t("UpdateService")
             )}
           </button>
         </div>

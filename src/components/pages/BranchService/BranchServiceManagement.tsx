@@ -12,6 +12,7 @@ import { Badge } from "@/components/atoms/ui/badge";
 import AddServiceModal from "./AddBranchService";
 import { TBranchService } from "@/types/branchService.type";
 import serviceBranchService from "@/services/serviceBranchService";
+import { useTranslation } from "react-i18next";
 
 const BranchServiceManagementPage = () => {
     const [branchServices, setBranchServices] = useState<TBranchService[]>([]);
@@ -23,7 +24,8 @@ const BranchServiceManagementPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
     const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
-  
+    const {t} = useTranslation();
+
     const fetchBranchService = async (branchId: number, page: number, pageSize: number) => {
         try {
             setLoading(true);
@@ -95,22 +97,22 @@ const BranchServiceManagementPage = () => {
 
     const headers = [
         {
-            label: "Service",
+            label: t("Service"),
             key: "service.name",
         },
         {
-            label: "Price",
+            label: t("Price"),
             key: "service.price",
             sortable: true,
             render: (value: number) => `${formatPrice(value)} VND`
         },
         {
-            label: "Duration",
+            label: t("Duration"),
             key: "service.duration",
             render: (value: number) => `${value} minute(s)`
         },
         {
-            label: "Status",
+            label: t("Status"),
             key: "status",
             render: (status: string) => (
                 <Badge variant={status === "Active" ? "active" : "inactive"}>
