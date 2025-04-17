@@ -54,7 +54,7 @@ const updatePaymentMethod = async ({orderId, paymentMethod, note}: UpdatePayment
 }
 interface CreateOrderFullProps {
   userId: number;
-  totalAmount: number;
+  totalAmount?: number;
   paymentMethod: string;
   shippingCost: number;
   products: {
