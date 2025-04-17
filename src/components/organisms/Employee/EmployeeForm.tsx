@@ -12,6 +12,7 @@ import branchService from "@/services/branchService";
 import toast from "react-hot-toast";
 import { TBranch } from "@/types/branch.type";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/ui/select";
+import { useTranslation } from "react-i18next";
 
 interface StaffFormProps {
   mode: "create" | "update";
@@ -23,6 +24,7 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [branchs, setBranch] = useState<TBranch[]>([]);
+  const { t } = useTranslation();
 
   const form = useForm<StaffType>({
     resolver: zodResolver(StaffSchema),
@@ -68,7 +70,7 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between mt-2">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? "Create Staff" : "Update Staff"}
+                {mode === "create" ? t("CreateStaff") : t("UpdateStaff")}
               </CardTitle>
             </div>
           </CardHeader>
@@ -79,9 +81,9 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                 name="userName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Staff Name</FormLabel>
+                    <FormLabel>{t("StaffName")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter staff name" {...field} />
+                      <Input placeholder={t('EnterStaffName')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -92,11 +94,11 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel>{t("FullName")}</FormLabel>
                     <FormControl>
                       <TextArea
                         {...field}
-                        placeholder="Enter full name"
+                        placeholder={t('EnterFullName')}
                         rows={4}
                         className="text-sm font-normal"
                         style={{ borderRadius: "8px", padding: "10px", fontFamily: "inherit" }}
@@ -115,7 +117,7 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Enter email"
+                        placeholder={t('EnterEmail')}
                         className="text-sm font-normal"
                         style={{ borderRadius: "8px", padding: "10px", fontFamily: "inherit" }}
                       />
@@ -129,14 +131,14 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                 name="branchId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Branch</FormLabel>
+                    <FormLabel>{t('Branch')}</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
                       value={field.value ? field.value.toString() : undefined}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select branch" />
+                          <SelectValue placeholder={t('SelectBranch')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -159,20 +161,20 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                 name="roleId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Role</FormLabel>
+                    <FormLabel>{t('Role')}</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
                       value={field.value ? field.value.toString() : undefined}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select role" />
+                          <SelectValue placeholder={t('SelectRole')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="1">Manager</SelectItem>
-                        <SelectItem value="2">Specialist</SelectItem>
-                        <SelectItem value="3">Cashier</SelectItem>
+                        <SelectItem value="1">{t(' Manager')}</SelectItem>
+                        <SelectItem value="2">{t('Specialist')}</SelectItem>
+                        <SelectItem value="3">{t('Cashier')}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -189,7 +191,7 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
             onClick={() => navigate(-1)}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
-            Cancel
+            {t("Cancel")}
           </button>
           <button
             type="submit"
@@ -201,7 +203,7 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                 <Loader className="animate-spin h-5 w-5 text-white" />
               </div>
             ) : (
-              mode === "create" ? "Create Staff" : "Update Staff"
+              mode === "create" ? t("CreateStaff") : t("UpdateStaff")
             )}
           </button>
         </div>

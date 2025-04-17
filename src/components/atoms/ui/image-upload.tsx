@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { message } from "antd";
 import { PlusCircleIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface FileUploadProps {
   onImageUpload: (files: File[]) => void;
   multiple?: boolean;
-  initialData?: string[]; 
+  initialData?: string[];
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false, initialData = [] }) => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const { t } = useTranslation();
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-  // 🟢 Load dữ liệu mặc định khi component được mount
   useEffect(() => {
     if (initialData.length > 0) {
-      setPreviews(initialData); // Set ảnh mặc định
+      setPreviews(initialData);
     }
   }, [initialData]);
 
@@ -45,7 +46,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
       newPreviews.push(URL.createObjectURL(file));
     });
 
-    // Cập nhật danh sách file và preview
     setSelectedFiles((prevFiles) => (multiple ? [...prevFiles, ...validFiles] : validFiles));
     setPreviews((prevPreviews) => (multiple ? [...prevPreviews, ...newPreviews] : newPreviews));
 
@@ -62,7 +62,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
   return (
     <div className="space-y-4">
       <label className="block text-sm font-medium text-gray-700">
-        {multiple ? "Upload Images" : "Upload Image"}
+        {multiple ? t("UploadImages")  : t("UploadImage")}
       </label>
 
       <div className="flex flex-wrap gap-4">
@@ -86,7 +86,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
           </div>
         ))}
 
-        {/* Input Upload */}
         <label className="w-32 h-32 bg-white border border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 cursor-pointer">
           <input
             type="file"
@@ -96,7 +95,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
             multiple={multiple}
           />
           <PlusCircleIcon color="green" size={32} />
-          <span className="text-xs mt-1">Add Image</span>
+          <span className="text-xs mt-1">{t('addImage')}</span>
         </label>
       </div>
 
