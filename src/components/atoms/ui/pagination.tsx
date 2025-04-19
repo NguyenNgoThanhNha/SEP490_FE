@@ -5,7 +5,6 @@ import { cn } from '@/utils/cn'
 import { ButtonProps, buttonVariants } from '@/components/atoms/ui/button'
 import { useTranslation } from 'react-i18next'
 
-
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
     role='navigation'
@@ -48,44 +47,51 @@ const PaginationLink = ({ className, isActive, size = 'icon', ...props }: Pagina
 )
 PaginationLink.displayName = 'PaginationLink'
 
-
 const PaginationPrevious = ({
   className,
   onClick,
   isDisabled,
   ...props
 }: { onClick?: () => void; isDisabled?: boolean } & React.ComponentProps<typeof PaginationLink>) => {
-  const { t } = useTranslation();  // This is now outside the return statement
+  const { t } = useTranslation() // This is now outside the return statement
 
   return (
     <PaginationLink
-      aria-label="Go to previous page"
-      size="default"
-      className={cn("gap-1 pl-2.5", isDisabled && "pointer-events-none opacity-50", className)}
+      aria-label='Go to previous page'
+      size='default'
+      className={cn('gap-1 pl-2.5', isDisabled && 'pointer-events-none opacity-50', className)}
       onClick={!isDisabled ? onClick : undefined}
       {...props}
     >
-      <ChevronLeft className="h-4 w-4" />
-      <span>{t("Previous")}</span>
+      <ChevronLeft className='h-4 w-4' />
+      <span>{t('Previous')}</span>
     </PaginationLink>
-  );
-};
-
+  )
+}
 
 PaginationPrevious.displayName = 'PaginationPrevious'
 
-const PaginationNext = ({ className, onClick, isDisabled, ...props }: { onClick?: () => void; isDisabled?: boolean } & React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to next page"
-    size="default"
-    className={cn("gap-1 pr-2.5", isDisabled && "pointer-events-none opacity-50", className)}
-    onClick={!isDisabled ? onClick : undefined}
-    {...props}
-  >
-    <span>Next</span>
-    <ChevronRight className="h-4 w-4" />
-  </PaginationLink>
-)
+const PaginationNext = ({
+  className,
+  onClick,
+  isDisabled,
+  ...props
+}: { onClick?: () => void; isDisabled?: boolean } & React.ComponentProps<typeof PaginationLink>) => {
+  const { t } = useTranslation() // Add translation hook
+
+  return (
+    <PaginationLink
+      aria-label='Go to next page'
+      size='default'
+      className={cn('gap-1 pr-2.5', isDisabled && 'pointer-events-none opacity-50', className)}
+      onClick={!isDisabled ? onClick : undefined}
+      {...props}
+    >
+      <span>{t('Next')}</span>
+      <ChevronRight className='h-4 w-4' />
+    </PaginationLink>
+  )
+}
 PaginationNext.displayName = 'PaginationNext'
 
 const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'>) => (

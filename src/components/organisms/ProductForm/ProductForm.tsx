@@ -25,8 +25,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
   const navigate = useNavigate();
   const [categories, setCategories] = useState<TCate[] | null>(null);
   const [, setImages] = useState<string[]>(initialData?.images || []);
-  const {t} = useTranslation();
-
+  const { t } = useTranslation();
+console.log('====================================');
+console.log(initialData?.productName);
+console.log('====================================');
   const form = useForm<ProductType>({
     resolver: zodResolver(ProductSchema),
     defaultValues: initialData || {
@@ -40,15 +42,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
       categoryId: 0,
       companyId: 1,
       images: [],
-      skintypesuitable: "", 
+      skintypesuitable: "",
     },
   });
   const handleFormSubmit = async (data: ProductType) => {
+    console.log('Submitting form:', data);
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("productName", data.productName);
-      formData.append("productDescription", data.productDescription);
+      formData.append("ProductName", data.productName);
+      formData.append("ProductDescription", data.productDescription);
+      formData.append("Dimension", data.dimension);
       formData.append("price", data.price.toString());
       formData.append("volume", data.volume.toString());
       formData.append("quantity", data.quantity.toString());
@@ -56,20 +60,30 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
       formData.append("categoryId", data.categoryId.toString());
       formData.append("companyId", data.companyId.toString());
       formData.append("skintypesuitable", data.skintypesuitable);
-  
+      
       if (data.images && data.images.length > 0) {
-        formData.append("image", data.images[0]); 
+        formData.append("image", data.images[0]);
       }
-  
-      await onSubmit(formData as any); 
+      
+      await onSubmit(data as any);
       navigate("/products-management");
     } catch {
-      toast.error("Error submitting form:");
+      toast.error("Error submitting form");
     } finally {
       setLoading(false);
     }
   };
-  
+  console.log("Errors:", form.formState.errors);
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === "volume" && value.volume) {
+        form.setValue("dimension", `${value.volume}ml`);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+
   useEffect(() => {
 
     const fetchCategories = async () => {
@@ -86,18 +100,20 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
     };
     fetchCategories();
   }, []);
-  useEffect (() => {
-    if(initialData?.images) {
+  useEffect(() => {
+    if (initialData?.images) {
       setImages(initialData.images);
       form.setValue("images", initialData.images);
     }
   }, [initialData]);
-  
-  const handleImageUpload = (file: File) => {
-    setImages([URL.createObjectURL(file)]); 
-    form.setValue("images", file); 
+
+  const handleImageUpload = (files: File[]) => {
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImages(previews);
+    form.setValue("images", files);
   };
-  
+
+
   console.log("Current images:", form.watch("images"));
 
   return (
@@ -107,13 +123,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? t("CreateProduct")  : t("UpdateProduct")}
+                {mode === "create" ? t("CreateProduct") : t("UpdateProduct")}
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-7 gap-6">
             <div className="col-span-4 space-y-6">
-              <ImageUploadOne onImageUpload={handleImageUpload} multiple={true}  initialData={initialData?.images} />
+              <ImageUploadOne onImageUpload={handleImageUpload} multiple={true} initialData={initialData?.images} />
               <FormField
                 control={form.control}
                 name="productName"
@@ -158,6 +174,23 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="dimension"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("Dimension")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
             </div>
             <div className="col-span-3 space-y-6">
               <FormField
@@ -168,6 +201,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                     <FormLabel>{t("Price")} (VND)</FormLabel>
                     <FormControl>
                       <Input
+                        {...field}
+
                         type="text"
                         placeholder={t("Enterprice")}
                         onChange={(e) => field.onChange(Number(e.target.value.replace(/\D/g, '')))}
@@ -244,6 +279,33 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="skintypesuitable"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("SuitableSkinType")}</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t("SelectSkinType")} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Oily">{t("OilySkin")}</SelectItem>
+                        <SelectItem value="Dry">{t("DrySkin")}</SelectItem>
+                        <SelectItem value="Combination">{t("CombinationSkin")}</SelectItem>
+                        <SelectItem value="All">{t("AllSkinTypes")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
             </div>
           </CardContent>
         </Card>
@@ -253,7 +315,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
             onClick={() => navigate("/products-management")}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
-           {t('Cancel')} 
+            {t('Cancel')}
           </button>
           <button
             type="submit"
@@ -265,7 +327,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 <Loader className="animate-spin h-5 w-5 text-white" />
               </div>
             ) : (
-              mode === "create" ? t("CreateProduct")  : t("UpdateProduct")
+              mode === "create" ? t("CreateProduct") : t("UpdateProduct")
             )}
           </button>
         </div>

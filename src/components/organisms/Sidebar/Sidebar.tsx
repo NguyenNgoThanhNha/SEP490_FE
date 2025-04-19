@@ -73,7 +73,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         //     { label: t("createOrder"), icon: <DashboardIcon />, path: "/create-blog" },
         //   ],
         // },
-        { label: t("customer"), icon: <PersonIcon />, path: "/customers-management" },
+        // { label: t("customer"), icon: <PersonIcon />, path: "/customers-management" },
         {
           label: t("promote"),
           icon: <TicketPercent />,

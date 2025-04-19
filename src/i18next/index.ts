@@ -121,6 +121,8 @@ const resources = {
       Manager: "Manager",
       Specialist: "Specialist",
       Cashier: "Cashier",
+      addProductToBranch: 'Add Product To Branch',
+
     }
   },
   vi: {
@@ -237,7 +239,9 @@ const resources = {
       SelectRole: "Chọn vai trò",
       Manager: "Quản lý",
       Specialist: "Chuyên viên",
-      Cashier: "Thu ngân",      
+      Cashier: "Thu ngân",  
+      addProductToBranch: 'Thêm sản phẩm vào chi nhánh',
+    
 
     }
   }

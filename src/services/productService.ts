@@ -28,36 +28,18 @@ interface CreateProductProps {
   categoryId: number
   companyId: number
   skintypesuitable: string,
-  images: string[]
+  images: File[]
 }
 
-const createProduct = async ({
-  productName,
-  productDescription,
-  dimension,
-  volume,
-  price,
-  quantity,
-  discount,
-  categoryId,
-  companyId,
-  skintypesuitable,
-  images
-}: CreateProductProps): Promise<ResponseProps> => {
-  return await post('Product/create', {
-    productName,
-    productDescription,
-    dimension,
-    discount,
-    categoryId,
-    companyId,
-    price,
-    volume,
-    quantity,
-    skintypesuitable,
-    images
-  })
-}
+
+const createProduct = async (formData: FormData): Promise<ResponseProps> => {
+  return await post("Product/create", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 
 interface UpdateProductProps {
   productId: number
