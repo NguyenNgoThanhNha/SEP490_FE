@@ -40,7 +40,7 @@ interface ConfirmAppointmentProps {
 }
 
 const confirmAppointment = async (data:ConfirmAppointmentProps) : Promise<ResponseProps> =>{
-  return await post('Order/confirm-order-appointment', data)
+  return await post('Order/confirm-order', data)
 }
 
 interface UpdatePaymentMethodProps {
@@ -98,6 +98,9 @@ const getAllOrder  = async (params: GetAllOrderProps = {}) : Promise<ResponsePro
   return await get('Order/get-all-order', params)
 }
 
+const getOrderDetail = async (orderId: number) : Promise<ResponseProps> =>{
+  return await get(`Order/detail-booking?orderId=${orderId}`)
+}
 export default {
   getAllPurchase,
   createPurchase,
@@ -106,6 +109,7 @@ export default {
   createOrderFull,
   confirmOrderProduct,
   updateOrderStatus,
-  getAllOrder
+  getAllOrder,
+  getOrderDetail
 
 }

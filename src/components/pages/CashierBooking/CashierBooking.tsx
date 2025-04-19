@@ -28,7 +28,7 @@ const BookingPage: React.FC = () => {
                 const orderId = response.result.data;
                 setOrderId(orderId);
                 setAppointmentData(data);
-                navigate("/checkout", { state: { orderId, appointmentData: data } });
+                navigate("/checkout", { state: { orderId} });
             } else {
                 alert("Failed to create appointment. Please try again.");
             }

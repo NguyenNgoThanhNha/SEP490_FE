@@ -26,7 +26,7 @@ interface CreateProductProps {
   categoryId: number
   companyId: number
   brand: string,
-  images: File[]}
+  images: string}
 
 
 const createProduct = async (data: CreateProductProps): Promise<ResponseProps> => {
@@ -56,7 +56,7 @@ interface UpdateProductProps {
   quantity?: number
   categoryId?: number
   companyId?: number
-  images?: string[]
+  images?: string
 }
 
 const updateProduct = async ({

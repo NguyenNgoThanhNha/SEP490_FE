@@ -24,6 +24,8 @@ import { TAppointment } from "@/types/appoinment.type";
 
 import { formatPrice } from "@/utils/formatPrice";
 import RegisterWithPhone from "./RegisterForm";
+import dayjs from "dayjs";
+import branchPromotionService from "@/services/branchPromotionService";
 
 const { Option } = Select;
 
@@ -46,7 +48,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
       date: "",
       time: "",
       notes: "",
-      voucher: "",
+      voucher: 0,
       userId: undefined,
       service: [],
     },
@@ -74,41 +76,57 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
       .then((res) => setServices(res.result?.data || []));
   }, [selectedBranch]);
 
+  const [vouchers, setVouchers] = useState<any[]>([]);
+  const [selectedVoucher, setSelectedVoucher] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!selectedBranch) return;
+    branchPromotionService
+      .getAllBranchPromotion({
+        branchId: selectedBranch,
+        page: 1,
+        pageSize: 100,
+      })
+      .then((res) => setVouchers(res.result?.data || []));
+  }, [selectedBranch]);
+
   useEffect(() => {
     const fetchStaffs = async () => {
       if (!selectedBranch || !selectedDate || !selectedTime || selectedServices.length === 0) return;
 
-      const baseDate = new Date(`${selectedDate}T${selectedTime}`);
+      const baseDate = dayjs(`${selectedDate}T${selectedTime}`);
       let currentTime = baseDate;
 
-      const serviceIds = selectedServices.map((s: any) => s.serviceId);
-      const startTimes: string[] = [];
+      const staffMap: Record<number, TStaff[]> = {};
 
       for (let s of selectedServices) {
-        startTimes.push(currentTime.toISOString());
         const service = services.find((sv) => sv.serviceId === s.serviceId);
-        if (service?.duration) {
-          currentTime = new Date(currentTime.getTime() + service.duration * 60000);
+        if (!service) continue;
+
+        const res = await staffService.getListStaffAvailable({
+          branchId: selectedBranch,
+          serviceId: s.serviceId,
+          workDate: currentTime.format('YYYY-MM-DD HH:mm:ss.SSSSSS'),
+          startTime: currentTime.format('HH:mm:ss'),
+        });
+
+        if (res.success && res.result?.data) {
+          staffMap[s.serviceId] = res.result.data;
+        } else {
+          staffMap[s.serviceId] = [];
+        }
+
+        if (service.duration) {
+          const durationInMinutes = Number(service.duration);
+          currentTime = currentTime.add(durationInMinutes + 7, 'minute');
         }
       }
-
-      const res = await staffService.getStaffFreeInTime({
-        branchId: selectedBranch,
-        serviceIds,
-        startTimes,
-      });
-
-      const staffMap: Record<number, TStaff[]> = {};
-      (res.result?.data || []).forEach((item: any) => {
-        staffMap[item.serviceId] = item.staffs;
-      });
 
       setStaffs(staffMap);
     };
 
     fetchStaffs();
-  }, [selectedBranch, selectedDate, selectedTime, selectedServices, services]);
-
+  }, [selectedBranch, selectedDate, selectedTime, selectedServices]);
   useEffect(() => {
     if (userId) {
       form.setValue("userId", userId);
@@ -129,26 +147,29 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
   };
 
   const computeAppointmentTimes = () => {
-    const baseDateTime = new Date(`${selectedDate}T${selectedTime}`);
-    let currentTime = new Date(baseDateTime.getTime() + 7 * 60 * 60 * 1000);
-  
+    let currentTime = dayjs(`${selectedDate}T${selectedTime}`);
+
     const selectedServices = form.getValues("service");
-  
+
     const result = selectedServices.map((s) => {
       const svc = services?.find((ser) => ser.serviceId === s.serviceId);
+
       const newService = {
         ...s,
-        appointmentTime: currentTime.toISOString(), 
+        appointmentTime: currentTime.format('YYYY-MM-DDTHH:mm:ss'),
       };
+
       if (svc?.duration) {
-        currentTime = new Date(currentTime.getTime() + (svc.duration + 6) * 60000);
+        const durationInMinutes = Number(svc.duration);
+        currentTime = currentTime.add(durationInMinutes + 7, 'minute')
       }
+
       return newService;
     });
-  
+
     return result;
   };
-  
+
 
 
   const handleSubmit = (data: TAppointment) => {
@@ -156,7 +177,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
 
     console.log("🔎 finalServiceData", finalServiceData);
     const branchName = branches.find((b) => b.branchId === data.branchId)?.branchName || "";
-    const customerName = form.getValues("name") || ""; 
+    const customerName = form.getValues("name") || "";
     const serviceDetails = finalServiceData.map((s) => {
       const service = services.find((sv) => sv.serviceId === s.serviceId);
       return {
@@ -185,8 +206,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
       status: "Pending",
       notes: data.notes || "",
       feedback: "",
-      voucherId: data.voucher ? Number(data.voucher) : 0,
-      total: totalPrice,
+      voucherId: selectedVoucher || 0,
+      total: finalPrice,
       branchName,
       customerName,
       serviceDetails,
@@ -200,6 +221,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
     const svc = services.find((sv) => sv.serviceId === s.serviceId);
     return sum + (svc?.price || 0);
   }, 0);
+
+  const discountPercent = vouchers.find((v) => v.id === selectedVoucher)?.promotion.discountPercent || 0;
+  const discountAmount = (totalPrice * discountPercent) / 100;
+  const finalPrice = totalPrice - discountAmount;
 
   return (
     <Card className="w-full max-w-md mx-auto shadow-md">
@@ -242,7 +267,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
               )}
             />
 
-            {/* Date and Time */}
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -268,7 +292,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
               />
             </div>
 
-            {/* Service Select */}
             <FormItem>
               <FormLabel>Services</FormLabel>
               <Select
@@ -284,12 +307,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
                   </Option>
                 ))}
               </Select>
-              <p className="text-right font-semibold mt-2">
-                Total: {formatPrice(totalPrice)} VND
-              </p>
             </FormItem>
 
-            {/* Staff per service */}
             {selectedServices.map((s: any, idx: number) => (
               <FormItem key={s.serviceId}>
                 <FormLabel>
@@ -313,7 +332,27 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
                 </Select>
               </FormItem>
             ))}
-
+            <FormItem>
+              <FormLabel>Voucher</FormLabel>
+              <Select
+                placeholder="Select voucher"
+                value={selectedVoucher}
+                onChange={(val) => setSelectedVoucher(Number(val))}
+                style={{ width: "100%" }}
+              >
+                {vouchers.map((voucher) => (
+                  <Option key={voucher.id} value={voucher.id}>
+                    {voucher.promotion.promotionName} - Giảm {voucher.promotion.discountPercent}%
+                  </Option>
+                ))}
+              </Select>
+              <p className="text-right font-semibold mt-2">
+                Discount: {formatPrice(discountAmount)} VND
+              </p>
+              <p className="text-right font-semibold mt-2">
+                Final Total: {formatPrice(finalPrice)} VND
+              </p>
+            </FormItem>
             <FormField
               control={form.control}
               name="notes"

@@ -86,13 +86,13 @@ const getStaffBusyTime = async ({ staffId, date }: StaffBusyTimeProps): Promise<
 }
 
 interface GetStaffFreeInTimeProps {
-  branchId: number,
-  serviceIds: number[],
+  branchId: number
+  serviceIds: number[]
   startTimes: string
 }
 
-const getStaffFreeInTime = async (data:  GetStaffFreeInTimeProps): Promise<ResponseProps> => {
-  return await post(`Staff/staff-free-in-time`, data);
+const getStaffFreeInTime = async (data: GetStaffFreeInTimeProps): Promise<ResponseProps> => {
+  return await post(`Staff/staff-free-in-time`, data)
 }
 
 interface AssignStaffRoleProps {
@@ -110,6 +110,16 @@ const staffWorkingSlot = async (branchId: number, month: number, year: number): 
 const getStaffInfo = async (): Promise<ResponseProps> => {
   return await get('Staff/get-staff-info')
 }
+interface GetListStaffAvailableProps {
+  serviceId: number
+  branchId: number
+  workDate: string
+  startTime: string
+}
+
+const getListStaffAvailable = async (data: GetListStaffAvailableProps): Promise<ResponseProps> => {
+  return await post('Staff/get-list-staff-available-by-service-and-time', data)
+}
 export default {
   createStaff,
   updateStaff,
@@ -122,5 +132,6 @@ export default {
   staffWorkingSlot,
   getStaffByServiceCategory,
   getStaffFreeInTime,
-  getStaffInfo
+  getStaffInfo,
+  getListStaffAvailable
 }
