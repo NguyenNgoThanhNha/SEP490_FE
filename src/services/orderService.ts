@@ -97,7 +97,9 @@ interface GetAllOrderProps {
 const getAllOrder  = async (params: GetAllOrderProps = {}) : Promise<ResponseProps> =>{
   return await get('Order/get-all-order', params)
 }
-
+const revenueByBranch = async (month: number, year: number) : Promise<ResponseProps> =>{
+  return await get(`Auth/revenue-by-branch?month=${month}&year=${year}`)
+}
 const getOrderDetail = async (orderId: number) : Promise<ResponseProps> =>{
   return await get(`Order/detail-booking?orderId=${orderId}`)
 }
@@ -110,6 +112,7 @@ export default {
   confirmOrderProduct,
   updateOrderStatus,
   getAllOrder,
-  getOrderDetail
+  getOrderDetail,
+  revenueByBranch
 
 }
