@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Edit } from 'lucide-react'
-import ReusableAreaChart from '@/components/molecules/AreaChart'
+import { CreditCard, Edit, HandCoins } from 'lucide-react'
 import RechartsPieChart from '@/components/molecules/PieChart'
 import { Table } from '@/components/organisms/Table/Table'
 import { formatPrice } from '@/utils/formatPrice'
@@ -20,16 +19,16 @@ import { TOrder } from '@/types/order.type'
 import orderService from '@/services/orderService'
 import { Badge } from '@/components/atoms/ui/badge'
 import { useTranslation } from 'react-i18next'
+import { RevenueByBranch } from '@/components/organisms/RevenueByBranchChart/RevenueByBranchChart'
 
 const OrderManagementPage = () => {
-  const { t } = useTranslation() // Hook để sử dụng dịch
+  const { t } = useTranslation() 
   const [orders, setOrders] = useState<TOrder[]>([])
   const [, setLoading] = useState(false)
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(6)
   const [totalPages, setTotalPages] = useState(0)
-  const [orderTypeFilter] = useState<string[]>([])
 
   const fetchOrders = async (PageIndex: number, PageSize: number, OrderType?: string) => {
     try {
@@ -94,7 +93,7 @@ const OrderManagementPage = () => {
             variant = 'inactive'
             break
           default:
-            variant = 'default'
+            variant = 'pending'
         }
 
         return <Badge variant={variant}>{t(status)}</Badge>
@@ -103,8 +102,27 @@ const OrderManagementPage = () => {
     {
       label: t('Paymentmethod'),
       key: 'paymentMethod',
-      render: (status: string) => <Badge variant={status === 'PayOs' ? 'active' : 'inactive'}>{t(status)}</Badge>
-    },
+      render: (method: string) => {
+        let icon = null
+        let variant: 'active' | 'inactive' | 'default' = 'default'
+    
+        if (method === 'cash') {
+          icon = <HandCoins size={14} className="inline mr-1" />
+          variant = 'active'
+        } else if (method === 'PayOS') {
+          icon = <CreditCard size={14} className="inline mr-1" />
+          variant = 'active'
+        }
+    
+        return (
+          <Badge variant={variant}>
+            {icon}
+            {t(method)}
+          </Badge>
+        )
+      }
+    }
+,    
     { label: t('OrderType'), key: 'orderType' }
   ]
 
@@ -156,16 +174,7 @@ const OrderManagementPage = () => {
     <div className='p-6 min-h-screen'>
       <div className='flex gap-6 mb-8'>
         <div className='flex-1'>
-          <ReusableAreaChart
-            title={t('Productused')}
-            showTotal={true}
-            chartData={[
-              { label: t('Jan'), value: 2000 },
-              { label: t('Feb'), value: 1150 },
-              { label: t('Mar'), value: 1800 },
-              { label: t('Apr'), value: 900 }
-            ]}
-          />
+         <RevenueByBranch/>
         </div>
         <div className='flex-1'>
           <RechartsPieChart
@@ -179,12 +188,6 @@ const OrderManagementPage = () => {
 
       <div className='bg-white shadow-md rounded-lg p-4'>
         <Table
-          filters={[
-            {
-              key: 'orderType',
-              values: orderTypeFilter
-            }
-          ]}
           headers={headers}
           selectable={true}
           data={orders.length > 0 ? orders : []}
@@ -197,7 +200,7 @@ const OrderManagementPage = () => {
           }}
           actions={(row) => (
             <>
-              <button className='text-blue-500 hover:text-blue-700' onClick={() => handleEdit(row.productId as number)}>
+              <button className='text-blue-500 hover:text-blue-700' onClick={() => handleEdit(row.orderId as number)}>
                 <Edit className='w-5 h-5' />
               </button>
             </>
