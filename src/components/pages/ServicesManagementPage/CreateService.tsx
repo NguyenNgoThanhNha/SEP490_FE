@@ -10,12 +10,17 @@ const CreateServiceForm = () => {
 
   const createService = async (data: ServiceType) => {
     setLoading(true);
-    
+    const payload = {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      steps: data.steps,
+      images: data.images,
+      serviceCategoryId: data.serviceCategoryId,
+      duration: data.duration,
+  }
     try {
-      const response = await serviceService.createService({
-        ...data,
-        images: data.images || [] 
-      });
+      const response = await serviceService.createService(payload);
       if (response.success) {
         toast.success("Service created successfully!");
       } else {
