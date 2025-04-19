@@ -181,7 +181,7 @@ const BranchProductManagementPage = () => {
           className="px-4 py-1 bg-[#516d19] text-white rounded-lg hover:bg-green-700 ml-auto"
           onClick={() => setIsModalOpen(true)}
         >
-          Add Product
+        {t('addProduct')}
         </button>
       </div>
       <AddProductModal

@@ -7,6 +7,7 @@ import { TBranchProduct } from "@/types/branchProduct.type";
 import { TProduct } from "@/types/product.type";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { useTranslation } from "react-i18next";
 
 const { Option } = Select;
 
@@ -24,6 +25,7 @@ interface ProductFormValues {
 
 const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onProductAdded }) => {
   const [loading, setLoading] = useState(false);
+  const {t} = useTranslation();
   const [form] = Form.useForm();
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
@@ -90,7 +92,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onPr
 
   return (
     <Modal
-      title="Add Product to Branch"
+      title={t("addProductToBranch")}
       open={isOpen}
       onCancel={onClose}
       footer={null}

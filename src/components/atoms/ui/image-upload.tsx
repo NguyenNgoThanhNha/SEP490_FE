@@ -19,6 +19,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
   useEffect(() => {
     if (initialData.length > 0) {
       setPreviews(initialData);
+      setSelectedFiles([]);
     }
   }, [initialData]);
 
