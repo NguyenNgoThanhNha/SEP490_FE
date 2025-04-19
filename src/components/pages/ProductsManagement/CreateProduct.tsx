@@ -5,35 +5,23 @@ import productService from "@/services/productService";
 import toast from "react-hot-toast";
 
 const CreateProductForm = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [, setLoading] = useState(false);
 
   const createProduct = async (data: ProductType) => {
     setLoading(true);
+      const payload = {
+        productName: data.productName,
+        productDescription: data.productDescription,
+        price: data.price,
+        quantity: data.quantity,
+        brand: data.brand,
+        categoryId: data.categoryId,
+        dimension: data.dimension,
+        images: data.images,
+        companyId: data.companyId   
+    }
     try {
-      const formData = new FormData();
-console.log('====================================');
-console.log(data.price);
-console.log('====================================');
-      // Append form fields
-      formData.append("ProductName", data.productName);
-      formData.append("ProductDescription", data.productDescription);
-      formData.append("Dimension", data.dimension);
-      formData.append("price", data.price.toString());
-      formData.append("volume", data.volume.toString());
-      formData.append("quantity", data.quantity.toString());
-      formData.append("discount", data.discount.toString());
-      formData.append("categoryId", data.categoryId.toString());
-      formData.append("companyId", data.companyId.toString());
-      formData.append("skintypesuitable", data.skintypesuitable);
-
-      // Append image (only first one if multiple)
-      if (data.images && data.images.length > 0) {
-        formData.append("Image", data.images[0]); // backend chỉ nhận 1 ảnh
-      }
-
-      // ✅ Gọi API và truyền formData
-      const response = await productService.createProduct(formData);
-
+      const response = await productService.createProduct(payload);
       if (response?.success) {
         toast.success("Product created successfully!");
       } else {
@@ -51,8 +39,7 @@ console.log('====================================');
     <div>
       <ProductForm
         mode="create"
-        onSubmit={(formData: FormData) => createProduct(formData)}
-        loading={loading}
+        onSubmit={(value)=> createProduct(value)}
       />
     </div>
   );

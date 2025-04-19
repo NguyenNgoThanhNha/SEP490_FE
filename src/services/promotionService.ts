@@ -27,7 +27,7 @@ interface CreatePromotionProps {
   Status?: string;
 }
 
-export const createPromotion = async (
+const createPromotion = async (
   data: CreatePromotionProps
 ): Promise<ResponseProps> => {
   const formData = new FormData();

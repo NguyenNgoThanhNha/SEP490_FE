@@ -4,7 +4,6 @@ export type TProduct = {
     productName: string; 
     productDescription: string; 
     price: number; 
-    volume: number; 
     dimension: string; 
     quantity: number; 
     discount: number; 
@@ -16,7 +15,6 @@ export type TProduct = {
     createdDate: string; 
     updatedDate: string; 
     images: string[];
-    skintypesuitable: string;
-    
+    brand: string    
   };
   
