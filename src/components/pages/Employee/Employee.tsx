@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Edit, Trash } from "lucide-react";
-// import ReusableAreaChart from "@/components/molecules/AreaChart";
-// import RechartsPieChart from "@/components/molecules/PieChart";
 import { Table } from "@/components/organisms/Table/Table";import toast from "react-hot-toast";
 import { Modal, Select } from "antd";
 import { useNavigate } from "react-router-dom";

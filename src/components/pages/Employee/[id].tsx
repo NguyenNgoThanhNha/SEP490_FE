@@ -15,15 +15,18 @@ export const EmployeeDetail = () => {
     fullName: staff.staffInfo.fullName,
     email: staff.staffInfo.email,
     branchId: staff.branchId,
+    roleId: staff.roleId, 
+    avatar: staff.avatar
   });
+  
 
   useEffect(() => {
     const fetchStaffDetails = async () => {
       try {
         const response = await staffService.getStaffDetail({ staffId: Number(staffId) });
         if (response.success && response.result) {
-          setStaffData(response.result.data.data);
-          console.log(response.result.data.data)
+          setStaffData(response.result.data);
+          console.log("staffid",response.result.data)
         } else {
           toast.error("Failed to fetch staff details");
         }
