@@ -4,7 +4,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/atoms/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePicker } from "antd";
-import { Switch } from "@/components/atoms/ui/switch";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -30,12 +29,13 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
       startDate: "",
       endDate: "",
       discountPercent: 0,
-      status: "Inactive",
+      status: "Active",
     },
   });
 
   const handleFormSubmit = async (data: PromotionType) => {
     setLoading(true);
+    console.log("Submitting promotion data:", data);
     try {
       await onSubmit(data);
       navigate("/promotions-management");
@@ -66,7 +66,7 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                   <FormItem>
                     <FormLabel>Promotion Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter promotion name" {...field} />
+                      <Input placeholder="Enter promotion name" {...field}  value={field.value} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -156,25 +156,6 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                           field.onChange(date ? date.toISOString() : "")
                         }
                         value={field.value ? dayjs(field.value) : null}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value === "Active"}
-                        onCheckedChange={(checked) =>
-                          field.onChange(checked ? "Active" : "Inactive")
-                        }
                       />
                     </FormControl>
                     <FormMessage />

@@ -100,15 +100,20 @@ export const post = async <T>(url: string, data?: unknown): Promise<T | Response
 
 export const put = async <T>(url: string, data?: unknown): Promise<T | ResponseProps> => {
   try {
-    const response: AxiosResponse<T> = await api.put<T>(url, data)
-    return response.data
+    const config = data instanceof FormData
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : {};
+
+    const response: AxiosResponse<T> = await api.put<T>(url, data, config);
+    return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
-      return handleApiError(error)
+      return handleApiError(error);
     }
-    throw error
+    throw error;
   }
-}
+};
+
 
 export const patch = async <T>(url: string, data: unknown): Promise<T | ResponseProps> => {
   try {

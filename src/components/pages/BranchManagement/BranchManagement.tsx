@@ -116,13 +116,13 @@ const BranchManagementPage = () => {
             <>
               <button
                 className="text-blue-500 hover:text-blue-700"
-                onClick={() => handleEdit(row.voucherId as number)}
+                onClick={() => handleEdit(row.branchId as number)}
               >
                 <Edit className="w-5 h-5" />
               </button>
               <button
                 className="text-red-500 hover:text-red-700"
-                onClick={() => handleDelete(row.voucherId as number)}
+                onClick={() => handleDelete(row.branchId as number)}
               >
                 <Trash className="w-5 h-5" />
               </button>

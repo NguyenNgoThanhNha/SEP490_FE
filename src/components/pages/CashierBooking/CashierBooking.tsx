@@ -8,7 +8,7 @@ interface AppointmentData {
     staffId: number[];
     serviceId: number[];
     branchId: number;
-    appointmentsTime: string[];
+    appointmentsTime: string;
     notes: string;
     status: string;
     voucherId?: number;
@@ -19,7 +19,7 @@ const BookingPage: React.FC = () => {
     const [, setAppointmentData] = useState<AppointmentData | null>(null);
     const navigate = useNavigate();
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data:  AppointmentData) => {
 
         try {
             const response = await appoinmentService.createAppointment(data);

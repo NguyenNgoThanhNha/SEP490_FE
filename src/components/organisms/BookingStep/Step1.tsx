@@ -130,23 +130,25 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
 
   const computeAppointmentTimes = () => {
     const baseDateTime = new Date(`${selectedDate}T${selectedTime}`);
+    let currentTime = new Date(baseDateTime.getTime() + 7 * 60 * 60 * 1000);
+  
     const selectedServices = form.getValues("service");
-    let currentTime = baseDateTime;
-
+  
     const result = selectedServices.map((s) => {
       const svc = services?.find((ser) => ser.serviceId === s.serviceId);
       const newService = {
         ...s,
-        appointmentTime: currentTime.toISOString(),
+        appointmentTime: currentTime.toISOString(), 
       };
       if (svc?.duration) {
         currentTime = new Date(currentTime.getTime() + (svc.duration + 6) * 60000);
       }
       return newService;
     });
-
+  
     return result;
   };
+  
 
 
   const handleSubmit = (data: TAppointment) => {
@@ -154,7 +156,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
 
     console.log("🔎 finalServiceData", finalServiceData);
     const branchName = branches.find((b) => b.branchId === data.branchId)?.branchName || "";
-    const customerName = form.getValues("name") || ""; // nếu form có tên
+    const customerName = form.getValues("name") || ""; 
     const serviceDetails = finalServiceData.map((s) => {
       const service = services.find((sv) => sv.serviceId === s.serviceId);
       return {

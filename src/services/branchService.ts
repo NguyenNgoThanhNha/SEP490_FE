@@ -75,6 +75,10 @@ const getCoordinates = async (fullAddress: string): Promise<{ lat: string; lng: 
   };
 };
 
+const getBranchById = async (branchId: number): Promise<ResponseProps> => {
+  return await get(`Branch/get-by-id/${branchId}`);
+};
+
 export default {
   getAllBranch,
   deleteBranch,
@@ -83,4 +87,5 @@ export default {
   getDistricts,
   getWards,
   getCoordinates,
+  getBranchById
 };

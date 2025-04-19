@@ -17,32 +17,39 @@ const getPromotionDetail = async ({ promotionId }: PromotionDetailProps): Promis
   return await get(`Promotion/get-by-id/${promotionId}`)
 }
 
+
 interface CreatePromotionProps {
-  promotionName: string
-  promotionDescription: string
-  discountPercent?: number
-  startDate?: string
-  endDate?: string
-  status?: string
+  PromotionName: string;
+  PromotionDescription: string;
+  DiscountPercent?: number;
+  StartDate?: string;
+  EndDate?: string;
+  Status?: string;
 }
 
-const createPromotion = async ({
-  promotionName,
-  promotionDescription,
-  discountPercent,
-  startDate,
-  endDate,
-  status
-}: CreatePromotionProps): Promise<ResponseProps> => {
-  return await post('Promotion/create', {
-    promotionName,
-    promotionDescription,
-    discountPercent,
-    startDate,
-    endDate,
-    status
-  })
-}
+export const createPromotion = async (
+  data: CreatePromotionProps
+): Promise<ResponseProps> => {
+  const formData = new FormData();
+
+  formData.append('PromotionName', data.PromotionName);
+  formData.append('PromotionDescription', data.PromotionDescription);
+  if (data.DiscountPercent !== undefined) {
+    formData.append('DiscountPercent', data.DiscountPercent.toString());
+  }
+  if (data.StartDate) {
+    formData.append('StartDate', data.StartDate);
+  }
+  if (data.EndDate) {
+    formData.append('EndDate', data.EndDate);
+  }
+  if (data.Status) {
+    formData.append('Status', data.Status);
+  }
+
+  return await post('Promotion/create', formData);
+};
+
 
 interface UpdatePromotionProps {
   promotionId: number
@@ -63,15 +70,18 @@ const updatePromotion = async ({
   endDate,
   status
 }: UpdatePromotionProps): Promise<ResponseProps> => {
-  return await put(`Promotion/update/${promotionId}`, {
-    promotionDescription,
-    promotionName,
-    discountPercent,
-    startDate,
-    endDate,
-    status
-  })
-}
+  const formData = new FormData();
+
+  if (promotionName !== undefined) formData.append("PromotionName", promotionName);
+  if (promotionDescription !== undefined) formData.append("PromotionDescription", promotionDescription);
+  if (discountPercent !== undefined) formData.append("DiscountPercent", discountPercent.toString());
+  if (startDate) formData.append("StartDate", startDate);
+  if (endDate) formData.append("EndDate", endDate);
+  if (status) formData.append("Status", status);
+
+  return await put(`Promotion/update/${promotionId}`, formData);
+};
+
 
 const deletePromotion = async (promotionId: number): Promise<ResponseProps> => {
   return await put(`Promotion/delete/${promotionId}`)

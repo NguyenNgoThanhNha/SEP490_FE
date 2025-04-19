@@ -19,8 +19,8 @@ const getAppointmentDetail = async({appointmentId}: AppointmentDetailProps) : Pr
 
 interface CreateAppointmentProps {
     userId: number
-    staffId: [],
-    serviceId: [],
+    staffId:number[],
+    serviceId: number[],
     branchId: number,
     appointmentsTime: string,
     status: string,
