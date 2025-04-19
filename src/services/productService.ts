@@ -21,23 +21,28 @@ interface CreateProductProps {
   productName: string
   productDescription: string
   dimension: string
-  volume: number
   price: number
   quantity: number
-  discount: number
   categoryId: number
   companyId: number
-  skintypesuitable: string,
-  images: File[]
-}
+  brand: string,
+  images: File[]}
 
 
-const createProduct = async (formData: FormData): Promise<ResponseProps> => {
-  return await post("Product/create", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+const createProduct = async (data: CreateProductProps): Promise<ResponseProps> => {
+  const formData = new FormData();
+  formData.append('ProductName', data.productName);
+  formData.append('ProductDescription', data.productDescription);
+  formData.append('Dimension', data.dimension);
+  formData.append('Price', data.price.toString());
+  formData.append('Quantity', data.quantity.toString());
+  formData.append('Brand', data.brand);
+  formData.append('CategoryId', data.categoryId.toString());
+  formData.append('CompanyId', data.companyId.toString());
+  data.images.forEach((image) => {
+    formData.append('Images', image);
   });
+  return await post('Product/create', formData);
 };
 
 
@@ -46,10 +51,9 @@ interface UpdateProductProps {
   productName?: string
   productDescription?: string
   dimension?: string
-  volume?: number
   price?: number
+  brand?: string
   quantity?: number
-  discount?: number
   categoryId?: number
   companyId?: number
   images?: string[]
@@ -61,9 +65,8 @@ const updateProduct = async ({
   productDescription,
   price,
   dimension,
-  discount,
   quantity,
-  volume,
+  brand,
   categoryId,
   companyId,
   images = []
@@ -73,12 +76,11 @@ const updateProduct = async ({
     categoryId,
     companyId,
     dimension,
-    discount,
-    volume,
     productDescription,
     productName,
     quantity,
-    images
+    images,
+    brand
   })
 }
 

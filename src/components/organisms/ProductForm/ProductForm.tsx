@@ -26,9 +26,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
   const [categories, setCategories] = useState<TCate[] | null>(null);
   const [, setImages] = useState<string[]>(initialData?.images || []);
   const { t } = useTranslation();
-console.log('====================================');
-console.log(initialData?.productName);
-console.log('====================================');
+
   const form = useForm<ProductType>({
     resolver: zodResolver(ProductSchema),
     defaultValues: initialData || {
@@ -36,36 +34,18 @@ console.log('====================================');
       productDescription: "",
       price: 0,
       dimension: "",
-      volume: 0,
       quantity: 0,
-      discount: 0,
       categoryId: 0,
       companyId: 1,
       images: [],
-      skintypesuitable: "",
+      brand: "",
     },
   });
   const handleFormSubmit = async (data: ProductType) => {
     console.log('Submitting form:', data);
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append("ProductName", data.productName);
-      formData.append("ProductDescription", data.productDescription);
-      formData.append("Dimension", data.dimension);
-      formData.append("price", data.price.toString());
-      formData.append("volume", data.volume.toString());
-      formData.append("quantity", data.quantity.toString());
-      formData.append("discount", data.discount.toString());
-      formData.append("categoryId", data.categoryId.toString());
-      formData.append("companyId", data.companyId.toString());
-      formData.append("skintypesuitable", data.skintypesuitable);
-      
-      if (data.images && data.images.length > 0) {
-        formData.append("image", data.images[0]);
-      }
-      
-      await onSubmit(data as any);
+      await onSubmit(data);
       navigate("/products-management");
     } catch {
       toast.error("Error submitting form");
@@ -74,18 +54,8 @@ console.log('====================================');
     }
   };
   console.log("Errors:", form.formState.errors);
-  useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
-      if (name === "volume" && value.volume) {
-        form.setValue("dimension", `${value.volume}ml`);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
-
 
   useEffect(() => {
-
     const fetchCategories = async () => {
       try {
         const response = await categoryService.getAllCate({ page: 1, pageSize: 10 });
@@ -158,16 +128,16 @@ console.log('====================================');
               />
               <FormField
                 control={form.control}
-                name="volume"
+                name="dimension"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("Dimension")} (ml)</FormLabel>
+                    <FormLabel>{t("Dimension")}</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
+                        type="text"
                         placeholder={t("Entervolume")}
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        onChange={(e) => field.onChange((e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -176,21 +146,22 @@ console.log('====================================');
               />
               <FormField
                 control={form.control}
-                name="dimension"
+                name="brand"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("Dimension")}</FormLabel>
+                    <FormLabel>{t("Brand")}</FormLabel>
                     <FormControl>
                       <Input
+                        type="text"
+                        placeholder={t("Enterbrand")}
                         {...field}
-                        disabled
+                        onChange={(e) => field.onChange((e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
             </div>
             <div className="col-span-3 space-y-6">
               <FormField
@@ -233,24 +204,6 @@ console.log('====================================');
               />
               <FormField
                 control={form.control}
-                name="discount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('Discount')} (%)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder={t("Enterdiscount")}
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="categoryId"
                 render={({ field }) => (
                   <FormItem>
@@ -273,32 +226,6 @@ console.log('====================================');
                             {category.name}
                           </SelectItem>
                         ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="skintypesuitable"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("SuitableSkinType")}</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t("SelectSkinType")} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Oily">{t("OilySkin")}</SelectItem>
-                        <SelectItem value="Dry">{t("DrySkin")}</SelectItem>
-                        <SelectItem value="Combination">{t("CombinationSkin")}</SelectItem>
-                        <SelectItem value="All">{t("AllSkinTypes")}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
