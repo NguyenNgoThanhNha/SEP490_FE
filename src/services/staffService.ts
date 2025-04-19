@@ -52,11 +52,11 @@ const updateStaff = async ({
   avatar,
   branchId
 }: UpdateStaffProps): Promise<ResponseProps> => {
-  return await put(`Staff/${staffId}`, { userName, fullName, email, avatar, branchId })
+  return await put(`Staff/update/${staffId}`, { userName, fullName, email, avatar, branchId })
 }
 
 const deleteStaff = async (staffId: number): Promise<ResponseProps> => {
-  return await del(`Staff/${staffId}`)
+  return await del(`Staff/delete/${staffId}`)
 }
 
 interface GetStaffByServiceCategoryProps {
