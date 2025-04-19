@@ -9,8 +9,16 @@ export const CreatePromotion = () => {
 
   const createPromotion = async (data: PromotionType) => {
     setLoading(true);
+    const payload = {
+      PromotionName: data.promotionName,
+      PromotionDescription: data.promotionDescription,
+      StartDate: data.startDate,
+      EndDate: data.endDate,
+      DiscountPercent: data.discountPercent,
+      Status: data.status,
+    };
     try {
-      const response = await promotionService.createPromotion(data);
+      const response = await promotionService.createPromotion(payload);
 
       if (response.success) {
         toast.success("Promotion created successfully");

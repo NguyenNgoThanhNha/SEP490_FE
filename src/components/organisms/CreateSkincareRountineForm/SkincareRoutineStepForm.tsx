@@ -130,7 +130,7 @@ export function SkincareStepForm({ routineId, step }: { routineId: number, step:
 
             <FormField control={form.control} name="intervalBeforeNextStep" render={({ field }) => (
               <FormItem>
-                <FormLabel>Thời gian nghỉ (phút)</FormLabel>
+                <FormLabel>Thời gian giữa các bước (ngày)</FormLabel>
                 <FormControl>
                   <Input disabled={loading} min={0} {...field} />
                 </FormControl>
