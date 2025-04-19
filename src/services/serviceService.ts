@@ -23,24 +23,23 @@ interface CreateServiceProps {
   price: number
   duration: string
   images: File[]
+  steps: string[]
+  serviceCategoryId: number 
 }
 
-const createService = async ({
-  name,
-  description,
-  price,
-  duration,
-  images=[]
-}: CreateServiceProps): Promise<ResponseProps> => {
-  return await post('Service/create-service', {
-    name,
-    description,
-    duration,
-    price,
-    images
-  })
-}
-
+const createService = async (data: CreateServiceProps): Promise<ResponseProps> => {
+  const formData = new FormData();
+  formData.append('Name', data.name);
+  formData.append('Description', data.description);
+  formData.append('Price', data.price.toString());
+  formData.append('Duration', data.duration.toString());
+  formData.append('Steps', data.steps.toString());
+  formData.append('ServiceCategoryId', data.serviceCategoryId.toString());
+  data.images.forEach((image) => {
+    formData.append('Images', image);
+  });
+  return await post('Service/create-service', formData);
+};
 
 interface UpdateServiceProps {
   serviceId: number
