@@ -75,7 +75,7 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
       const response = await branchPromotionService.createBranchPromotion({
         promotionId: values.promotionId,
         branchId: 1,
-        status: values.status,
+        status: "Active",
         stockQuantity: values.stockQuantity,
       });
 
@@ -108,13 +108,6 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
                 {promotion.promotionName}
               </Option>
             ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item label="Status" name="status" rules={[{ required: true }]}>
-          <Select placeholder="Select status">
-            <Option value="Active">Active</Option>
-            <Option value="Inactive">Inactive</Option>
           </Select>
         </Form.Item>
 

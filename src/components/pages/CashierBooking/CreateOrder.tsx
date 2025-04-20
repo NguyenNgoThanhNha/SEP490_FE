@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 interface SelectedProduct {
+  productBranchId: number;
   productId: number;
   productName: string;
   price: number;
@@ -41,7 +42,8 @@ const EmployeeStore: React.FC = () => {
     try {
       const response = await productService.filterProducts({ branchId });
       const formattedProducts = response.result?.data.map((item: TProduct) => ({
-        productId: item.productId,
+        productId: item.productBranchId,
+        productBranchId: item.productBranchId,
         productName: item.productName || "",
         price: item.price || 0,
         categoryId: item.categoryId || null,
@@ -66,15 +68,24 @@ const EmployeeStore: React.FC = () => {
   const updateProductQuantity = (product: TProduct, quantity: number) => {
     setSelectedProducts((prev) => {
       if (quantity <= 0) {
-        return prev.filter((item) => item.productId !== product.productId);
+        return prev.filter((item) => item.productBranchId !== product.productBranchId);
       }
-      const existing = prev.find((item) => item.productId === product.productId);
+      const existing = prev.find((item) => item.productBranchId === product.productBranchId);
       if (existing) {
         return prev.map((item) =>
-          item.productId === product.productId ? { ...item, quantity } : item
+          item.productBranchId === product.productBranchId ? { ...item, quantity } : item
         );
       }
-      return [...prev, { productId: product.productId, productName: product.productName, price: product.price, quantity }];
+      return [
+        ...prev,
+        {
+          productId: product.productBranchId,
+          productBranchId: product.productBranchId,
+          productName: product.productName,
+          price: product.price,
+          quantity,
+        },
+      ];
     });
   };
 
@@ -85,7 +96,7 @@ const EmployeeStore: React.FC = () => {
   const finalAmount = totalAmount - discountAmount;
 
   const handleApplyVoucher = () => {
-    const selected = vouchers.find(v => v.code === voucherCode);
+    const selected = vouchers.find((v) => v.code === voucherCode);
     if (!selected) {
       alert("Mã giảm giá không hợp lệ!");
       return;
@@ -103,7 +114,7 @@ const EmployeeStore: React.FC = () => {
         paymentMethod,
         shippingCost: 1,
         products: selectedProducts.map((item) => ({
-          productBranchId: item.productId,
+          productBranchId: item.productBranchId,
           quantity: item.quantity,
         })),
       };
@@ -119,6 +130,15 @@ const EmployeeStore: React.FC = () => {
       if (!orderId) throw new Error("Không tìm thấy orderId");
 
       if (paymentMethod === "cash") {
+        console.log("Payload gửi đến updateOrderStatus:", {
+          orderId,
+          orderStatus: "Completed",
+        });
+        const updateResponse = await orderService.updateOrderStatus(orderId, "Completed");
+        if (!updateResponse.success) {
+          alert(`Lỗi cập nhật trạng thái đơn hàng: ${updateResponse.result?.message}`);
+          return;
+        }
         alert("Đơn hàng đã được tạo và thanh toán bằng tiền mặt thành công!");
         setSelectedProducts([]);
       } else {
@@ -144,10 +164,6 @@ const EmployeeStore: React.FC = () => {
     }
   };
 
-  // const filteredProducts = products.filter((product) =>
-  //   product.productName.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-
   return (
     <div className="flex flex-col md:flex-row max-w-5xl mx-auto p-4 gap-4">
       <div className="md:w-2/3 w-full">
@@ -161,19 +177,27 @@ const EmployeeStore: React.FC = () => {
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {products.map((product) => (
-            <Card key={product.productId} className="p-2 hover:shadow-md transition-shadow h-full">
+            <Card key={product.productBranchId} className="p-2 hover:shadow-md transition-shadow h-full">
               <CardContent className="flex flex-col items-center p-2 h-full">
                 <img
-                  src={product.images[0] || "https://i.pinimg.com/736x/fe/9f/c5/fe9fc53618e47885bf815cb9a2699b75.jpg"}
+                  src={
+                    product.images[0] ||
+                    "https://i.pinimg.com/736x/fe/9f/c5/fe9fc53618e47885bf815cb9a2699b75.jpg"
+                  }
                   alt={product.productName}
                   className="w-24 h-24 object-cover rounded mb-2"
                 />
-                <h3 className="text-sm font-semibold text-center line-clamp-2 min-h-[3rem]">{product.productName}</h3>
+                <h3 className="text-sm font-semibold text-center line-clamp-2 min-h-[3rem]">
+                  {product.productName}
+                </h3>
                 <p className="text-primary font-bold mt-1">{product.price.toLocaleString()} VND</p>
 
                 <div className="flex-grow" />
 
-                <Button onClick={() => updateProductQuantity(product, 1)} className="mt-auto w-full bg-[#516D19]">
+                <Button
+                  onClick={() => updateProductQuantity(product, 1)}
+                  className="mt-auto w-full bg-[#516D19]"
+                >
                   Thêm
                 </Button>
               </CardContent>
@@ -187,16 +211,14 @@ const EmployeeStore: React.FC = () => {
 
         <div className="border p-4 rounded-lg bg-gray-50 shadow-sm">
           <div className="mb-2">
-            <RegisterWithPhoneOrEmail
-              onRegisterSuccess={(id) => setUserId(id)}
-            />
+            <RegisterWithPhoneOrEmail onRegisterSuccess={(id) => setUserId(id)} />
           </div>
           {selectedProducts.length > 0 ? (
             <>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {selectedProducts.map((item) => (
                   <div
-                    key={item.productId}
+                    key={item.productBranchId}
                     className="flex justify-between items-center text-sm p-2 bg-white rounded"
                   >
                     <div className="flex-1">
@@ -205,7 +227,12 @@ const EmployeeStore: React.FC = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => updateProductQuantity({ ...item } as TProduct, item.quantity - 1)}
+                          onClick={() =>
+                            updateProductQuantity(
+                              { ...item } as TProduct,
+                              item.quantity - 1
+                            )
+                          }
                           disabled={item.quantity <= 1}
                         >
                           -
@@ -214,7 +241,12 @@ const EmployeeStore: React.FC = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => updateProductQuantity({ ...item } as TProduct, item.quantity + 1)}
+                          onClick={() =>
+                            updateProductQuantity(
+                              { ...item } as TProduct,
+                              item.quantity + 1
+                            )
+                          }
                         >
                           +
                         </Button>
@@ -222,7 +254,9 @@ const EmployeeStore: React.FC = () => {
                           size="sm"
                           variant="ghost"
                           className="text-red-500 ml-auto"
-                          onClick={() => updateProductQuantity({ ...item } as TProduct, 0)}
+                          onClick={() =>
+                            updateProductQuantity({ ...item } as TProduct, 0)
+                          }
                         >
                           <Trash />
                         </Button>
@@ -235,7 +269,6 @@ const EmployeeStore: React.FC = () => {
                 ))}
               </div>
 
-              {/* Apply Voucher */}
               <div className="my-2">
                 <label className="block mb-1 font-semibold">Mã giảm giá</label>
                 <div className="flex gap-2">
@@ -256,7 +289,9 @@ const EmployeeStore: React.FC = () => {
                   </Button>
                 </div>
                 {discountAmount > 0 && (
-                  <p className="text-[#516d19] text-sm mt-1">Giảm giá: {discountAmount.toLocaleString()} VND</p>
+                  <p className="text-[#516d19] text-sm mt-1">
+                    Giảm giá: {discountAmount.toLocaleString()} VND
+                  </p>
                 )}
               </div>
 
@@ -281,7 +316,6 @@ const EmployeeStore: React.FC = () => {
                 </Button>
               </div>
 
-              {/* Checkout */}
               <div className="mt-6">
                 <Button className="w-full bg-[#516D19]" onClick={handleCheckout}>
                   Thanh toán

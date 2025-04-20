@@ -44,6 +44,7 @@ export enum ROUTES {
 
   // Order
   ORDER_MANAGEMENT = 'order',
+  ORDER_DETAIL = '/order-management/:orderId',
  
 
   // Blog

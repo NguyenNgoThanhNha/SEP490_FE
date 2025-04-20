@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import toast from 'react-hot-toast'
 import authService from '@/services/authService.ts'
 import { redirect } from 'react-router-dom'
@@ -66,20 +66,17 @@ const handleApiError = (error: AxiosError) => {
   }
 }
 
-export const get = async <T>(url: string, params?: Record<string, any>): Promise<T | ResponseProps> => {
+export const get = async <T>(url: string): Promise<T | ResponseProps> => {
   try {
-    const response: AxiosResponse<T> = await api.get<T>(url, {
-      params,
-    });
-    return response.data;
+    const response: AxiosResponse<T> = await api.get<T>(url)
+    return response.data
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
-      return handleApiError(error);
+      return handleApiError(error)
     }
-    throw error;
+    throw error
   }
-};
-
+}
 
 export const post = async <T>(url: string, data?: unknown): Promise<T | ResponseProps> => {
   try {
@@ -100,11 +97,23 @@ export const post = async <T>(url: string, data?: unknown): Promise<T | Response
 
 export const put = async <T>(url: string, data?: unknown): Promise<T | ResponseProps> => {
   try {
-    const config = data instanceof FormData
-      ? { headers: { 'Content-Type': 'multipart/form-data' } }
-      : {};
+    const response: AxiosResponse<T> = await api.put<T>(url, data)
+    return response.data
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      return handleApiError(error)
+    }
+    throw error
+  }
+}
 
-    const response: AxiosResponse<T> = await api.put<T>(url, data, config);
+export const patch = async <T>(
+  url: string,
+  data: unknown = null,
+  config: AxiosRequestConfig = {}
+): Promise<T | ResponseProps> => {
+  try {
+    const response: AxiosResponse<T> = await api.patch<T>(url, data, config);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -114,18 +123,6 @@ export const put = async <T>(url: string, data?: unknown): Promise<T | ResponseP
   }
 };
 
-
-export const patch = async <T>(url: string, data: unknown): Promise<T | ResponseProps> => {
-  try {
-    const response: AxiosResponse<T> = await api.patch<T>(url, data)
-    return response.data
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      return handleApiError(error)
-    }
-    throw error
-  }
-}
 
 export const del = async <T>(url: string): Promise<T | ResponseProps> => {
   try {

@@ -26,6 +26,7 @@ import { formatPrice } from "@/utils/formatPrice";
 import RegisterWithPhone from "./RegisterForm";
 import dayjs from "dayjs";
 import branchPromotionService from "@/services/branchPromotionService";
+import { message } from "antd";
 
 const { Option } = Select;
 
@@ -112,8 +113,12 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
 
         if (res.success && res.result?.data) {
           staffMap[s.serviceId] = res.result.data;
+          if (res.result.data.length === 0) {
+            message.warning(`Không có nhân viên phù hợp cho dịch vụ: ${service.name}`);
+          }
         } else {
           staffMap[s.serviceId] = [];
+          message.error(`Lỗi khi lấy danh sách nhân viên cho dịch vụ: ${service.name}`);
         }
 
         if (service.duration) {
@@ -127,6 +132,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
 
     fetchStaffs();
   }, [selectedBranch, selectedDate, selectedTime, selectedServices]);
+
   useEffect(() => {
     if (userId) {
       form.setValue("userId", userId);

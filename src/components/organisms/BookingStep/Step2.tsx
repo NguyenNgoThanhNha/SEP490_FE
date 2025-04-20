@@ -95,7 +95,7 @@ const CheckoutPage: React.FC = () => {
         }
       } else {
         await Promise.all([
-          orderService.updateOrderStatus({ orderId, status: "Completed" }),
+          orderService.updateOrderStatus({ orderId, orderStatus: "Completed" }),
           orderService.updatePaymentMethod({ orderId, paymentMethod, note: "Thanh toán bằng tiền mặt" }),
         ]);
         message.success("Thanh toán thành công!");

@@ -62,6 +62,7 @@ import BranchServiceDetail from '@/components/pages/BranchService/[id]'
 import { CreateRoutine } from '@/components/pages/RoutineManagement/CreateRoutine'
 import BranchOrderManagementPage from '@/components/pages/Order/BranchOrder'
 import { LeaveRequestList } from '@/components/pages/LeaveManagement/LeaveManagement'
+import OrderDetailPage from '@/components/pages/Order/[id]'
 
 
 export const AppRouter = () => {
@@ -116,7 +117,9 @@ export const AppRouter = () => {
 
             {/* ORDER MANAGEMENT */}
             <Route path={ROUTES.ORDER_MANAGEMENT} element={<OrderPage />} />
+            <Route path={ROUTES.ORDER_DETAIL} element={<OrderDetailPage/>} />
 
+            {/* EMPLOYEE MANAGEMENT */}
             {/* USER MANAGEMENT */}
             <Route path={ROUTES.CUSTOMER_MANAGEMENT} element={<CustomerManagementPage />} />
 

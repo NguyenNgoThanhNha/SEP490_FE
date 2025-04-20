@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Edit } from "lucide-react";
-import ReusableAreaChart from "@/components/molecules/AreaChart";
-import RechartsPieChart from "@/components/molecules/PieChart";
 import { Table } from "@/components/organisms/Table/Table";
 import { formatPrice } from "@/utils/formatPrice";
 import toast from "react-hot-toast";
@@ -22,7 +20,6 @@ const BranchOrderManagementPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
-  const [orderTypeFilter, ] = useState<string[]>([]);
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const BranchId = branchIdRedux || Number(localStorage.getItem("branchId"));
   const { t } = useTranslation();
@@ -135,37 +132,10 @@ const BranchOrderManagementPage = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <div className="flex gap-6 mb-8">
-        <div className="flex-1">
-          <ReusableAreaChart
-            title="Product used"
-            showTotal={true}
-            chartData={[
-              { label: "Jan", value: 2000 },
-              { label: "Feb", value: 1150 },
-              { label: "Mar", value: 1800 },
-              { label: "Apr", value: 900 },
-            ]}
-          />
-        </div>
-        <div className="flex-1">
-          <RechartsPieChart
-            title="Type distribution"
-            subtitle="Product Type"
-            labels={["Serum", "Toner", "Others"]}
-            data={[59, 20, 21]}
-          />
-        </div>
-      </div>
 
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
-          filters={[
-            {
-              key: "orderType", 
-              values: orderTypeFilter,
-            },
-          ]} headers={headers}
+         headers={headers}
           selectable={true}
           data={orders.length > 0 ? orders : []}
           badgeConfig={{
@@ -177,7 +147,7 @@ const BranchOrderManagementPage = () => {
           }}
           actions={(row) => (
             <>
-              <button className="text-blue-500 hover:text-blue-700" onClick={() => handleEdit(row.productId as number)}>
+              <button className="text-blue-500 hover:text-blue-700" onClick={() => handleEdit(row.orderId as number)}>
                 <Edit className="w-5 h-5" />
               </button>
             </>

@@ -129,11 +129,15 @@ const staffLeaveOfBranch = async (branchId: number, month: number): Promise<Resp
   return await post(`Staff/get-staff-leave-of-branch`, { branchId, month })
 }
 const approveLeave = async (staffLeaveId: number): Promise<ResponseProps> => {
-  return await put(`Staff/approve-staff-leave/${staffLeaveId }`)
+  return await put(`Staff/approve-staff-leave/${staffLeaveId}`)
 }
 
 const rejectLeave = async (staffLeaveId: number): Promise<ResponseProps> => {
-  return await put(`Staff/reject-staff-leave/${staffLeaveId }`)
+  return await put(`Staff/reject-staff-leave/${staffLeaveId}`)
+}
+
+const getStaffLeaveAppointments = async (staffLeaveId: number): Promise<ResponseProps> => {
+  return await get(`Staff/get-staff-leave-appointments/?staffLeaveId=${staffLeaveId}`)
 }
 export default {
   createStaff,
@@ -153,4 +157,5 @@ export default {
   staffLeaveOfBranch,
   rejectLeave,
   approveLeave,
+  getStaffLeaveAppointments
 }

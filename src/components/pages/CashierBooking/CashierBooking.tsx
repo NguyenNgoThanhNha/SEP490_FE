@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import appoinmentService from "@/services/appoinmentService";
 import BookingForm from "@/components/organisms/BookingStep/Step1";
+import toast from "react-hot-toast";
 
 interface AppointmentData {
     userId: number;
@@ -30,11 +31,11 @@ const BookingPage: React.FC = () => {
                 setAppointmentData(data);
                 navigate("/checkout", { state: { orderId} });
             } else {
-                alert("Failed to create appointment. Please try again.");
+                toast("Failed to create appointment. Please try again.");
             }
         } catch (error) {
             console.error("Error creating appointment", error);
-            alert("An error occurred while booking the appointment.");
+            toast("An error occurred while booking the appointment.");
         }
     };
 

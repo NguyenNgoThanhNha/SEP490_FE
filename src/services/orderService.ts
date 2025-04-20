@@ -75,17 +75,18 @@ interface ConfirmOrderProduct {
   }
 }
 const confirmOrderProduct = async (data: ConfirmOrderProduct) : Promise<ResponseProps> =>{
-  return await post('Order/confirm-order-product', data)
+  return await post('Order/confirm-order', data)
 }
 
-interface UpdateOrderStatusProps {
-  orderId: number;
-  status: string;
-}
 
-const updateOrderStatus = async (data: UpdateOrderStatusProps) : Promise<ResponseProps> =>{
-  return await patch('Order/update-order-status', data)
-}
+
+const updateOrderStatus = async (orderId: number, orderStatus: string): Promise<ResponseProps> => {
+  console.log("Payload gửi đến API:", { orderId, orderStatus });
+  return await patch(`Order/update-order-status`, null, {
+    params: { orderId, orderStatus },
+  });
+};
+
 interface GetAllOrderProps {
   OrderType?: string,
   OrderStatus?: string,
@@ -100,7 +101,11 @@ const getAllOrder  = async (params: GetAllOrderProps = {}) : Promise<ResponsePro
 const revenueByBranch = async (month: number, year: number) : Promise<ResponseProps> =>{
   return await get(`Auth/revenue-by-branch?month=${month}&year=${year}`)
 }
-const getOrderDetail = async (orderId: number) : Promise<ResponseProps> =>{
+interface OrderDetailProps {
+  orderId: number
+}
+
+const getOrderDetail = async ({orderId}: OrderDetailProps) : Promise<ResponseProps> =>{
   return await get(`Order/detail-booking?orderId=${orderId}`)
 }
 export default {

@@ -1,4 +1,5 @@
 export type TProduct = {
+    productBranchId: any;
     stockQuantity: number;
     productId: number; 
     productName: string; 

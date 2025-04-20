@@ -127,6 +127,8 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
       return [
         { label: t("indeskBooking"), icon: <BookIcon />, path: "/booking-form" },
         { label: t("createOrder"), icon: <BookIcon />, path: "/create-order" },
+        { label: t("manageOrder"), icon: <ShoppingBag />, path: "/branch-order-management" },
+        { label: t("manageCalendar"), icon: <Calendar />, path: "/staff-calendar" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/sign-out" },
       ];
     default:
