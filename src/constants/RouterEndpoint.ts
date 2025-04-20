@@ -85,5 +85,8 @@ export enum ROUTES {
   
   //Routine Management
   ROUTINE_MANAGEMENT = 'routine-management', 
-  CREATE_ROUTINE = 'create-routine'
+  CREATE_ROUTINE = 'create-routine',
+
+  //LEAVE schedule
+  LEAVE_SCHEDULE = 'leave-schedule',
 }

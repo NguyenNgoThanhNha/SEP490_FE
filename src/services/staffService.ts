@@ -120,6 +120,21 @@ interface GetListStaffAvailableProps {
 const getListStaffAvailable = async (data: GetListStaffAvailableProps): Promise<ResponseProps> => {
   return await post('Staff/get-list-staff-available-by-service-and-time', data)
 }
+
+const getListShift = async (): Promise<ResponseProps> => {
+  return await get(`Staff/get-list-shifts`)
+}
+
+const staffLeaveOfBranch = async (branchId: number, month: number): Promise<ResponseProps> => {
+  return await post(`Staff/get-staff-leave-of-branch`, { branchId, month })
+}
+const approveLeave = async (staffLeaveId: number): Promise<ResponseProps> => {
+  return await put(`Staff/approve-staff-leave/${staffLeaveId }`)
+}
+
+const rejectLeave = async (staffLeaveId: number): Promise<ResponseProps> => {
+  return await put(`Staff/reject-staff-leave/${staffLeaveId }`)
+}
 export default {
   createStaff,
   updateStaff,
@@ -133,5 +148,9 @@ export default {
   getStaffByServiceCategory,
   getStaffFreeInTime,
   getStaffInfo,
-  getListStaffAvailable
+  getListStaffAvailable,
+  getListShift,
+  staffLeaveOfBranch,
+  rejectLeave,
+  approveLeave,
 }

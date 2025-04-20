@@ -61,6 +61,7 @@ import BranchServiceManagementPage from '@/components/pages/BranchService/Branch
 import BranchServiceDetail from '@/components/pages/BranchService/[id]'
 import { CreateRoutine } from '@/components/pages/RoutineManagement/CreateRoutine'
 import BranchOrderManagementPage from '@/components/pages/Order/BranchOrder'
+import { LeaveRequestList } from '@/components/pages/LeaveManagement/LeaveManagement'
 
 
 export const AppRouter = () => {
@@ -159,6 +160,11 @@ export const AppRouter = () => {
             {/* BRANCH SERVICE MANAGEMENT */}
             <Route path={ROUTES.BRANCH_SERVICE_MANAGEMENT} element={<BranchServiceManagementPage />} />
             <Route path={ROUTES.BRANCH_SERVICE_DETAIL} element={<BranchServiceDetail />} />
+
+            {/* EMPLOYEE CALENDAR */}
+            <Route path={ROUTES.LEAVE_SCHEDULE} element={<LeaveRequestList/>} />
+
+            {/* 404 PAGE */}
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />

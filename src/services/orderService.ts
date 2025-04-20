@@ -1,4 +1,4 @@
-import { get, post,put,ResponseProps } from './root'
+import { get, patch, post,put,ResponseProps } from './root'
 
 interface OrderProps {
   pageIndex: number
@@ -84,7 +84,7 @@ interface UpdateOrderStatusProps {
 }
 
 const updateOrderStatus = async (data: UpdateOrderStatusProps) : Promise<ResponseProps> =>{
-  return await post('Order/update-status', data)
+  return await patch('Order/update-order-status', data)
 }
 interface GetAllOrderProps {
   OrderType?: string,

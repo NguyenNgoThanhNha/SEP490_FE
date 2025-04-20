@@ -14,7 +14,19 @@ const paymentOptions = [
 const CheckoutPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<string>("PayOS");
-  const [appointmentData, setAppointmentData] = useState<any | null>(null);
+  interface Appointment {
+    branch?: { branchName?: string };
+    service?: { name?: string; duration?: number; price?: number };
+    staff?: { staffInfo?: { fullName?: string; email?: string; phoneNumber?: string } };
+  }
+
+  interface AppointmentData {
+    appointments?: Appointment[];
+    customer?: { fullName?: string; userName?: string };
+    totalAmount?: number;
+  }
+
+  const [appointmentData, setAppointmentData] = useState<AppointmentData | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const orderId = location.state?.orderId;
@@ -121,7 +133,7 @@ const CheckoutPage: React.FC = () => {
           <Col span={24}>
             <Text strong>Dịch vụ và Nhân viên:</Text>
             <ul className="list-disc ml-5">
-              {appointmentData?.appointments?.map((appointment: any, idx: number) => {
+              {appointmentData?.appointments?.map((appointment: Appointment, idx: number) => {
                 const service = appointment?.service;
                 const staff = appointment?.staff?.staffInfo;
 
