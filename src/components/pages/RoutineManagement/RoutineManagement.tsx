@@ -72,8 +72,8 @@ const RoutineManagementPage = () => {
   const headers = [
     { label: "Routine Name", key: "name", searchable: true },
     { label: "Description", key: "description" },
-    { label: "Steps", key: "steps" },
-    { label: "Frequency", key: "frequency" },
+    { label: "Steps", key: "totalSteps" },
+    { label: "Target Skin Type", key: "targetSkinTypes" },
   ];
 
   return (

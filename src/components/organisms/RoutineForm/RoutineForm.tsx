@@ -1,29 +1,26 @@
-import SkincareRoutineForm from "../CreateSkincareRountineForm/SkincareRoutineForm";
-import { TRoutine } from "@/types/routine.type";
 import { useState } from "react";
+import SkincareRoutineForm from "../CreateSkincareRountineForm/SkincareRoutineForm";
 import { SkincareStepForm } from "../CreateSkincareRountineForm/SkincareRoutineStepForm";
-
+import { TRoutine } from "@/types/routine.type";
 
 const RoutineForm: React.FC = () => {
+  const [routine, setRoutine] = useState<TRoutine | null>(null); // Lưu thông tin routine sau khi tạo
 
-  const [routine, setRoutine] = useState<TRoutine | null>(null);
-
+  const handleRoutineCreated = (routineData: TRoutine) => {
+    setRoutine(routineData); // Lưu skincareRoutineId và các thông tin khác
+  };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Tạo gói liệu trình </h1>
-      <SkincareRoutineForm onCreated={async (routine) => {
-        setRoutine(routine);
-      }} />
-
-      <h2 className="text-lg font-bold">Tạo các bước cho routine: {routine?.name}</h2>
-      {Array.from({ length: routine?.totalSteps || 0 }).map((_, index) => (
-        <SkincareStepForm
-          key={index}
-          step={index + 1}
-          routineId={Number(routine?.skincareRoutineId)}
-        />
-      ))}
+    <div className="container mx-auto py-10 px-4">
+      <div className="max-w-3xl mx-auto">
+        {!routine ? (
+          // Hiển thị form tạo routine
+          <SkincareRoutineForm onCreated={handleRoutineCreated} />
+        ) : (
+          // Hiển thị form tạo step
+          <SkincareStepForm routineData={routine} />
+        )}
+      </div>
     </div>
   );
 };

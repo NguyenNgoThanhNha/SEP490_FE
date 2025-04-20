@@ -110,7 +110,7 @@ export default function OrderDetailPage() {
                             <span className="sr-only">Back to orders</span>
                         </Button>
                     </Button>
-                    <h1 className="text-2xl font-bold tracking-tight">Order #{orderCode}</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">Order #{orderId}</h1>
                     <Badge className="ml-2">{status}</Badge>
                 </div>
             </div>
