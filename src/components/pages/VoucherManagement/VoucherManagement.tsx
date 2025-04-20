@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Modal, Select } from "antd";
-import { useNavigate } from "react-router-dom";
-import { Edit, Trash } from "lucide-react";
+// import { useNavigate } from "react-router-dom";
+import { Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -24,7 +24,7 @@ import { formatPrice } from "@/utils/formatPrice";
 const VoucherManagementPage = () => {
   const [vouchers, setVouchers] = useState<TVoucher[]>([]);
   const [, setLoading] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -72,9 +72,9 @@ const VoucherManagementPage = () => {
     });
   };
 
-  const handleEdit = (voucherId: number) => {
-    navigate(`/voucher-management/${voucherId}`);
-  };
+  // const handleEdit = (voucherId: number) => {
+  //   navigate(`/voucher-management/${voucherId}`);
+  // };
 
   const handleExport = () => {
     const exportData = vouchers.map((voucher) => ({
@@ -121,12 +121,6 @@ const VoucherManagementPage = () => {
           onExport={handleExport}
           actions={(row) => (
             <>
-              <button
-                className="text-blue-500 hover:text-blue-700"
-                onClick={() => handleEdit(row.voucherId as number)}
-              >
-                <Edit className="w-5 h-5" />
-              </button>
               <button
                 className="text-red-500 hover:text-red-700"
                 onClick={() => handleDelete(row.voucherId as number)}
