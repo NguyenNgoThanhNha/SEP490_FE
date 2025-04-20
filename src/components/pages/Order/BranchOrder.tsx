@@ -77,10 +77,10 @@ const BranchOrderManagementPage = () => {
       label: t("Paymentmethod"),
       key: "paymentMethod",
       render: (status: string) => (
-        <Badge variant={status === "PayOs" ? "active" : "inactive"}>
-            {status}
+        <Badge variant={status?.toUpperCase() === "PAYOS" ? "active" : "inactive"}>
+          {status}
         </Badge>
-    ),
+      ),
     },
     { label: t("OrderType"), key: "orderType" },
 
@@ -135,7 +135,7 @@ const BranchOrderManagementPage = () => {
 
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
-         headers={headers}
+          headers={headers}
           selectable={true}
           data={orders.length > 0 ? orders : []}
           badgeConfig={{

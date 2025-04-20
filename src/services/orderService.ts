@@ -108,6 +108,14 @@ interface OrderDetailProps {
 const getOrderDetail = async ({orderId}: OrderDetailProps) : Promise<ResponseProps> =>{
   return await get(`Order/detail-booking?orderId=${orderId}`)
 }
+
+interface updateOrderDetailProps {
+  orderDetailsIds: number[],
+  status: string
+}
+const updateOrderDetail = async ({orderDetailsIds, status}: updateOrderDetailProps) : Promise<ResponseProps> =>{
+  return await put('Order/update-order-details-status', {orderDetailsIds, status})
+}
 export default {
   getAllPurchase,
   createPurchase,
@@ -118,6 +126,7 @@ export default {
   updateOrderStatus,
   getAllOrder,
   getOrderDetail,
-  revenueByBranch
+  revenueByBranch,
+  updateOrderDetail,
 
 }
