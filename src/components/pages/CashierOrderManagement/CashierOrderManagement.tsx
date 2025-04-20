@@ -17,8 +17,6 @@ const StaffCalendar = () => {
   const { id } = useParams();
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
-    const roleID = useSelector((state: RootState) => state.auth.user?.roleID);
-  
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -77,7 +75,6 @@ const StaffCalendar = () => {
     <>
       {showPopup && selectedTask && (
         <EventPopup
-          roleId={Number(roleID)}
           selectedTask={selectedTask}
           onClose={closePopup}
           onComplete={markTaskComplete}
