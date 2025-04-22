@@ -25,26 +25,23 @@ interface CreateProductProps {
   quantity: number
   categoryId: number
   companyId: number
-  brand: string,
-  images: string}
-
+  brand: string
+  images: File
+}
 
 const createProduct = async (data: CreateProductProps): Promise<ResponseProps> => {
-  const formData = new FormData();
-  formData.append('ProductName', data.productName);
-  formData.append('ProductDescription', data.productDescription);
-  formData.append('Dimension', data.dimension);
-  formData.append('Price', data.price.toString());
-  formData.append('Quantity', data.quantity.toString());
-  formData.append('Brand', data.brand);
-  formData.append('CategoryId', data.categoryId.toString());
-  formData.append('CompanyId', data.companyId.toString());
-  data.images.forEach((image) => {
-    formData.append('Images', image);
-  });
-  return await post('Product/create', formData);
-};
-
+  const formData = new FormData()
+  formData.append('ProductName', data.productName)
+  formData.append('ProductDescription', data.productDescription)
+  formData.append('Dimension', data.dimension)
+  formData.append('Price', data.price.toString())
+  formData.append('Quantity', data.quantity.toString())
+  formData.append('Brand', data.brand)
+  formData.append('CategoryId', data.categoryId.toString())
+  formData.append('CompanyId', data.companyId.toString())
+  formData.append("Image", data.images);
+  return await post('Product/create', formData)
+}
 
 interface UpdateProductProps {
   productId: number
@@ -69,7 +66,7 @@ const updateProduct = async ({
   brand,
   categoryId,
   companyId,
-  images = []
+  images
 }: UpdateProductProps): Promise<ResponseProps> => {
   return await put(`Product/update/${productId}`, {
     price,
@@ -88,21 +85,22 @@ const deleteProduct = async (productId: number): Promise<ResponseProps> => {
   return await del(`Product/${productId}`)
 }
 interface FilterProductProps {
-  branchId: number;
-  categoryId?: number;
-  minPrice?: number;
-  maxPrice?: number;
-  sortBy?: string;
-  pageNumber?: number;
-  pageSize?: number;
+  branchId: number
+  categoryId?: number
+  minPrice?: number
+  maxPrice?: number
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
 }
 
 const filterProducts = async (params: FilterProductProps): Promise<ResponseProps> => {
-  const query = new URLSearchParams(params as any).toString();
-  return await get(`Product/filter?${query}`);
-};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const query = new URLSearchParams(params as any).toString()
+  return await get(`Product/filter?${query}`)
+}
 
-const elasticSearchProduct =  async (keyword: string): Promise<ResponseProps> => {
+const elasticSearchProduct = async (keyword: string): Promise<ResponseProps> => {
   return await get(`Product/elasticsearch?keyword=${keyword}`)
 }
 export default {
@@ -113,5 +111,4 @@ export default {
   deleteProduct,
   filterProducts,
   elasticSearchProduct
-
 }

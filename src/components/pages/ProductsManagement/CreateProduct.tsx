@@ -17,7 +17,7 @@ const CreateProductForm = () => {
         brand: data.brand,
         categoryId: data.categoryId,
         dimension: data.dimension,
-        images: data.images,
+        images: data.images?.[0] || new File([], "default"),
         companyId: data.companyId   
     }
     try {
