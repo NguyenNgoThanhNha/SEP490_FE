@@ -8,7 +8,9 @@ export const ProductSchema = z.object({
   quantity: z.number().min(1, 'Quantity must be at least 1'),
   categoryId: z.number().positive('Category ID is required'),
   companyId: z.number().positive('Company ID is required'),
-  images: z.array(z.any()).optional(),
+  images: z
+  .array(z.instanceof(File)) 
+  .optional(),
   brand: z.string(),
 
 })

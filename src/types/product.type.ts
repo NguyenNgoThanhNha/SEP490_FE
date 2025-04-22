@@ -1,5 +1,5 @@
 export type TProduct = {
-    productBranchId: any;
+    productBranchId: number;
     stockQuantity: number;
     productId: number; 
     productName: string; 
@@ -15,7 +15,7 @@ export type TProduct = {
     status: "Active" | "Sold Out"; 
     createdDate: string; 
     updatedDate: string; 
-    images: string[];
+    images: File;
     brand: string    
   };
   

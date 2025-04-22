@@ -24,7 +24,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [categories, setCategories] = useState<TCate[] | null>(null);
-  const [, setImages] = useState<string[]>(initialData?.images || []);
+  const [, setImages] = useState<string[] | File[]>(initialData?.images || []);
   const { t } = useTranslation();
 
   const form = useForm<ProductType>({
@@ -99,7 +99,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
           </CardHeader>
           <CardContent className="grid grid-cols-7 gap-6">
             <div className="col-span-4 space-y-6">
-              <ImageUploadOne onImageUpload={handleImageUpload} multiple={true} initialData={initialData?.images} />
+              <ImageUploadOne 
+                onImageUpload={handleImageUpload} 
+                multiple={true} 
+                initialData={initialData?.images?.map(file => typeof file === "string" ? file : URL.createObjectURL(file))} 
+              />
               <FormField
                 control={form.control}
                 name="productName"
@@ -149,7 +153,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 name="brand"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("Brand")}</FormLabel>
+                    <FormLabel>{t("brand")}</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
