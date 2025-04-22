@@ -34,13 +34,17 @@ const CheckoutPage: React.FC = () => {
 
   useEffect(() => {
     const fetchOrderDetail = async () => {
-      if (!orderId) return;
+      if (!orderId) {
+        console.error("orderId is missing");
+        return;
+      }
 
       try {
-        const res = await orderService.getOrderDetail(orderId);
+        const res = await orderService.getOrderDetail({orderId: Number(orderId)});
+        console.log("API Response:", res); // Log toàn bộ phản hồi từ API
         if (res.success && res.result?.data) {
-          setAppointmentData(res.result.data);
-        } else {
+            setAppointmentData(res.result.data);
+         } else {
           message.error("Không thể lấy thông tin đơn hàng.");
         }
       } catch (err) {
@@ -51,6 +55,7 @@ const CheckoutPage: React.FC = () => {
 
     fetchOrderDetail();
   }, [orderId]);
+
   useEffect(() => {
     console.log("appointmentData updated:", appointmentData);
   }, [appointmentData]);
@@ -95,7 +100,7 @@ const CheckoutPage: React.FC = () => {
         }
       } else {
         await Promise.all([
-          orderService.updateOrderStatus({ orderId, orderStatus: "Completed" }),
+          orderService.updateOrderStatus(orderId, "Completed"),
           orderService.updatePaymentMethod({ orderId, paymentMethod, note: "Thanh toán bằng tiền mặt" }),
         ]);
         message.success("Thanh toán thành công!");

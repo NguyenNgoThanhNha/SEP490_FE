@@ -83,10 +83,10 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
           name="phoneNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone number</FormLabel>
+              <FormLabel>Số điện thoại</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Phone Number"
+                  placeholder="Nhập số điện thoại"
                   {...field}
                   onBlur={checkPhone} 
                 />
@@ -102,7 +102,7 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
               name="userName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>User name</FormLabel>
+                  <FormLabel>Tên khách hàng</FormLabel>
                   <FormControl>
                     <Input placeholder="Nhập họ tên" {...field} />
                   </FormControl>

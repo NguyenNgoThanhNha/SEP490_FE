@@ -234,7 +234,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
 
   return (
     <Card className="w-full max-w-md mx-auto shadow-md">
-      <CardHeader className="text-lg font-semibold">Booking Appointment</CardHeader>
+      <CardHeader className="text-lg font-semibold"></CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -249,13 +249,13 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
               name="branchId"
               render={() => (
                 <FormItem>
-                  <FormLabel>Branch</FormLabel>
+                  <FormLabel>Chi nhánh</FormLabel>
                   <Controller
                     control={form.control}
                     name="branchId"
                     render={({ field }) => (
                       <Select
-                        placeholder="Select branch"
+                        placeholder="Chọn chi nhánh"
                         value={field.value}
                         onChange={(val) => field.onChange(Number(val))}
                         style={{ width: "100%" }}
@@ -279,7 +279,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date</FormLabel>
+                    <FormLabel>Ngày</FormLabel>
                     <FormControl><Input type="date" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -290,7 +290,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
                 name="time"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Time</FormLabel>
+                    <FormLabel>Giờ</FormLabel>
                     <FormControl><Input type="time" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -299,10 +299,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
             </div>
 
             <FormItem>
-              <FormLabel>Services</FormLabel>
+              <FormLabel>Dịch vụ</FormLabel>
               <Select
                 mode="multiple"
-                placeholder="Select services"
+                placeholder="Chọn dịch vụ"
                 value={selectedServices.map((s: any) => s.serviceId)}
                 onChange={handleServiceSelect}
                 style={{ width: "100%" }}
@@ -318,10 +318,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
             {selectedServices.map((s: any, idx: number) => (
               <FormItem key={s.serviceId}>
                 <FormLabel>
-                  Staff for: {services.find((sv) => sv.serviceId === s.serviceId)?.name}
+                  Nhân viên: {services.find((sv) => sv.serviceId === s.serviceId)?.name}
                 </FormLabel>
                 <Select
-                  placeholder="Select staff"
+                  placeholder="Chọn nhân viên"
                   value={s.staffId}
                   onChange={(val) => {
                     const updated = [...form.getValues("service")];
@@ -339,9 +339,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
               </FormItem>
             ))}
             <FormItem>
-              <FormLabel>Voucher</FormLabel>
+              <FormLabel>Mã giảm giá</FormLabel>
               <Select
-                placeholder="Select voucher"
+                placeholder="Mã giảm giá"
                 value={selectedVoucher}
                 onChange={(val) => setSelectedVoucher(Number(val))}
                 style={{ width: "100%" }}
@@ -353,10 +353,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
                 ))}
               </Select>
               <p className="text-right font-semibold mt-2">
-                Discount: {formatPrice(discountAmount)} VND
+                Tiền giảm: {formatPrice(discountAmount)} VND
               </p>
               <p className="text-right font-semibold mt-2">
-                Final Total: {formatPrice(finalPrice)} VND
+                Tổng tiền: {formatPrice(finalPrice)} VND
               </p>
             </FormItem>
             <FormField
@@ -364,15 +364,15 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Note</FormLabel>
-                  <FormControl><Input placeholder="Additional notes" {...field} /></FormControl>
+                  <FormLabel>Ghi chú</FormLabel>
+                  <FormControl><Input placeholder="Thêm lưu ý" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             <Button type="submit" className="w-full bg-[#516D19]">
-              Book Now
+              Đặt lịch hẹn
             </Button>
           </form>
         </Form>

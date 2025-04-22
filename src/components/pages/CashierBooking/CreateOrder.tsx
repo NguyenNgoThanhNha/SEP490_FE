@@ -11,6 +11,7 @@ import { TVoucher } from "@/types/voucher.type";
 import { Select } from "antd";
 import { Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 interface SelectedProduct {
@@ -102,7 +103,7 @@ const EmployeeStore: React.FC = () => {
       return;
     }
     setDiscountAmount(selected.discountAmount || 0);
-    alert(`Áp dụng mã giảm ${selected.discountAmount.toLocaleString()} VND thành công!`);
+    toast(`Áp dụng mã giảm ${selected.discountAmount.toLocaleString()} VND thành công!`);
   };
 
   const handleCheckout = async () => {
@@ -122,7 +123,7 @@ const EmployeeStore: React.FC = () => {
       const response = await orderService.createOrderFull(orderPayload);
 
       if (!response.success) {
-        alert(`Lỗi tạo đơn hàng: ${response.result?.message}`);
+        toast(`Lỗi tạo đơn hàng: ${response.result?.message}`);
         return;
       }
 
@@ -136,7 +137,7 @@ const EmployeeStore: React.FC = () => {
         });
         const updateResponse = await orderService.updateOrderStatus(orderId, "Completed");
         if (!updateResponse.success) {
-          alert(`Lỗi cập nhật trạng thái đơn hàng: ${updateResponse.result?.message}`);
+          toast(`Lỗi cập nhật trạng thái đơn hàng: ${updateResponse.result?.message}`);
           return;
         }
         alert("Đơn hàng đã được tạo và thanh toán bằng tiền mặt thành công!");
