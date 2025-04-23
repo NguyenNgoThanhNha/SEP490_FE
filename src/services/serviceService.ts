@@ -24,22 +24,24 @@ interface CreateServiceProps {
   duration: string
   images: File[]
   steps: string[]
-  serviceCategoryId: number 
+  serviceCategoryId: number
 }
 
 const createService = async (data: CreateServiceProps): Promise<ResponseProps> => {
-  const formData = new FormData();
-  formData.append('Name', data.name);
-  formData.append('Description', data.description);
-  formData.append('Price', data.price.toString());
-  formData.append('Duration', data.duration.toString());
-  formData.append('Steps', data.steps.toString());
-  formData.append('ServiceCategoryId', data.serviceCategoryId.toString());
-  data.images.forEach((image) => {
-    formData.append('Images', image);
-  });
-  return await post('Service/create-service', formData);
-};
+  const formData = new FormData()
+  formData.append('Name', data.name)
+  formData.append('Description', data.description)
+  formData.append('Price', data.price.toString())
+  formData.append('Duration', data.duration.toString())
+  formData.append('Steps', data.steps.toString())
+  formData.append('ServiceCategoryId', data.serviceCategoryId.toString())
+  if (data.images && Array.isArray(data.images)) {
+    data.images.forEach((file: File) => {
+      formData.append('images', file)
+    })
+  }
+  return await post('Service/create-service', formData)
+}
 
 interface UpdateServiceProps {
   serviceId: number
@@ -48,7 +50,7 @@ interface UpdateServiceProps {
   price?: number
   duration?: string
   status?: string
-  images? : string[]
+  images?: string[]
 }
 
 const updateService = async ({
@@ -60,7 +62,19 @@ const updateService = async ({
   status,
   images = []
 }: UpdateServiceProps): Promise<ResponseProps> => {
-  return await put(`Service/update-service?serviceId=${serviceId}`, { name, description, price, duration, status , images})
+  const formData = new FormData()
+  if (name) formData.append('Name', name) 
+  if (description) formData.append('Description', description)
+  if (price !== undefined) formData.append('Price', price.toString())
+  if (duration) formData.append('Duration', duration)
+  if (status) formData.append('Status', status)
+  if (images && Array.isArray(images)) {
+    images.forEach((image) => {
+      formData.append('Images', image) 
+    })
+  }
+
+  return await put(`Service/update-service?serviceId=${serviceId}`, formData)
 }
 
 const deleteService = async (serviceId: number): Promise<ResponseProps> => {
@@ -68,16 +82,20 @@ const deleteService = async (serviceId: number): Promise<ResponseProps> => {
 }
 
 interface GetAllServiceForBranchProps {
-  branchId: number,
-  page: number,
+  branchId: number
+  page: number
   pageSize: number
 }
 
-const getAllServiceForBranch = async({branchId, page, pageSize}: GetAllServiceForBranchProps): Promise<ResponseProps> => {
+const getAllServiceForBranch = async ({
+  branchId,
+  page,
+  pageSize
+}: GetAllServiceForBranchProps): Promise<ResponseProps> => {
   return await get(`Service/get-all-services-for-branch?branchId=${branchId}&page=${page}&pageSize=${pageSize}`)
 }
 
-const elasticSearchService =  async (keyword: string): Promise<ResponseProps> => {
+const elasticSearchService = async (keyword: string): Promise<ResponseProps> => {
   return await get(`Service/elasticsearch?keyword=${keyword}`)
 }
 

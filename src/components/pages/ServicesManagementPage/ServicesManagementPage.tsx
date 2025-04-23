@@ -96,7 +96,7 @@ const ServicesManagementPage = () => {
     {
       label: t("Price"),
       key: "price",
-      render: (price: number) => formatPrice(price),
+      render: (price: number) => `${formatPrice(price)} VND`,
       sortable: true,
     },
     { label: t("Duration"), key: "duration", render: (duration: number) => `${duration} ${t('minutes')}` },

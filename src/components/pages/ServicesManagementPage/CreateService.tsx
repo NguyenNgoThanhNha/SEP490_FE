@@ -14,8 +14,8 @@ const CreateServiceForm = () => {
       name: data.name,
       description: data.description,
       price: data.price,
-      steps: data.steps,
-      images: data.images,
+      steps: data.steps || [],
+      images:  data.images || [],
       serviceCategoryId: data.serviceCategoryId,
       duration: data.duration,
   }

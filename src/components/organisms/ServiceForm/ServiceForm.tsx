@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/ui/form copy";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/ui/form";
 import FileUpload from "@/components/atoms/ui/image-upload";
 import { Input } from "@/components/atoms/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/ui/select";
@@ -25,6 +25,13 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
   const navigate = useNavigate();
   const [categories, setCategories] = useState<TServiceCategory[] | null>(null);
   const [, setImages] = useState<string[]>(initialData?.images || []);
+  const [steps, setSteps] = useState<string[]>(
+    initialData?.steps
+      ? typeof initialData.steps === "string"
+        ? initialData.steps.split(",").map((step) => step.trim())
+        : initialData.steps
+      : [""]
+  );
 
   const form = useForm<ServiceType>({
     resolver: zodResolver(ServiceSchema),
@@ -38,11 +45,16 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
       steps: []
     },
   });
+
   const handleFormSubmit = async (data: ServiceType) => {
     console.log("Form data:", data);
     setLoading(true);
     try {
-      await onSubmit(data);
+      const formattedData = {
+        ...data,
+        steps: steps,
+      };
+      await onSubmit(formattedData);
       navigate("/services-management");
     } catch {
       toast.error("Error submitting form:");
@@ -50,7 +62,31 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
       setLoading(false);
     }
   };
+
+  const handleStepChange = (index: number, value: string) => {
+    const updatedSteps = [...steps];
+    updatedSteps[index] = value;
+    setSteps(updatedSteps);
+    form.setValue("steps", updatedSteps);
+  };
+
+  const handleAddStep = () => {
+    setSteps([...steps, ""]);
+  };
+
+  const handleRemoveStep = (index: number) => {
+    const updatedSteps = steps.filter((_, i) => i !== index);
+    setSteps(updatedSteps);
+    form.setValue("steps", updatedSteps);
+  };
+
+
   const { t } = useTranslation();
+
+  const handleImageUpload = (files: File[]) => {
+    setImages((prevImages) => [...prevImages, ...files.map((file) => URL.createObjectURL(file))]); 
+    form.setValue("images", [...(form.getValues("images") || []), ...files]); 
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -75,11 +111,15 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
     }
   }, [initialData]);
 
-  const handleImageUpload = (files: File[]) => {
-    const previews = files.map(file => URL.createObjectURL(file));
-    setImages(previews);
-    form.setValue("images", files);
-  };
+  useEffect(() => {
+    if (initialData?.steps) {
+      const formattedSteps = typeof initialData.steps === "string"
+        ? initialData.steps.split(/[\n,]/).map((step) => step.trim())
+        : initialData.steps;
+      setSteps(formattedSteps);
+      form.setValue("steps", formattedSteps);
+    }
+  }, [initialData]);
 
   return (
     <Form {...form}>
@@ -158,7 +198,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
               name="serviceCategoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('Category')}</FormLabel>
+                  <FormLabel>{t('servicecategory')}</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(Number(value))}
                     value={field.value ? field.value.toString() : undefined}
@@ -186,20 +226,37 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
             <FormField
               control={form.control}
               name="steps"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
-                  <FormLabel>{t("Steps")}</FormLabel>
+                  <FormLabel>{t("steps")}</FormLabel>
                   <FormControl>
-                    <textarea
-                    {...field}
-                      rows={5}
-                      placeholder={t("EnterStepsEachLine")}
-                      className="w-full p-2 border rounded-md"
-                      value={Array.isArray(field.value) ? field.value.join("\n") : ""}
-                      onChange={(e) => field.onChange(
-                        e.target.value.split("\n").map(s => s.trim()).filter(Boolean)
-                      )}
-                    />
+                    <div className="space-y-4">
+
+                      {steps.map((step, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <Input
+                            value={step}
+                            placeholder={`${t("step")} ${index + 1}`}
+                            onChange={(e) => handleStepChange(index, e.target.value)}
+                            className="flex-1"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveStep(index)}
+                            className="text-[#516d19] hover:text-green-700 font-medium bg-white"
+                          >
+                            {t("remove")}
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={handleAddStep}
+                        className="text-[#516d19] font-medium hover:text-green-700 mt-2 bg-white"
+                      >
+                        {t("addStep")}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -233,5 +290,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, initialData, onSubmit }
       </form>
     </Form>
   );
-}
+};
+
 export default ServiceForm;
