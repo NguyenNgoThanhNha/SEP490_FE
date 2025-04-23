@@ -10,7 +10,7 @@ export type TService = {
     steps: string[],
     createdDate: string,
     updatedDate: string,
-    images: string[],
+    images: File[],
     serviceCategoryId: number,
     serviceCategory : TCate,
 }

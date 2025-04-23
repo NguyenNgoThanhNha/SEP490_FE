@@ -109,7 +109,7 @@ const BranchServiceManagementPage = () => {
     {
       label: t("Duration"),
       key: "service.duration",
-      render: (value: number) => `${value} minute(s)`
+      render: (value: number) => `${value} phút`
     },
     {
       label: t("Status"),
