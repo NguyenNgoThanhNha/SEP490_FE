@@ -144,6 +144,17 @@ const resources = {
       addStep: "Add Step",
       servicecategory: "Service Category",  
       step: "Step",
+      Total: "Total",
+      noData: "No Data",
+      month: "Month",
+      year: "Year",
+      branchRevenueTitle: 'Branch Revenue for {{month}}/{{year}}',
+      totalRevenue: 'Total Revenue',
+      fetchError: 'Fetch Error',
+      apiError: 'API Error',
+      managerDashboard: 'Manager Dashboard',
+      revenuebranch: "Branch's Revenue",
+      soldproduct: "Product sold"
     }
   },
   vi: {
@@ -284,6 +295,17 @@ const resources = {
       addStep: 'Thêm bước',
       servicecategory: 'Loại dịch vụ',
       step: 'Bước',
+      total: 'Tổng',
+      noData: 'Không có dữ liệu',
+      month: 'Tháng',
+      year: 'Năm',
+      branchRevenueTitle: 'Doanh thu của chi nhánh tháng {{month}} năm {{year}}',
+      totalRevenue: 'Tổng doanh thu',
+      fetchError: 'Lỗi khi lấy dữ liệu',
+      apiError: 'Lỗi API',
+      managerDashboard: 'Bảng điều khiển quản lý',
+      revenuebranch: "Doanh thu của chi nhánh",
+      soldproduct: "Sản phẩm đã bán",
 
     }
   }

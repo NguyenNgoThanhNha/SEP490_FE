@@ -14,12 +14,11 @@ import { loginSuccess } from '@/store/slice/authSlice.ts'
 import { ROUTES } from '@/constants/RouterEndpoint.ts'
 import branchService from '@/services/branchService'
 import { TBranch } from '@/types/branch.type'
-import staffService from '@/services/staffService'
+import staffService from '@/services/staffService.ts'
 
 const LoginForm = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
-  // const location = useLocation()
   const form = useForm<UserLoginType>({
     resolver: zodResolver(UserLoginSchema),
     defaultValues: {
@@ -30,75 +29,87 @@ const LoginForm = () => {
   const dispatch = useDispatch()
   const onSubmit: SubmitHandler<UserLoginType> = async (data) => {
     setLoading(true);
-  
+
     try {
       const formattedData = {
         identifier: data.emailOrPhone,
-        password: data.password
+        password: data.password,
       };
-  
-      // 1. Gọi API login
       const response = await authService.login(formattedData);
       if (!response.success) {
         toast.error(response?.result?.message as string);
         return;
       }
-  
-      // 2. Lưu accessToken vào localStorage
+
       const accessToken = response?.result?.data;
-      localStorage.setItem('accessToken', accessToken);
-  
-      // 3. Gọi song song userInfo và staffInfo
-      const [userInfo, staffInfo] = await Promise.all([
-        authService.getUserInfo(),
-        staffService.getStaffInfo()
-      ]);
-  
-      if (!userInfo.success && !staffInfo.success) {
-        toast.error("Failed to fetch user or staff info");
+      localStorage.setItem("accessToken", accessToken);
+
+      const userInfo = await authService.getUserInfo();
+      if (!userInfo.success) {
+        toast.error("Failed to fetch user info");
         return;
       }
-  
+
+      const roleId = userInfo?.result?.data?.roleID;
+      console.log("Role ID:", roleId);
+
       const userId = userInfo?.result?.data?.userId;
-      const staffData = staffInfo?.result?.data;
-  
-      // 4. Gọi danh sách chi nhánh
+
       const branchRes = await branchService.getAllBranch({
         status: "Active",
         page: 1,
-        pageSize: 100
+        pageSize: 100,
       });
       const branches = branchRes?.result?.data || [];
-  
-      // 5. Ưu tiên tìm chi nhánh theo manager
+
       const managedBranch = branches.find(
         (branch: TBranch) => branch.managerId === userId
       );
-  
-      if (managedBranch) {
+
+      if (roleId === 2 && managedBranch) {
         localStorage.setItem("branchId", managedBranch.branchId.toString());
-        localStorage.setItem("role", "manager");
-      } else if (staffData?.branchId) {
-        // Nếu không phải manager thì check theo staff
-        localStorage.setItem("branchId", staffData.branchId.toString());
-        localStorage.setItem("role", "staff");
       }
-        localStorage.setItem("user", JSON.stringify(userInfo?.result?.data));
+      if (roleId === 4) {
+        const staffInfo = await staffService.getStaffInfo();
+        if (!staffInfo.success) {
+          toast.error("Failed to fetch staff info");
+          return;
+        }
+
+        const staffBranchId = staffInfo?.result?.data?.branchId;
+        if (staffBranchId) {
+          localStorage.setItem("branchId", staffBranchId.toString());
+        }
+      }
+
+      localStorage.setItem("roleId", roleId.toString());
+      localStorage.setItem("user", JSON.stringify(userInfo?.result?.data));
+
       dispatch(
         loginSuccess({
           user: userInfo?.result?.data,
-          token: accessToken
+          token: accessToken,
         })
       );
+
       toast.success("Login successful!");
-      navigate("/dashboard");
-    } catch  {
+
+      if (roleId === 1) {
+        navigate("/dashboard"); 
+      } else if (roleId === 2) {
+        navigate("/manager-dashboard"); 
+      } else if (roleId === 4) {
+        navigate("/create-appointment"); 
+      } else {
+        toast.error("Invalid role, please contact support.");
+      }
+    } catch {
       toast.error("Something went wrong, please try again!");
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className={'w-full flex flex-col gap-y-3'}>

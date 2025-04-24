@@ -103,6 +103,10 @@ const filterProducts = async (params: FilterProductProps): Promise<ResponseProps
 const elasticSearchProduct = async (keyword: string): Promise<ResponseProps> => {
   return await get(`Product/elasticsearch?keyword=${keyword}`)
 }
+
+const productSoldByBranch = async (branchId: number): Promise<ResponseProps> => {
+  return await get(`Product/sold-products-by-branch?branchId=${branchId}`)  
+}
 export default {
   getAllProduct,
   createProduct,
@@ -110,5 +114,6 @@ export default {
   updateProduct,
   deleteProduct,
   filterProducts,
-  elasticSearchProduct
+  elasticSearchProduct,
+  productSoldByBranch
 }
