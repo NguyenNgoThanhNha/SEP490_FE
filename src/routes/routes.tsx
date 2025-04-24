@@ -63,6 +63,7 @@ import { CreateRoutine } from '@/components/pages/RoutineManagement/CreateRoutin
 import BranchOrderManagementPage from '@/components/pages/Order/BranchOrder'
 import { LeaveRequestList } from '@/components/pages/LeaveManagement/LeaveManagement'
 import OrderDetailPage from '@/components/pages/Order/[id]'
+import ManagerDashboard from '@/components/pages/Dashboard/ManagerDashboard'
 
 
 export const AppRouter = () => {
@@ -88,7 +89,10 @@ export const AppRouter = () => {
         </Route>
         <Route path={ROUTES.ROOT} element={<MainLayout />}>
           <Route element={<PrivateRoute />}>
+
             <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            <Route path={ROUTES.MANAGER_DASHBOARD} element={<ManagerDashboard />} />
+
             {/* PRODUCT MANAGEMENT */}
             <Route path={ROUTES.PRODUCT_MANAGEMNT} element={<ProductManagementPage />} />
             <Route path={ROUTES.CREATE_PRODUCT} element={<CreateProductPage />} />

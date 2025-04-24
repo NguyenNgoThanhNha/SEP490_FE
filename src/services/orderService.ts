@@ -116,6 +116,10 @@ interface updateOrderDetailProps {
 const updateOrderDetail = async ({orderDetailsIds, status}: updateOrderDetailProps) : Promise<ResponseProps> =>{
   return await put('Order/update-order-details-status', {orderDetailsIds, status})
 }
+
+const top3Revenue = async (month: number, year: number) : Promise<ResponseProps> =>{
+  return await get(`Auth/top-3-revenue-branches?month=${month}&year=${year}`)
+}
 export default {
   getAllPurchase,
   createPurchase,
@@ -128,5 +132,6 @@ export default {
   getOrderDetail,
   revenueByBranch,
   updateOrderDetail,
+  top3Revenue,
 
 }

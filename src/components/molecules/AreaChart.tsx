@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   AreaChart,
   Area,
@@ -10,35 +11,31 @@ import {
 } from "recharts";
 
 type ChartDataPoint = {
-  label: string; 
+  label: string;
   value: number;
 };
 
 type ReusableAreaChartProps = {
-  title: string; 
-  subtitle?: string; 
-  showTotal?: boolean; 
-  chartData: ChartDataPoint[]; 
-  color?: string; 
+  title: string;
+  subtitle?: string;
+  chartData: ChartDataPoint[];
+  color?: string;
 };
 
 const ReusableAreaChart: React.FC<ReusableAreaChartProps> = ({
   title,
-  showTotal = false,
   chartData,
-  color = "#4f46e5", 
+  subtitle,
+  color = "#516d19",
 }) => {
-  const total = chartData.reduce((sum, point) => sum + point.value, 0);
+  const { t } = useTranslation();
+  const isEmpty = chartData.length === 0;
 
   return (
     <div className="bg-white shadow-md rounded p-4">
       <div className="mb-4">
         <h2 className="text-lg font-semibold">{title}</h2>
-        {showTotal && (
-          <p className="text-sm font-medium text-gray-600 mt-1">
-            Total: {total.toLocaleString()}
-          </p>
-        )}
+        {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
@@ -46,17 +43,31 @@ const ReusableAreaChart: React.FC<ReusableAreaChartProps> = ({
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="label" tick={false}/>
-          <YAxis />
+          <XAxis dataKey="label" tick={false} />
+          <YAxis allowDecimals={false} />
           <Tooltip />
           <Area
             type="monotone"
             dataKey="value"
             stroke={color}
-            fill={`${color}33`} 
+            fill={`${color}33`}
             strokeWidth={2}
           />
+
+          {isEmpty && (
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize={16}
+              fill="#9ca3af"
+            >
+              {t("noData") || "Không có dữ liệu"}
+            </text>
+          )}
         </AreaChart>
+
       </ResponsiveContainer>
     </div>
   );

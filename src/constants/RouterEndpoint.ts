@@ -11,6 +11,7 @@ export enum ROUTES {
   // Dashboard
   HOME='home',
   DASHBOARD = "dashboard",
+  MANAGER_DASHBOARD = 'manager-dashboard',
   ABOUT_US = 'about-us',
   OUR_SERVICES = 'our-services',
   CONTACT = 'contact',
