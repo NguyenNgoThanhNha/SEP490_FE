@@ -173,6 +173,10 @@ const resources = {
       targetSkinTypes: "Target Skin Types",
       description: "Description",
       routineAppointment: "Routine Appointment",
+      orderTypeDistribution: "Order Distribution",
+      Routine: "Routine",
+      Appointment: "Appointment",
+      soldproductbranch: "Sold Product Branch",
     }
   },
   vi: {
@@ -343,6 +347,11 @@ const resources = {
       targetSkinTypes: "Điều trị cho loại da",
       description: "Mô tả",
       routineAppointment: "Lịch hẹn gói dịch vụ",
+      orderDetails: "Chi tiết đơn hàng",
+      orderTypeDistribution: "Phân loại đơn hàng",
+      Routine: "Gói dịch vụ",
+      Appointment: "Lịch hẹn",
+      soldproductbranch: "Sản phẩm bán theo chi nhánh",
     }
   }
 }

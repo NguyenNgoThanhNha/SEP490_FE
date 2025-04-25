@@ -7,6 +7,7 @@ import { sendMessageToChannel, startConnection } from '@/services/signalRService
 import ChatInput from '@/components/organisms/Chat/ChatInput.tsx'
 import ChatSidebar from '@/components/organisms/Chat/ChatSidebar.tsx'
 import ChatMessages from '@/components/organisms/Chat/ChatMessages.tsx'
+import { ChatHeader } from '@/components/organisms/Chat/ChatHeader'
 
 export default function ChatPage() {
   const dispatch = useDispatch()
@@ -34,8 +35,8 @@ export default function ChatPage() {
   const handleSendMessage = async (fileUrl: string | null = null) => {
     if (!selectedChannel || (!newMessage.trim() && !fileUrl)) return
     
-    const content = fileUrl || newMessage
-    const messageType = fileUrl ? 'image' : 'text'
+    const content = newMessage;
+    const messageType = 'text';
     
     try {
       await sendMessageToChannel(
@@ -70,6 +71,7 @@ export default function ChatPage() {
     <div className="flex h-[calc(100vh-80px)] bg-white rounded-lg overflow-hidden">
       <ChatSidebar />
       <div className="flex flex-col flex-1">
+        <ChatHeader/>
         <ChatMessages messages={messages} currentUserId={customerId} />
         <ChatInput
           newMessage={newMessage}

@@ -39,7 +39,7 @@ const createProduct = async (data: CreateProductProps): Promise<ResponseProps> =
   formData.append('Brand', data.brand)
   formData.append('CategoryId', data.categoryId.toString())
   formData.append('CompanyId', data.companyId.toString())
-  formData.append("Image", data.images);
+  formData.append('Image', data.images)
   return await post('Product/create', formData)
 }
 
@@ -105,7 +105,11 @@ const elasticSearchProduct = async (keyword: string): Promise<ResponseProps> => 
 }
 
 const productSoldByBranch = async (branchId: number): Promise<ResponseProps> => {
-  return await get(`Product/sold-products-by-branch?branchId=${branchId}`)  
+  return await get(`Product/sold-products-by-branch?branchId=${branchId}`)
+}
+
+const top5Product = async (branchId: number): Promise<ResponseProps> => {
+  return await get(`Product/top-5-best-sellers?branchId=${branchId}`)
 }
 export default {
   getAllProduct,
@@ -115,5 +119,7 @@ export default {
   deleteProduct,
   filterProducts,
   elasticSearchProduct,
-  productSoldByBranch
+  productSoldByBranch,
+  top5Product,
+
 }

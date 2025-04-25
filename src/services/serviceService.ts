@@ -63,14 +63,14 @@ const updateService = async ({
   images = []
 }: UpdateServiceProps): Promise<ResponseProps> => {
   const formData = new FormData()
-  if (name) formData.append('Name', name) 
+  if (name) formData.append('Name', name)
   if (description) formData.append('Description', description)
   if (price !== undefined) formData.append('Price', price.toString())
   if (duration) formData.append('Duration', duration)
   if (status) formData.append('Status', status)
   if (images && Array.isArray(images)) {
     images.forEach((image) => {
-      formData.append('Images', image) 
+      formData.append('Images', image)
     })
   }
 
@@ -99,6 +99,10 @@ const elasticSearchService = async (keyword: string): Promise<ResponseProps> => 
   return await get(`Service/elasticsearch?keyword=${keyword}`)
 }
 
+const top5Service = async (): Promise<ResponseProps> => {
+  return await get('Service/top5-featured-services')
+}
+
 export default {
   getAllService,
   getServiceDetail,
@@ -106,5 +110,6 @@ export default {
   updateService,
   deleteService,
   getAllServiceForBranch,
-  elasticSearchService
+  elasticSearchService,
+  top5Service
 }
