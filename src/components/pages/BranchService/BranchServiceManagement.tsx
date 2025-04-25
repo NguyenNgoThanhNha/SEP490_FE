@@ -34,10 +34,10 @@ const BranchServiceManagementPage = () => {
         setBranchServices(response.result?.data);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || "Failed to fetch branch services.");
+        toast.error(response.result?.message || t("fetchError"));
       }
     } catch {
-      toast.error("Failed to fetch branch services.");
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
@@ -45,21 +45,21 @@ const BranchServiceManagementPage = () => {
 
   const handleDelete = (id: number) => {
     Modal.confirm({
-      title: t("Areyousure?"),
-      content: t("Thisactioncannotbeundone."),
-      okText: t("Yesdelete"),
-      cancelText: t("Cancel"),
+      title: t("confirmDeleteTitle"),
+      content: t("confirmDeleteContent"),
+      okText: t("confirmDeleteOk"),
+      cancelText: t("confirmDeleteCancel"),
       onOk: async () => {
         try {
           const response = await serviceBranchService.deleteBranchService(id);
           if (response?.success) {
-            toast.success("Branch service deleted successfully.");
-            setBranchServices(prev => prev.filter(item => item.id !== id));
+            toast.success(t("deleteSuccess"));
+            setBranchServices((prev) => prev.filter((item) => item.id !== id));
           } else {
-            toast.error(response.result?.message || "Failed to delete branch service.");
+            toast.error(response.result?.message || t("deleteError"));
           }
         } catch {
-          toast.error("Failed to delete branch service.");
+          toast.error(t("deleteError"));
         }
       },
     });
@@ -71,7 +71,7 @@ const BranchServiceManagementPage = () => {
 
   const handlePageChange = (newPage: number) => {
     if (!branchId) {
-      toast.error("Branch ID is required!");
+      toast.error(t("branchIdRequired"));
       return;
     }
 
@@ -84,11 +84,13 @@ const BranchServiceManagementPage = () => {
     setPageSize(value);
     setPage(1);
   };
+
   useEffect(() => {
     if (branchId) {
       fetchBranchService(branchId, page, pageSize);
     }
   }, [branchId, page, pageSize]);
+
   const handleServiceAdded = () => {
     if (branchId) {
       fetchBranchService(branchId, page, pageSize);
@@ -104,22 +106,22 @@ const BranchServiceManagementPage = () => {
       label: t("Price"),
       key: "service.price",
       sortable: true,
-      render: (value: number) => `${formatPrice(value)} VND`
+      render: (value: number) => `${formatPrice(value)} VND`,
     },
     {
       label: t("Duration"),
       key: "service.duration",
-      render: (value: number) => `${value} phút`
+      render: (value: number) => `${value} ${t("minutes")}`,
     },
     {
       label: t("Status"),
       key: "status",
       render: (status: string) => (
         <Badge variant={status === "Active" ? "active" : "inactive"}>
-          {status}
+          {t(status.toLowerCase())}
         </Badge>
       ),
-    }
+    },
   ];
 
   const renderPagination = () => {
@@ -173,7 +175,7 @@ const BranchServiceManagementPage = () => {
           className="px-4 py-1 bg-[#516d19] text-white rounded-lg hover:bg-green-700 ml-auto"
           onClick={() => setIsModalOpen(true)}
         >
-          {t('addService')}
+          {t("addService")}
         </button>
       </div>
       <AddServiceModal
@@ -190,8 +192,8 @@ const BranchServiceManagementPage = () => {
           badgeConfig={{
             key: "status",
             values: {
-              Active: { label: "Active", color: "green", textColor: "white" },
-              SoldOut: { label: "Sold Out", color: "red", textColor: "white" },
+              Active: { label: t("active"), color: "green", textColor: "white" },
+              SoldOut: { label: t("soldOut"), color: "red", textColor: "white" },
             },
           }}
           actions={(row) => (
@@ -211,12 +213,12 @@ const BranchServiceManagementPage = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="whitespace-nowrap text-gray-400 text-sm">
-              Number of rows per page
+              {t("Numberofrowsperpage")}
             </span>
             <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
               {[5, 10, 15, 20].map((size) => (
                 <Select.Option key={size} value={size}>
-                  {size} items
+                  {size} {t("items")}
                 </Select.Option>
               ))}
             </Select>
@@ -224,11 +226,11 @@ const BranchServiceManagementPage = () => {
           <Pagination className="flex">
             <PaginationContent>
               <PaginationPrevious onClick={() => handlePageChange(page - 1)} isDisabled={page === 1}>
-                Prev
+                {t("Prev")}
               </PaginationPrevious>
               {renderPagination()}
               <PaginationNext onClick={() => handlePageChange(page + 1)} isDisabled={page === totalPages}>
-                Next
+                {t("Next")}
               </PaginationNext>
             </PaginationContent>
           </Pagination>

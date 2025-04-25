@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import Navbar from "../Navbar/AdminNavbar"
 import { RootState } from "@/store";
+import { useTranslation } from "react-i18next";
 
 const getRoleName = (roleID: number) => {
   switch (roleID) {
@@ -17,11 +18,11 @@ const getRoleName = (roleID: number) => {
 
 const Header = () => {
   const user = useSelector((state: RootState) => state.auth.user);
-
+  const {t} = useTranslation();
   return (
     <div>
       <Navbar
-        title="Dashboard"
+        title={t("solace")}
         user={{
           name: user?.userName || "Guest",
           role: getRoleName(user?.roleID as number),

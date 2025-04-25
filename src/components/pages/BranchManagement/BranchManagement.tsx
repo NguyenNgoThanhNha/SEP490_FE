@@ -18,7 +18,7 @@ import {
 import { Table } from "@/components/organisms/Table/Table";
 import { TBranch } from "@/types/branch.type";
 import branchService from "@/services/branchService";
-
+import { useTranslation } from "react-i18next";
 
 const BranchManagementPage = () => {
   const [branches, setBranches] = useState<TBranch[]>([]);
@@ -27,19 +27,22 @@ const BranchManagementPage = () => {
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [totalPages,] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchBranches= async (page: number, pageSize: number, status: "Active") => {
+  const { t } = useTranslation();
+
+  const fetchBranches = async (page: number, pageSize: number, status: "Active") => {
     try {
       setLoading(true);
-      const response = await branchService.getAllBranch({page, pageSize, status});
+      const response = await branchService.getAllBranch({ page, pageSize, status });
       if (response?.success) {
         setBranches(response.result?.data || []);
+        setTotalPages(response.result?.pagination?.totalPage || 1);
       } else {
-        toast.error(response.result?.message || "Failed to fetch branches.");
+        toast.error(response.result?.message || t("fetchError"));
       }
     } catch {
-      toast.error("Failed to fetch branches.");
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
@@ -51,21 +54,21 @@ const BranchManagementPage = () => {
 
   const handleDelete = (branchId: number) => {
     Modal.confirm({
-      title: "Are you sure?",
-      content: "This action cannot be undone.",
-      okText: "Yes, delete",
-      cancelText: "Cancel",
+      title: t("confirmDeleteTitle"),
+      content: t("confirmDeleteContent"),
+      okText: t("confirmDeleteOk"),
+      cancelText: t("confirmDeleteCancel"),
       onOk: async () => {
         try {
           const response = await branchService.deleteBranch(branchId);
           if (response?.success) {
-            toast.success("Branch deleted successfully.");
-            fetchBranches(page, pageSize, "Active"); 
+            toast.success(t("deleteSuccess"));
+            fetchBranches(page, pageSize, "Active");
           } else {
-            toast.error(response.result?.message || "Failed to delete branch.");
+            toast.error(response.result?.message || t("deleteError"));
           }
         } catch {
-          toast.error("Failed to delete branch.");
+          toast.error(t("deleteError"));
         }
       },
     });
@@ -77,31 +80,30 @@ const BranchManagementPage = () => {
 
   const handleExport = () => {
     const exportData = branches.map((branch) => ({
-      "Branch Name": branch.branchName,
-      "Address": branch.branchAddress,
-      "Phone": branch.branchPhone,
-      "Longitude": branch.longAddress,
-      "Latitude": branch.latAddress,
-      "Status": branch.status,
+      [t("branchName")]: branch.branchName,
+      [t("branchAddress")]: branch.branchAddress,
+      [t("phone")]: branch.branchPhone,
+      [t("longitude")]: branch.longAddress,
+      [t("latitude")]: branch.latAddress,
+      [t("status")]: branch.status,
     }));
-  
+
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Branches");
-  
+    XLSX.utils.book_append_sheet(workbook, worksheet, t("branches"));
+
     const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
     const file = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(file, `branches_export_${Date.now()}.xlsx`);
   };
-  
 
   const headers = [
-    { label: "Branch Name", key: "branchName", searchable: true },
-  { label: "Branch Address", key: "branchAddress", searchable: true  },
-  { label: "Phone", key: "branchPhone", searchable: true },
-  { label: "District", key: "district" },  
-  { label: "WardCode", key: "wardCode" },    
-  { label: "Status", key: "status" },
+    { label: t("branchname"), key: "branchName", searchable: true },
+    { label: t("branchaddress"), key: "branchAddress", searchable: true },
+    { label: t("branchphone"), key: "branchPhone", searchable: true },
+    { label: t("district"), key: "district" },
+    { label: t("wardCode"), key: "wardCode" },
+    { label: t("Status"), key: "status" },
   ];
 
   return (
@@ -133,7 +135,7 @@ const BranchManagementPage = () => {
 
       <div className="flex justify-between items-center mt-4">
         <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <span>Rows per page:</span>
+          <span>{t("Numberofrowsperpage")}:</span>
           <Select
             defaultValue={pageSize}
             onChange={(value: number) => {
@@ -144,7 +146,7 @@ const BranchManagementPage = () => {
           >
             {[5, 10, 15, 20].map((size) => (
               <Select.Option key={size} value={size}>
-                {size}
+                {size} {t("items")}
               </Select.Option>
             ))}
           </Select>

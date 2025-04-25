@@ -38,15 +38,14 @@ const BranchOrderManagementPage = () => {
         setOrders(response.result?.data);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || "Failed to fetch orders.");
+        toast.error(response.result?.message || t("fetchError"));
       }
     } catch {
-      toast.error("Failed to fetch orders.");
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleEdit = (orderId: number) => {
     navigate(`/order-management/${orderId}`);
@@ -70,20 +69,19 @@ const BranchOrderManagementPage = () => {
   }, [BranchId, page, pageSize]);
 
   const headers = [
-    { label: t("Customer"), key: "customer.userName" },
+    { label: t("customer"), key: "customer.userName" },
     { label: t("Price"), key: "totalAmount", render: (price: number) => formatPrice(price), sortable: true },
     { label: t("Status"), key: "status", sortable: true },
     {
-      label: t("Paymentmethod"),
+      label: t("PaymentMethod"),
       key: "paymentMethod",
       render: (status: string) => (
         <Badge variant={status?.toUpperCase() === "PAYOS" ? "active" : "inactive"}>
-          {status}
+          {t(status.toLowerCase())}
         </Badge>
       ),
     },
     { label: t("OrderType"), key: "orderType" },
-
   ];
 
   const renderPagination = () => {
@@ -132,7 +130,6 @@ const BranchOrderManagementPage = () => {
 
   return (
     <div className="p-6 min-h-screen">
-
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}
@@ -141,8 +138,8 @@ const BranchOrderManagementPage = () => {
           badgeConfig={{
             key: "status",
             values: {
-              Active: { label: "Active", color: "green", textColor: "white" },
-              SoldOut: { label: "Sold Out", color: "red", textColor: "white" },
+              Active: { label: t("active"), color: "green", textColor: "white" },
+              SoldOut: { label: t("soldOut"), color: "red", textColor: "white" },
             },
           }}
           actions={(row) => (
@@ -159,12 +156,12 @@ const BranchOrderManagementPage = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="whitespace-nowrap text-gray-400 text-sm">
-              Number of rows per page
+              {t("Numberofrowsperpage")}
             </span>
             <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
               {[5, 10, 15, 20].map((size) => (
                 <Select.Option key={size} value={size}>
-                  {size} items
+                  {size} {t("items")}
                 </Select.Option>
               ))}
             </Select>
@@ -172,11 +169,11 @@ const BranchOrderManagementPage = () => {
           <Pagination className="flex">
             <PaginationContent>
               <PaginationPrevious onClick={() => handlePageChange(page - 1)} isDisabled={page === 1}>
-                Prev
+                {t("Prev")}
               </PaginationPrevious>
               {renderPagination()}
               <PaginationNext onClick={() => handlePageChange(page + 1)} isDisabled={page === totalPages}>
-                Next
+                {t("Next")}
               </PaginationNext>
             </PaginationContent>
           </Pagination>

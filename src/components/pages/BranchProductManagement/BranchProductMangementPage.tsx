@@ -24,45 +24,43 @@ const BranchProductManagementPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const fetchBranchProduct = async (branchId: number, page: number, pageSize: number) => {
     try {
       setLoading(true);
       const response = await branchProductService.getAllBranchProduct(branchId, page, pageSize);
       if (response?.success) {
-        const activeProducts = response.result?.data
+        const activeProducts = response.result?.data;
         setBranchProducts(activeProducts);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || "Failed to fetch branch products.");
+        toast.error(response.result?.message || t("fetchError"));
       }
     } catch {
-      toast.error("Failed to fetch branch products.");
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
   };
 
-
-
   const handleDelete = (id: number) => {
     Modal.confirm({
-      title: "Are you sure?",
-      content: "This action cannot be undone.",
-      okText: "Yes, delete",
-      cancelText: "Cancel",
+      title: t("confirmDeleteTitle"),
+      content: t("confirmDeleteContent"),
+      okText: t("confirmDeleteOk"),
+      cancelText: t("confirmDeleteCancel"),
       onOk: async () => {
         try {
           const response = await branchProductService.deleteBranchProduct(id);
           if (response?.success) {
-            toast.success("Branch product deleted successfully.");
-            setBranchProducts(prev => prev.filter(item => item.id !== id));
+            toast.success(t("deleteSuccess"));
+            setBranchProducts((prev) => prev.filter((item) => item.id !== id));
           } else {
-            toast.error(response.result?.message || "Failed to delete branch productproduct.");
+            toast.error(response.result?.message || t("deleteError"));
           }
         } catch {
-          toast.error("Failed to delete branch product.");
+          toast.error(t("deleteError"));
         }
       },
     });
@@ -74,7 +72,7 @@ const BranchProductManagementPage = () => {
 
   const handlePageChange = (newPage: number) => {
     if (!branchId) {
-      toast.error("Branch ID is required!");
+      toast.error(t("branchIdRequired"));
       return;
     }
 
@@ -87,11 +85,13 @@ const BranchProductManagementPage = () => {
     setPageSize(value);
     setPage(1);
   };
+
   useEffect(() => {
     if (branchId) {
       fetchBranchProduct(branchId, page, pageSize);
     }
   }, [branchId, page, pageSize]);
+
   const handleProductAdded = () => {
     if (branchId) {
       fetchBranchProduct(branchId, page, pageSize);
@@ -107,7 +107,7 @@ const BranchProductManagementPage = () => {
       label: t("Price"),
       key: "product.price",
       sortable: true,
-      render: (value: number) => `${formatPrice(value)} VND`
+      render: (value: number) => `${formatPrice(value)} VND`,
     },
     {
       label: t("Dimension"),
@@ -115,7 +115,7 @@ const BranchProductManagementPage = () => {
       sortable: true,
     },
     {
-      label: t("Quantity"),
+      label: t("stockQuantity"),
       key: "stockQuantity",
       sortable: true,
     },
@@ -124,10 +124,10 @@ const BranchProductManagementPage = () => {
       key: "status",
       render: (status: string) => (
         <Badge variant={status === "Active" ? "active" : "inactive"}>
-          {status}
+          {t(status.toLowerCase())}
         </Badge>
       ),
-    }
+    },
   ];
 
   const renderPagination = () => {
@@ -181,7 +181,7 @@ const BranchProductManagementPage = () => {
           className="px-4 py-1 bg-[#516d19] text-white rounded-lg hover:bg-green-700 ml-auto"
           onClick={() => setIsModalOpen(true)}
         >
-        {t('addProduct')}
+          {t("addProductToBranch")}
         </button>
       </div>
       <AddProductModal
@@ -198,8 +198,8 @@ const BranchProductManagementPage = () => {
           badgeConfig={{
             key: "status",
             values: {
-              Active: { label: "Active", color: "green", textColor: "white" },
-              SoldOut: { label: "Sold Out", color: "red", textColor: "white" },
+              Active: { label: t("active"), color: "green", textColor: "white" },
+              SoldOut: { label: t("soldOut"), color: "red", textColor: "white" },
             },
           }}
           actions={(row) => (
@@ -219,12 +219,12 @@ const BranchProductManagementPage = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="whitespace-nowrap text-gray-400 text-sm">
-              Number of rows per page
+              {t(" Numberofrowsperpage")}
             </span>
             <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
               {[5, 10, 15, 20].map((size) => (
                 <Select.Option key={size} value={size}>
-                  {size} items
+                  {size} {t("items")}
                 </Select.Option>
               ))}
             </Select>
@@ -232,11 +232,11 @@ const BranchProductManagementPage = () => {
           <Pagination className="flex">
             <PaginationContent>
               <PaginationPrevious onClick={() => handlePageChange(page - 1)} isDisabled={page === 1}>
-                Prev
+                {t("Prev")}
               </PaginationPrevious>
               {renderPagination()}
               <PaginationNext onClick={() => handlePageChange(page + 1)} isDisabled={page === totalPages}>
-                Next
+                {t("Next")}
               </PaginationNext>
             </PaginationContent>
           </Pagination>
