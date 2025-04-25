@@ -41,7 +41,7 @@ export const SoldProductByBranch = () => {
   }, [branchId]);
 
   return (
-    <div style={{ padding: "20px", overflowY:"auto" }} >
+    <div>
       <BarChartComponent data={chartData} />
     </div>
   );

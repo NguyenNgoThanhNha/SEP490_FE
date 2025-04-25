@@ -27,40 +27,46 @@ const brightPastelColors = [
 const BarChartComponent: React.FC<BarChartProps> = ({ data }) => {
   const top10Data = data.slice(0, 10);
   const maxValue = Math.max(...top10Data.map((d) => d.value));
-  const step = 5;
+  const step = 10;
   const maxDomain = Math.ceil(maxValue / step) * step;
 
   return (
-    <ResponsiveContainer width="100%" height={top10Data.length * 40}>
-      <BarChart
-        layout="vertical"
-        data={top10Data}
-        margin={{ top: 30, right: 30, left: 160, bottom: 30 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-        <XAxis
-          type="number"
-          domain={[0, maxDomain]}
-          tick={{ fontSize: 14 }}
-          tickLine={false}
-          axisLine={{ stroke: "#ccc" }}
+    <div>
+    <ResponsiveContainer width="100%" height={400}>
+  <BarChart
+    layout="vertical"
+    data={top10Data}
+    margin={{ top: 20, right: 30, bottom: 20 }}
+  >
+    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+    <XAxis
+      type="number"
+      domain={[0, maxDomain]}
+      tick={{ fontSize: 14 }}
+      tickLine={false}
+      axisLine={{ stroke: "#ddd" }}
+    />
+    <YAxis
+      dataKey="name"
+      type="category"
+      tick={{ fontSize: 14 }}
+      tickLine={false}
+      axisLine={{ stroke: "#ddd" }}
+      width={200}
+    />
+    <Tooltip />
+    <Bar dataKey="value" barSize={30} radius={[8, 8, 0, 0]}>
+      {top10Data.map((_entry, index) => (
+        <Cell
+          key={`cell-${index}`}
+          fill={brightPastelColors[index % brightPastelColors.length]}
         />
-        <YAxis
-          dataKey="name"
-          type="category"
-          tick={{ fontSize: 14 }}
-          tickLine={false}
-          axisLine={{ stroke: "#ccc" }}
-          width={200}
-        />
-        <Tooltip />
-        <Bar dataKey="value" barSize={35} radius={[8, 8, 0, 0]}>
-          {top10Data.map((_entry, index) => (
-            <Cell key={`cell-${index}`} fill={brightPastelColors[index % brightPastelColors.length]} />
-          ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+      ))}
+    </Bar>
+  </BarChart>
+</ResponsiveContainer>
+
+    </div>
   );
 };
 

@@ -120,6 +120,10 @@ const updateOrderDetail = async ({orderDetailsIds, status}: updateOrderDetailPro
 const top3Revenue = async (month: number, year: number) : Promise<ResponseProps> =>{
   return await get(`Auth/top-3-revenue-branches?month=${month}&year=${year}`)
 }
+
+const getOrderByOrderType = async () : Promise<ResponseProps> =>{
+  return await get(`Order/count-by-order-type`)
+}
 export default {
   getAllPurchase,
   createPurchase,
@@ -133,5 +137,6 @@ export default {
   revenueByBranch,
   updateOrderDetail,
   top3Revenue,
+  getOrderByOrderType,
 
 }
