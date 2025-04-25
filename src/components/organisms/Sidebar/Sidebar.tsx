@@ -7,7 +7,7 @@ import {
   ExitIcon,
   ChatBubbleIcon,
 } from "@radix-ui/react-icons";
-import { AlignJustify, BookIcon, Calendar, ShoppingBag, SquareMenu, TicketIcon, TicketPercent, TicketPlus } from "lucide-react";
+import { AlignJustify, BookPlus, Building, Calendar, CirclePlus, Clock, NotebookText, Package, Package2, PackagePlus, PlusCircle, ShoppingBag, SquareMenu, TicketIcon, TicketPercent, TicketPlus } from "lucide-react";
 import { MenuItemComponent } from "@/components/molecules/MenuItem";
 import { useTranslation } from "react-i18next";
 import solace from "@/assets/images/solace.png";
@@ -36,7 +36,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
           icon: <ArchiveIcon />,
           submenu: [
             { label: t("manageProducts"), icon: <ArchiveIcon />, path: "/products-management" },
-            { label: t("addProduct"), icon: <ArchiveIcon />, path: "/create-product" },
+            { label: t("addProduct"), icon: <CirclePlus />, path: "/create-product" },
           ],
         },
         {
@@ -44,7 +44,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
           icon: <ShoppingBag />,
           submenu: [
             { label: t("manageServices"), icon: <ShoppingBag />, path: "/services-management" },
-            { label: t("addService"), icon: <ShoppingBag />, path: "/create-service" },
+            { label: t("addService"), icon: <PlusCircle />, path: "/create-service" },
           ],
         },
         {
@@ -52,10 +52,10 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
           icon: <PersonIcon />,
           submenu: [
             { label: t("manageEmployee"), icon: <PersonIcon />, path: "/staffs-management" },
-            { label: t("addEmployee"), icon: <PersonIcon />, path: "/create-staff" },
+            { label: t("addEmployee"), icon: <PlusCircle />, path: "/create-staff" },
           ],
         },
-        { label: t("manageOrder"), icon: <ShoppingBag />, path: "/order" },
+        { label: t("manageOrder"), icon: <BookPlus/>, path: "/order" },
 
         // {
         //   label: t("blog"),
@@ -79,29 +79,29 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
           icon: <TicketPercent />,
           submenu: [
             { label: t("promote"), icon: <TicketPercent />, path: "/promotions-management" },
-            { label: t("addPromote"), icon: <TicketPercent />, path: "/create-promote" },
+            { label: t("addPromote"), icon: <TicketPlus/>, path: "/create-promote" },
           ],
         },
         {
           label: t("branch"),
-          icon: <TicketPercent />,
+          icon: <Building />,
           submenu: [
-            { label: t("manageBranch"), icon: <TicketPercent />, path: "/branchs-management" },
-            { label: t("addBranch"), icon: <TicketPercent />, path: "/add-branch" },
+            { label: t("manageBranch"), icon: <Building/>, path: "/branchs-management" },
+            { label: t("addBranch"), icon: <CirclePlus />, path: "/add-branch" },
           ],
         },
         { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
         {
           label: t("routine"),
-          icon: <PersonIcon />,
+          icon: <Package />,
           submenu: [
-            { label: t("manageRoutine"), icon: <BookIcon />, path: "/routine-management" },
-            { label: t("addRoutine"), icon: <TicketPlus />, path: "/create-routine" },
+            { label: t("manageRoutine"), icon: <Package />, path: "/routine-management" },
+            { label: t("addRoutine"), icon: <PackagePlus />, path: "/create-routine" },
           ],
         },
         {
           label: t("voucher"),
-          icon: <PersonIcon />,
+          icon: <TicketIcon />,
           submenu: [
             { label: t("manageVoucher"), icon: <TicketIcon />, path: "/voucher-management" },
             { label: t("addVoucher"), icon: <TicketPlus />, path: "/add-voucher" },
@@ -113,21 +113,21 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
     case 2: // Manager
       return [
         { label: t("managerDashboard"), icon: <DashboardIcon />, path: "/manager-dashboard" },
-        { label: t("manageOrder"), icon: <ShoppingBag />, path: "/branch-order-management" },
-        { label: t("manageCalendar"), icon: <Calendar />, path: "/staff-calendar" },
-        { label: t("manageBranchPromotion"), icon: <ShoppingBag />, path: "/branch-promotion-management" },
-        { label: t("manageBranchProduct"), icon: <ShoppingBag />, path: "/branch-product-management" },
+        { label: t("manageOrder"), icon: <NotebookText/>, path: "/branch-order-management" },
+        { label: t("manageCalendar"), icon: <Clock />, path: "/staff-calendar" },
+        { label: t("manageBranchPromotion"), icon: <TicketIcon />, path: "/branch-promotion-management" },
+        { label: t("manageBranchProduct"), icon: <Package2 />, path: "/branch-product-management" },
         { label: t("manageBranchService"), icon: <ShoppingBag />, path: "/branch-service-management" },
-        { label: t("manageSchedule"), icon: <BookIcon />, path: "/schedule-management" },
+        { label: t("manageSchedule"), icon: <Calendar />, path: "/schedule-management" },
         { label: t("manageChat"), icon: <ChatBubbleIcon />, path: "/chat" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/sign-out" },
 
       ];
     case 4: // Cashier
       return [
-        { label: t("indeskBooking"), icon: <BookIcon />, path: "/booking-form" },
-        { label: t("createOrder"), icon: <BookIcon />, path: "/create-order" },
-        { label: t("manageOrder"), icon: <ShoppingBag />, path: "/branch-order-management" },
+        { label: t("indeskBooking"), icon: <BookPlus />, path: "/booking-form" },
+        { label: t("createOrder"), icon: <PackagePlus />, path: "/create-order" },
+        { label: t("manageOrder"), icon: <NotebookText />, path: "/branch-order-management" },
         { label: t("manageCalendar"), icon: <Calendar />, path: "/staff-calendar" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/sign-out" },
       ];

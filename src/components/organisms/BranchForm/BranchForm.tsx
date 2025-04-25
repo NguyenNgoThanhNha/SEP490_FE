@@ -44,7 +44,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       latAddress: "",
       status: "Active",
       managerId: 1,
-      companyId: 1
+      companyId: 1,
     },
   });
 
@@ -64,7 +64,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         headers: { Token: GHN_TOKEN },
       })
       .then((res) => setProvinces(res.data.data))
-      .catch((err) => console.error("Failed to fetch provinces", err));
+      .catch((err) => console.error(t("fetchProvincesError"), err));
   }, []);
 
   useEffect(() => {
@@ -78,8 +78,9 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         params: { province_id: provinceId },
       })
       .then((res) => setDistricts(res.data.data))
-      .catch((err) => console.error("Failed to fetch districts", err));
+      .catch((err) => console.error(t("fetchDistrictsError"), err));
   }, [provinceId]);
+
   useEffect(() => {
     const district = form.getValues("district");
     if (!district) return;
@@ -90,7 +91,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         params: { district_id: district },
       })
       .then((res) => setWards(res.data.data))
-      .catch((err) => console.error("Failed to fetch wards", err));
+      .catch((err) => console.error(t("fetchWardsError"), err));
   }, [form.watch("district")]);
 
   useEffect(() => {
@@ -106,21 +107,20 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
     return () => clearTimeout(timeout);
   }, [form.watch("branchAddress"), form.watch("district"), form.watch("wardCode"), provinceId]);
 
-
   const fetchCoordinates = async (
     branchAddress: string,
     provinceId: string,
     district: number,
     wardCode: number
   ) => {
-    const provinceName = provinces.find(p => String(p.ProvinceID) === String(provinceId))?.ProvinceName;
-    const districtName = districts.find(d => d.DistrictID === Number(district))?.DistrictName;
-    const wardName = wards.find(w => Number(w.WardCode) === Number(wardCode))?.WardName;
+    const provinceName = provinces.find((p) => String(p.ProvinceID) === String(provinceId))?.ProvinceName;
+    const districtName = districts.find((d) => d.DistrictID === Number(district))?.DistrictName;
+    const wardName = wards.find((w) => Number(w.WardCode) === Number(wardCode))?.WardName;
 
     if (!provinceName || !districtName || !wardName) return;
 
     const fullAddress = `${branchAddress}, ${wardName}, ${districtName}, ${provinceName}`;
-    console.log("Full address:", fullAddress);
+    console.log(t("fullAddress"), fullAddress);
 
     try {
       const res = await axios.get("https://rsapi.goong.io/geocode", {
@@ -136,7 +136,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         form.setValue("longAddress", result.geometry.location.lng.toString());
       }
     } catch (err) {
-      console.error("Failed to fetch coordinates from Goong", err);
+      console.error(t("fetchCoordinatesError"), err);
     }
   };
 
@@ -160,10 +160,12 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       }
 
       await onSubmit(payload as any);
-      toast.success(`${mode === "create" ? "Created" : "Updated"} branch successfully`);
+      toast.success(
+        `${mode === "create" ? t("createBranchSuccess") : t("updateBranchSuccess")}`
+      );
       navigate("/branchs-management");
     } catch {
-      toast.error("Something went wrong while submitting branch");
+      toast.error(t("submitBranchError"));
     }
   };
 
@@ -174,7 +176,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? t("createbranch") : t("updatebranch")}
+                {mode === "create" ? t("createBranch") : t("updateBranch")}
               </CardTitle>
             </div>
           </CardHeader>
@@ -300,15 +302,13 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
           </CardContent>
         </Card>
 
-
         <div className="flex justify-end">
           <button
             type="submit"
             className="bg-[#516d19] text-white px-6 py-2 rounded hover:bg-green-700"
           >
-            {mode === "create" ? t("createbranch") : t("updatebranch")}
+            {mode === "create" ? t("createBranch") : t("updateBranch")}
           </button>
-
         </div>
       </form>
     </Form>

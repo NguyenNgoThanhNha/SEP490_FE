@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronUp, ChevronDown, FileDown, FileUp } from 'lucide-react';
 import SearchInput from '@/components/atoms/search-input';
+import { useTranslation } from 'react-i18next';
 
 interface BadgeConfig<T> {
   key: keyof T;
@@ -47,7 +48,7 @@ export const Table = React.memo(<T extends Record<string, unknown>>({
     new Set(headers.filter((header) => header.hiding).map((header) => header.key))
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const {t} = useTranslation();
   const handleSort = (key: keyof T, direction?: 'asc' | 'desc') => {
     const nextDirection = direction || (sortConfig?.direction === 'asc' ? 'desc' : 'asc');
     setSortConfig({ key, direction: nextDirection });
@@ -75,12 +76,6 @@ export const Table = React.memo(<T extends Record<string, unknown>>({
     );
   }, [sortedData, searchQuery]);
 
-  const renderBadge = (key: keyof T, value: T[keyof T]) => {
-    const badge = badgeConfig?.[key];
-    if (!badge) return value;
-    const badgeStyle = badge[value as keyof typeof badge];
-    return badgeStyle ? <span className={badgeStyle}>{value}</span> : value;
-  };
 
   const handleColumnToggle = (columnKey: keyof T) => {
     const newHiddenColumns = new Set(hiddenColumns);
@@ -150,20 +145,13 @@ export const Table = React.memo(<T extends Record<string, unknown>>({
             </div>
           ))}
         </div>
-        {/* Import/Export Icons */}
         <div className="flex items-center space-x-4">
-          <button onClick={onImport} className="p-2 hover:bg-indigo-100 rounded-lg">
-            <FileUp className="w-5 h-5 text-indigo-600" />
-          </button>
-          <button   onClick={() => onExport?.(selectedRows)} className="p-2 hover:bg-indigo-100 rounded-lg">
-            <FileDown className="w-5 h-5 text-indigo-600" />
-          </button>
           <div className="relative">
             <button
               className="bg-gray-100 p-2 rounded-lg"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              Display
+              {t("display")}
             </button>
             {isDropdownOpen && (
               <div
@@ -230,7 +218,7 @@ export const Table = React.memo(<T extends Record<string, unknown>>({
                 </th>
               )
             )}
-            {actions && <th className="p-4 text-sm font-medium">Actions</th>}
+            {actions && <th className="p-4 text-sm font-medium"></th>}
           </tr>
         </thead>
         <tbody>

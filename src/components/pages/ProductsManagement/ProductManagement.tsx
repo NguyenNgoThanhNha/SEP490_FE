@@ -86,7 +86,7 @@ const ProductManagementPage = () => {
   const headers = [
     { label: t("Image"), key: "image", hiding: true },
     { label: t("Product"), key: "productName" },
-    { label: t("Price"), key: "price", render: (price: number) => formatPrice(price), sortable: true },
+    { label: t("Price"), key: "price", render: (price: number) => `${formatPrice(price)} VND`, sortable: true },
     { label: t("Quantity"), key: "quantity", sortable: true },
     { 
       label: t("category"), 
@@ -171,7 +171,7 @@ const ProductManagementPage = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="whitespace-nowrap text-gray-400 text-sm">
-              Number of rows per page
+              {t("Numberofrowsperpage")}
             </span>
             <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
               {[5, 10, 15, 20].map((size) => (
