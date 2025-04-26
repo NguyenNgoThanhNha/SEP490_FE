@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Modal, Select } from "antd";
-// import { useNavigate } from "react-router-dom";
 import { Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import * as XLSX from "xlsx";
@@ -20,15 +19,16 @@ import { TVoucher } from "@/types/voucher.type";
 import voucherService from "@/services/voucherService";
 import { formatDate } from "@/utils/formatDate";
 import { formatPrice } from "@/utils/formatPrice";
+import { useTranslation } from "react-i18next";
 
 const VoucherManagementPage = () => {
+  const { t } = useTranslation();
   const [vouchers, setVouchers] = useState<TVoucher[]>([]);
   const [, setLoading] = useState(false);
-  // const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [totalPages, ] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchVouchers = async () => {
     try {
@@ -36,11 +36,12 @@ const VoucherManagementPage = () => {
       const response = await voucherService.getAllVoucher({ Status: "active" });
       if (response?.success) {
         setVouchers(response.result?.data || []);
+        setTotalPages(Math.ceil((response.result?.data.length || 0) / pageSize));
       } else {
-        toast.error(response.result?.message || "Failed to fetch vouchers.");
+        toast.error(response.result?.message || t("fetchError"));
       }
     } catch {
-      toast.error("Failed to fetch vouchers.");
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
@@ -52,44 +53,40 @@ const VoucherManagementPage = () => {
 
   const handleDelete = (voucherId: number) => {
     Modal.confirm({
-      title: "Are you sure?",
-      content: "This action cannot be undone.",
-      okText: "Yes, delete",
-      cancelText: "Cancel",
+      title: t("confirmDeleteTitle"),
+      content: t("confirmDeleteContent"),
+      okText: t("confirmDeleteOk"),
+      cancelText: t("confirmDeleteCancel"),
       onOk: async () => {
         try {
           const response = await voucherService.deleteVoucher(voucherId);
           if (response?.success) {
-            toast.success("Voucher deleted successfully.");
+            toast.success(t("deleteSuccess"));
             fetchVouchers();
           } else {
-            toast.error(response.result?.message || "Failed to delete voucher.");
+            toast.error(response.result?.message || t("deleteError"));
           }
         } catch {
-          toast.error("Failed to delete voucher.");
+          toast.error(t("deleteError"));
         }
       },
     });
   };
 
-  // const handleEdit = (voucherId: number) => {
-  //   navigate(`/voucher-management/${voucherId}`);
-  // };
-
   const handleExport = () => {
     const exportData = vouchers.map((voucher) => ({
-      "Voucher Code": voucher.code,
-      "Discount": `${voucher.discountAmount} VND`,
-      "Description": voucher.description,
-      "Quantity": voucher.quantity,
-      "Remain Quantity": voucher.remainQuantity,
-      "Valid From": formatDate(voucher.validFrom),
-      "Valid To": formatDate(voucher.validTo),
+      [t("voucherCode")]: voucher.code,
+      [t("Discount")]: `${voucher.discountAmount} VND`,
+      [t("description")]: voucher.description,
+      [t("quantity")]: voucher.quantity,
+      [t("remainQuantity")]: voucher.remainQuantity,
+      [t("validFrom")]: formatDate(voucher.validFrom),
+      [t("validTo")]: formatDate(voucher.validTo),
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Vouchers");
+    XLSX.utils.book_append_sheet(workbook, worksheet, t("vouchers"));
 
     const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
     const file = new Blob([excelBuffer], { type: "application/octet-stream" });
@@ -97,18 +94,18 @@ const VoucherManagementPage = () => {
   };
 
   const headers = [
-    { label: "Voucher code", key: "code", searchable: true },
+    { label: t("voucherCode"), key: "code", searchable: true },
     {
-      label: "Discount",
+      label: t("Discount"),
       key: "discountAmount",
       render: (price: number) => `${formatPrice(price)} VND`,
       sortable: true,
     },
-    { label: "Description", key: "description" },
-    { label: "Quantity", key: "quantity",  sortable: true, },
-    { label: "Remain Quantity", key: "remainQuantity",  sortable: true, },
-    { label: "Valid from", key: "validFrom", render: formatDate,  sortable: true, },
-    { label: "Valid to", key: "validTo", render: formatDate,  sortable: true, },
+    { label: t("description"), key: "description" },
+    { label: t("Quantity"), key: "quantity", sortable: true },
+    { label: t("remainQuantity"), key: "remainQuantity", sortable: true },
+    { label: t("validFrom"), key: "validFrom", render: formatDate, sortable: true },
+    { label: t("validTo"), key: "validTo", render: formatDate, sortable: true },
   ];
 
   return (
@@ -134,7 +131,7 @@ const VoucherManagementPage = () => {
 
       <div className="flex justify-between items-center mt-4">
         <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <span>Rows per page:</span>
+          <span>{t("Numberofrowsperpage")}:</span>
           <Select
             defaultValue={pageSize}
             onChange={(value: number) => {
@@ -145,7 +142,7 @@ const VoucherManagementPage = () => {
           >
             {[5, 10, 15, 20].map((size) => (
               <Select.Option key={size} value={size}>
-                {size}
+                {size} {t("items")}
               </Select.Option>
             ))}
           </Select>

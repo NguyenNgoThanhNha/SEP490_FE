@@ -32,8 +32,8 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
       userName: "",
       fullName: "",
       email: "",
-      branchId: 1,
-      roleId: 1,
+      branchId: 0,
+      roleId: 0,
       avatar: "",
     },
   });
@@ -210,9 +210,8 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="1">{t("Manager")}</SelectItem>
-                          <SelectItem value="2">{t("Specialist")}</SelectItem>
-                          <SelectItem value="3">{t("Cashier")}</SelectItem>
+                          <SelectItem value="3">{t("Specialist")}</SelectItem>
+                          <SelectItem value="4">{t("Cashier")}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

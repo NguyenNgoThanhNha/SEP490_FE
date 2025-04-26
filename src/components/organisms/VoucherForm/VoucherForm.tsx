@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface VoucherFormProps {
   mode: "create" | "update";
@@ -20,6 +21,7 @@ interface VoucherFormProps {
 const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const form = useForm<VoucherType>({
     resolver: zodResolver(VoucherSchema),
@@ -43,30 +45,33 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
       const now = dayjs().startOf("day");
       const validFrom = dayjs(data.validFrom).startOf("day");
       const validTo = dayjs(data.validTo).endOf("day");
+
       if (validFrom.isBefore(now)) {
-        toast.error("Ngày bắt đầu không được nhỏ hơn ngày hiện tại.");
+        toast.error(t("validFromError"));
         setLoading(false);
         return;
       }
 
       if (validTo.isBefore(validFrom)) {
-        toast.error("Ngày kết thúc không được nhỏ hơn ngày bắt đầu.");
+        toast.error(t("validToError"));
         setLoading(false);
         return;
       }
 
       const payload = {
         ...data,
-        validFrom: validFrom.format("YYYY-MM-DDTHH:mm:ss"), 
+        validFrom: validFrom.format("YYYY-MM-DDTHH:mm:ss"),
         validTo: validTo.toISOString(),
         remainQuantity: data.quantity,
       };
 
       await onSubmit(payload);
-      toast.success(`${mode === "create" ? "Created" : "Updated"} voucher successfully`);
+      toast.success(
+        mode === "create" ? t("createVoucherSuccess") : t("updateVoucherSuccess")
+      );
       navigate("/voucher-management");
     } catch {
-      toast.error("Something went wrong while submitting voucher");
+      toast.error(t("submitVoucherError"));
     } finally {
       setLoading(false);
     }
@@ -79,7 +84,7 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? "Tạo mã giảm giá" : "Cập nhật mã giảm giá"}
+                {mode === "create" ? t("createVoucher") : t("updateVoucher")}
               </CardTitle>
             </div>
           </CardHeader>
@@ -89,9 +94,9 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Mã giảm giá</FormLabel>
+                  <FormLabel>{t("voucherCode")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nhập mã giảm giá" {...field} />
+                    <Input placeholder={t("enterVoucherCode")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,9 +108,9 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Mô tả</FormLabel>
+                  <FormLabel>{t("description")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nhập mô tả" {...field} />
+                    <Input placeholder={t("enterDescription")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,12 +122,12 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="quantity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Số lượng</FormLabel>
+                  <FormLabel>{t("quantity")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Nhập số lượng"
-                      value={field.value || ''}
+                      placeholder={t("enterQuantity")}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
@@ -136,12 +141,12 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="discountAmount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Số tiền ưu đãi (VND)</FormLabel>
+                  <FormLabel>{t("discountAmount")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Nhập số tiền ưu đãi"
-                      value={field.value || ''}
+                      placeholder={t("enterDiscountAmount")}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
@@ -155,12 +160,12 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="minOrderAmount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Số tiền tối thiểu (VND)</FormLabel>
+                  <FormLabel>{t("minOrderAmount")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Nhập số tiền tối thiểu"
-                      value={field.value || ''}
+                      placeholder={t("enterMinOrderAmount")}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
@@ -174,12 +179,12 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="requirePoint"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Điểm yêu cầu</FormLabel>
+                  <FormLabel>{t("requirePoint")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Nhập điểm yêu cầu"
-                      value={field.value || ''}
+                      placeholder={t("enterRequirePoint")}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
@@ -189,7 +194,6 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
             />
 
             <FormDatePicker name="validFrom" form={form} />
-
             <FormDatePicker name="validTo" form={form} />
           </CardContent>
         </Card>
@@ -200,7 +204,7 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
             onClick={() => navigate("/voucher-management")}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
-            Hủy
+            {t("Cancel")}
           </button>
           <button
             type="submit"
@@ -212,7 +216,7 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
                 <Loader className="animate-spin h-5 w-5 text-white" />
               </div>
             ) : (
-              mode === "create" ? "Tạo mã giảm giá" : "Cập nhật mã giảm giá"
+              mode === "create" ? t("createVoucher") : t("updateVoucher")
             )}
           </button>
         </div>

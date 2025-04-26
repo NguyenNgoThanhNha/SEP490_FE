@@ -11,13 +11,14 @@ import { Input } from "@/components/atoms/ui/input";
 import TextArea from "antd/es/input/TextArea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/ui/select";
 import { Button } from "@/components/atoms/ui/button";
-
+import { useTranslation } from "react-i18next";
 
 const SkincareRoutineForm = ({
   onCreated,
 }: {
   onCreated: (routine: TRoutine) => Promise<void>;
 }) => {
+  const { t } = useTranslation();
   const [skinTypes, setSkinTypes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -40,15 +41,15 @@ const SkincareRoutineForm = ({
           setSkinTypes(res.result?.data || []);
         }
       } catch {
-        toast.error("Không lấy được danh sách loại da");
+        toast.error(t("fetchSkinTypesError"));
       }
     };
     fetchSkinTypes();
-  }, []);
+  }, [t]);
 
   const handleFormSubmit = async (data: SkincareRoutineType) => {
     if (data.targetSkinTypes.length === 0) {
-      toast.error("Vui lòng chọn ít nhất 1 loại da phù hợp");
+      toast.error(t("selectAtLeastOneSkinType"));
       return;
     }
 
@@ -57,15 +58,15 @@ const SkincareRoutineForm = ({
       const res = await skincareRoutineService.createSkincareRoutine(data);
 
       if (res.success) {
-        toast.success("Tạo skincare routine thành công!");
+        toast.success(t("createRoutineSuccess"));
         onCreated(res.result?.data);
         form.reset();
       } else {
-        toast.error("Tạo skincare routine thất bại");
+        toast.error(t("createRoutineError"));
       }
     } catch (error) {
       console.error(error);
-      toast.error("Có lỗi xảy ra khi tạo routine");
+      toast.error(t("unexpectedError"));
     } finally {
       setLoading(false);
     }
@@ -76,8 +77,8 @@ const SkincareRoutineForm = ({
       <div className="max-w-3xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Tạo Routine Chăm Sóc Da</CardTitle>
-            <CardDescription>Điền thông tin chi tiết cho routine chăm sóc da của bạn</CardDescription>
+            <CardTitle>{t("createRoutineTitle")}</CardTitle>
+            <CardDescription>{t("createRoutineDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -87,11 +88,11 @@ const SkincareRoutineForm = ({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tên Routine</FormLabel>
+                      <FormLabel>{t("routineName")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Nhập tên routine" {...field} />
+                        <Input placeholder={t("enterRoutineName")} {...field} />
                       </FormControl>
-                      <FormDescription>Đặt tên cho routine chăm sóc da của bạn.</FormDescription>
+                      <FormDescription>{t("routineNameDescription")}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -102,15 +103,15 @@ const SkincareRoutineForm = ({
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Mô tả</FormLabel>
+                      <FormLabel>{t("description")}</FormLabel>
                       <FormControl>
                         <TextArea
-                          placeholder="Routine này giúp dưỡng ẩm và bảo vệ da vào buổi sáng..."
+                          placeholder={t("enterRoutineDescription")}
                           className="min-h-[100px]"
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>Mô tả mục đích và lợi ích của routine này.</FormDescription>
+                      <FormDescription>{t("routineDescriptionDescription")}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -122,11 +123,11 @@ const SkincareRoutineForm = ({
                     name="totalSteps"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Số bước</FormLabel>
+                        <FormLabel>{t("totalSteps")}</FormLabel>
                         <FormControl>
                           <Input type="number" min={1} max={10} {...field} />
                         </FormControl>
-                        <FormDescription>Số bước trong routine này.</FormDescription>
+                        <FormDescription>{t("totalStepsDescription")}</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -137,11 +138,11 @@ const SkincareRoutineForm = ({
                     name="totalPrice"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Giá tiền (VND)</FormLabel>
+                        <FormLabel>{t("totalPrice")}</FormLabel>
                         <FormControl>
                           <Input type="number" min={0} step={1000} {...field} />
                         </FormControl>
-                        <FormDescription>Tổng chi phí ước tính của các sản phẩm.</FormDescription>
+                        <FormDescription>{t("totalPriceDescription")}</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -153,7 +154,7 @@ const SkincareRoutineForm = ({
                   name="targetSkinTypes"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Loại da phù hợp</FormLabel>
+                      <FormLabel>{t("targetSkinTypes")}</FormLabel>
                       <Select
                         onValueChange={(value) => {
                           if (!field.value.includes(value)) {
@@ -163,7 +164,7 @@ const SkincareRoutineForm = ({
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Chọn loại da" />
+                            <SelectValue placeholder={t("selectSkinTypes")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -174,7 +175,7 @@ const SkincareRoutineForm = ({
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormDescription>Routine này dành cho loại da nào?</FormDescription>
+                      <FormDescription>{t("targetSkinTypesDescription")}</FormDescription>
                       <FormMessage />
                       {field.value.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-2">
@@ -195,8 +196,8 @@ const SkincareRoutineForm = ({
                   )}
                 />
 
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Đang tạo..." : "Tạo Routine"}
+                <Button type="submit" className="w-full bg-[#516d19] rounded-full" disabled={loading}>
+                  {loading ? t("creating") : t("createRoutine")}
                 </Button>
               </form>
             </Form>
