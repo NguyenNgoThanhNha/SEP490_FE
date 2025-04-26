@@ -189,7 +189,9 @@ const resources = {
       stockQuantity: 'Stock Quantity',
       active: 'Active',
       soldOut: 'Sold out',
-      addPromotion: "Add Promotion"
+      addPromotion: "Add Promotion",
+      bookingTrend: "Booking Trend",
+
     }
   },
   vi: {
@@ -376,7 +378,8 @@ const resources = {
       branchIdRequired: 'Mã chi nhánh là bắt buộc!',
       stockQuantity: 'Số lượng tồn kho',
       active: "'Đang hoạt động",
-      soldOut: 'Hết hàng'
+      soldOut: 'Hết hàng',
+      bookingTrend: 'Xu hướng đặt lịch hẹn',
     }
   }
 }

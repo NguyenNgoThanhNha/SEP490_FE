@@ -1,51 +1,61 @@
-import { get, post, ResponseProps } from "./root"
+import { get, post, ResponseProps } from './root'
 
 interface GetAppointmentProps {
-    page: number,
-    pageSize: number,
+  page: number
+  pageSize: number
 }
 
-const getAllAppointment = async({page, pageSize}: GetAppointmentProps) : Promise<ResponseProps> => {
-    return await get(`Appointments/get-all?page=${page}&pageSize=${pageSize}`)
+const getAllAppointment = async ({ page, pageSize }: GetAppointmentProps): Promise<ResponseProps> => {
+  return await get(`Appointments/get-all?page=${page}&pageSize=${pageSize}`)
 }
 
 interface AppointmentDetailProps {
-    appointmentId: number
+  appointmentId: number
 }
 
-const getAppointmentDetail = async({appointmentId}: AppointmentDetailProps) : Promise<ResponseProps> => {
-    return await get(`Appointments/get-by-id/${appointmentId}`)
+const getAppointmentDetail = async ({ appointmentId }: AppointmentDetailProps): Promise<ResponseProps> => {
+  return await get(`Appointments/get-by-id/${appointmentId}`)
 }
 
 interface CreateAppointmentProps {
-    userId: number
-    staffId:number[],
-    serviceId: number[],
-    branchId: number,
-    appointmentsTime: string,
-    status: string,
-    notes?: string,
-    feedback?: string,
-    voucherId?: number
+  userId: number
+  staffId: number[]
+  serviceId: number[]
+  branchId: number
+  appointmentsTime: string
+  status: string
+  notes?: string
+  feedback?: string
+  voucherId?: number
 }
 
-const createAppointment = async(data: CreateAppointmentProps) : Promise<ResponseProps> => {
-    return await post('Appointments/create', data)
+const createAppointment = async (data: CreateAppointmentProps): Promise<ResponseProps> => {
+  return await post('Appointments/create', data)
 }
 
 interface GetAppointmentByBranchProps {
-    BranchId: number,
-    Page: number,
-    PageSize: number
+  BranchId: number
+  Page: number
+  PageSize: number
 }
 
-const getAppointmentByBranch = async({BranchId, Page , PageSize}: GetAppointmentByBranchProps) : Promise<ResponseProps> => {
-    return await get(`Appointments/by-branch?BranchId=${BranchId}&Page=${Page}&PageSize=${PageSize}`)
+const getAppointmentByBranch = async ({
+  BranchId,
+  Page,
+  PageSize
+}: GetAppointmentByBranchProps): Promise<ResponseProps> => {
+  return await get(`Appointments/by-branch?BranchId=${BranchId}&Page=${Page}&PageSize=${PageSize}`)
+}
+
+const bookingStatistic = async (branchId: number, year: number): Promise<ResponseProps> => {
+  return await get(`Appointments/booking-statistics?branchId=${branchId}&year=${year}`)
 }
 
 export default {
-    getAllAppointment,
-    getAppointmentDetail,
-    createAppointment,
-    getAppointmentByBranch,
+  getAllAppointment,
+  getAppointmentDetail,
+  createAppointment,
+  getAppointmentByBranch,
+  bookingStatistic,
+
 }

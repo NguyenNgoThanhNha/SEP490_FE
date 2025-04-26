@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import BarChartComponent from "@/components/molecules/BarChart";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/ui/card";
 
 interface TProductSoldByBranch {
   productId: number;
@@ -42,7 +43,14 @@ export const SoldProductByBranch = () => {
 
   return (
     <div>
-      <BarChartComponent data={chartData} />
+      <Card className="col-span-3">
+        <CardHeader>
+          <CardTitle>{t("soldproductbranch")}</CardTitle>
+        </CardHeader>
+        <CardContent className="h-[400px]">
+          <BarChartComponent data={chartData} />
+        </CardContent>
+      </Card>
     </div>
   );
 };
