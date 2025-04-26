@@ -29,7 +29,8 @@ const BarChartComponent: React.FC<BarChartProps> = ({ data }) => {
   const maxValue = Math.max(...top10Data.map((d) => d.value));
   const step = 10;
   const maxDomain = Math.ceil(maxValue / step) * step;
-
+  const truncate = (str: string, maxLength: number) => 
+    str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
   return (
     <div>
     <ResponsiveContainer width="100%" height={400}>
@@ -53,8 +54,10 @@ const BarChartComponent: React.FC<BarChartProps> = ({ data }) => {
       tickLine={false}
       axisLine={{ stroke: "#ddd" }}
       width={200}
+      tickFormatter={(name) => truncate(name, 20)} 
     />
-    <Tooltip />
+    <Tooltip
+     />
     <Bar dataKey="value" barSize={30} radius={[8, 8, 0, 0]}>
       {top10Data.map((_entry, index) => (
         <Cell
