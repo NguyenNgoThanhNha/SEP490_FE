@@ -18,6 +18,9 @@ const deleteBranch = async (branchId: number): Promise<ResponseProps> => {
   return await del(`Branch/delete/${branchId}`);
 };
 
+const getManagerNotInBranch = async (): Promise<ResponseProps> => {
+  return await get(`User/get-manager-not-in-branch`);
+}
 interface CreateBranchProps {
   branchName: string;
   branchAddress: string;
@@ -87,5 +90,6 @@ export default {
   getDistricts,
   getWards,
   getCoordinates,
-  getBranchById
+  getBranchById,
+  getManagerNotInBranch,
 };

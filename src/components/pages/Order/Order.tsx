@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { CreditCard, Edit, HandCoins } from 'lucide-react'
-import RechartsPieChart from '@/components/molecules/PieChart'
 import { Table } from '@/components/organisms/Table/Table'
 import { formatPrice } from '@/utils/formatPrice'
 import toast from 'react-hot-toast'
@@ -19,10 +18,9 @@ import { TOrder } from '@/types/order.type'
 import orderService from '@/services/orderService'
 import { Badge } from '@/components/atoms/ui/badge'
 import { useTranslation } from 'react-i18next'
-import { RevenueByBranch } from '@/components/organisms/RevenueByBranchChart/RevenueByBranchChart'
 
 const OrderManagementPage = () => {
-  const { t } = useTranslation() 
+  const { t } = useTranslation()
   const [orders, setOrders] = useState<TOrder[]>([])
   const [, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -81,49 +79,54 @@ const OrderManagementPage = () => {
       key: 'status',
       sortable: true,
       render: (status: string) => {
-        let variant: 'active' | 'inactive' | 'pending' | 'default'
+        let variant: 'active' | 'inactive' | 'pending' | 'default';
+        let translatedStatus = '';
+
         switch (status.toLowerCase()) {
           case 'completed':
-            variant = 'active'
-            break
+            variant = 'active';
+            translatedStatus = t('Completed');
+            break;
           case 'pending':
-            variant = 'pending'
-            break
+            variant = 'pending';
+            translatedStatus = t('Pending');
+            break;
           case 'cancelled':
-            variant = 'inactive'
-            break
+            variant = 'inactive';
+            translatedStatus = t('Cancelled');
+            break;
           default:
-            variant = 'pending'
+            variant = 'default';
+            translatedStatus = t('Unknown');
         }
 
-        return <Badge variant={variant}>{t(status)}</Badge>
-      }
+        return <Badge variant={variant}>{translatedStatus}</Badge>;
+      },
     },
     {
       label: t('Paymentmethod'),
       key: 'paymentMethod',
       render: (method: string) => {
-        let icon = null
-        let variant: 'active' | 'inactive' | 'default' = 'default'
-    
+        let icon = null;
+        let variant: 'active' | 'inactive' | 'default' = 'default';
+
         if (method === 'cash') {
-          icon = <HandCoins size={14} className="inline mr-1" />
-          variant = 'active'
+          icon = <HandCoins size={14} className="inline mr-1" />;
+          variant = 'active';
         } else if (method === 'PayOS') {
-          icon = <CreditCard size={14} className="inline mr-1" />
-          variant = 'active'
+          icon = <CreditCard size={14} className="inline mr-1" />;
+          variant = 'active';
         }
-    
+
         return (
           <Badge variant={variant}>
             {icon}
             {t(method)}
           </Badge>
-        )
-      }
-    }
-,    
-    { label: t('OrderType'), key: 'orderType' }
+        );
+      },
+    },
+    { label: t('OrderType'), key: 'orderType' },
   ]
 
   const renderPagination = () => {
@@ -172,19 +175,7 @@ const OrderManagementPage = () => {
 
   return (
     <div className='p-6 min-h-screen'>
-      <div className='flex gap-6 mb-8'>
-        <div className='flex-1'>
-         <RevenueByBranch/>
-        </div>
-        <div className='flex-1'>
-          <RechartsPieChart
-            title={t('Typedistribution')}
-            subtitle={t('ProductType')}
-            labels={[t('Serum'), t('Toner'), t('Others')]}
-            data={[59, 20, 21]}
-          />
-        </div>
-      </div>
+
 
       <div className='bg-white shadow-md rounded-lg p-4'>
         <Table

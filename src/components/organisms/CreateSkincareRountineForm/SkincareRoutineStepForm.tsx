@@ -15,8 +15,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/atoms/ui/input";
 import TextArea from "antd/es/input/TextArea";
 import { TRoutine } from "@/types/routine.type";
+import { useTranslation } from "react-i18next";
 
 export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
   const [steps, setSteps] = useState<SkincareStepType[]>([]);
   const [isComplete, setIsComplete] = useState(false);
@@ -46,7 +48,7 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
 
       const response = await skincareRoutineStepService.createSkincareRoutineStep(newStep);
       if (response.success) {
-        toast.success(`Bước ${currentStep} đã được thêm thành công!`);
+        toast.success(t("stepAddedSuccess", { step: currentStep }));
         setSteps([...steps, newStep]);
 
         if (currentStep >= routineData.totalSteps) {
@@ -56,18 +58,18 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
           form.reset();
         }
       } else {
-        toast.error("Không thể thêm bước. Vui lòng thử lại.");
+        toast.error(t("stepAddError"));
       }
     } catch (error) {
-      console.error("Lỗi khi thêm bước:", error);
-      toast.error("Đã xảy ra lỗi khi thêm bước.");
+      console.error(t("unexpectedError"), error);
+      toast.error(t("unexpectedError"));
     } finally {
       setLoading(false);
     }
   };
 
   const handleFinish = () => {
-    toast.success("Routine đã hoàn thành!");
+    toast.success(t("routineComplete"));
   };
 
   if (isComplete) {
@@ -76,30 +78,28 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
         <div className="max-w-3xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle className="text-center text-green-600">Routine Hoàn Thành!</CardTitle>
-              <CardDescription className="text-center">
-                Bạn đã tạo thành công routine chăm sóc da với tất cả các bước.
-              </CardDescription>
+              <CardTitle className="text-center text-green-600">{t("routineCompleteTitle")}</CardTitle>
+              <CardDescription className="text-center">{t("routineCompleteDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">Chi tiết Routine:</h3>
+                <h3 className="text-lg font-medium">{t("routineDetails")}</h3>
                 <p>
-                  <strong>Tên:</strong> {routineData.name}
+                  <strong>{t("name")}:</strong> {routineData.name}
                 </p>
                 <p>
-                  <strong>Mô tả:</strong> {routineData.description}
+                  <strong>{t("description")}:</strong> {routineData.description}
                 </p>
                 <p>
-                  <strong>Số bước:</strong> {routineData.totalSteps}
+                  <strong>{t("totalSteps")}:</strong> {routineData.totalSteps}
                 </p>
 
-                <h3 className="text-lg font-medium mt-6">Các bước:</h3>
+                <h3 className="text-lg font-medium mt-6">{t("steps")}</h3>
                 <div className="space-y-4">
                   {steps.map((step, index) => (
                     <div key={index} className="border p-4 rounded-md">
                       <h4 className="font-medium">
-                        Bước {step.step}: {step.name}
+                        {t("step")} {step.step}: {step.name}
                       </h4>
                       <p className="text-sm text-muted-foreground">{step.description}</p>
                     </div>
@@ -109,7 +109,7 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
             </CardContent>
             <CardFooter>
               <Button onClick={handleFinish} className="w-full">
-                Hoàn thành
+                {t("finish")}
               </Button>
             </CardFooter>
           </Card>
@@ -124,10 +124,10 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
         <Card>
           <CardHeader>
             <CardTitle>
-              Thêm Bước {currentStep} / {routineData.totalSteps}
+              {t("addStepTitle", { currentStep, totalSteps: routineData.totalSteps })}
             </CardTitle>
             <CardDescription>
-              Điền thông tin chi tiết cho bước {currentStep} của routine "{routineData.name}"
+              {t("addStepDescription", { currentStep, routineName: routineData.name })}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -138,9 +138,9 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tên Bước</FormLabel>
+                      <FormLabel>{t("stepName")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ví dụ: Làm sạch" {...field} />
+                        <Input placeholder={t("enterStepName")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -152,10 +152,10 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Mô tả</FormLabel>
+                      <FormLabel>{t("description")}</FormLabel>
                       <FormControl>
                         <TextArea
-                          placeholder="Mô tả chi tiết bước này..."
+                          placeholder={t("enterStepDescription")}
                           className="min-h-[80px]"
                           {...field}
                         />
@@ -170,10 +170,10 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                   name="productIds"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Chọn Sản Phẩm</FormLabel>
+                      <FormLabel>{t("selectProducts")}</FormLabel>
                       <FormControl>
                         <MultiSelect
-                          label="Chọn sản phẩm"
+                          label={t("selectProducts")}
                           fetchOptions={async (keyword) => {
                             const res = await productService.elasticSearchProduct(keyword);
                             return (
@@ -197,10 +197,10 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                   name="serviceIds"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Chọn Dịch Vụ</FormLabel>
+                      <FormLabel>{t("selectServices")}</FormLabel>
                       <FormControl>
                         <MultiSelect
-                          label="Chọn dịch vụ"
+                          label={t("selectServices")}
                           fetchOptions={async (keyword) => {
                             const res = await serviceService.elasticSearchService(keyword);
                             return (
@@ -210,8 +210,8 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                               })) || []
                             );
                           }}
-                          selected={field.value || []} // Giá trị được chọn
-                          onChange={(value) => field.onChange(value)} // Cập nhật giá trị khi thay đổi
+                          selected={field.value || []}
+                          onChange={(value) => field.onChange(value)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -224,7 +224,7 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                   name="intervalBeforeNextStep"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Thời gian giữa các bước (ngày)</FormLabel>
+                      <FormLabel>{t("intervalBeforeNextStep")}</FormLabel>
                       <FormControl>
                         <Input type="number" min={0} {...field} />
                       </FormControl>
@@ -233,8 +233,8 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                   )}
                 />
 
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {currentStep === routineData.totalSteps ? "Hoàn thành Routine" : "Thêm Bước"}
+                <Button type="submit" className="w-full bg-[#516d19] rounded-full" disabled={loading}>
+                  {currentStep === routineData.totalSteps ? t("finishRoutine") : t("addStep")}
                 </Button>
               </form>
             </Form>
