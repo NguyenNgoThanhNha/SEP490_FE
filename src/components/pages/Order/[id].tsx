@@ -74,10 +74,10 @@ interface OrderDetailData {
 export default function OrderDetailPage() {
   const [orderDetail, setOrderDetail] = useState<OrderDetailData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [updating, setUpdating] = useState<boolean>(false); 
+  const [updating, setUpdating] = useState<boolean>(false);
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchOrderDetail = async () => {
@@ -88,7 +88,7 @@ export default function OrderDetailPage() {
         } else {
           message.error(t("orderNotFound"));
         }
-      } catch  {
+      } catch {
         message.error(t("orderDetailError"));
       } finally {
         setLoading(false);
@@ -126,7 +126,7 @@ export default function OrderDetailPage() {
       } else {
         message.error(t("updateStatusError"));
       }
-    } catch  {
+    } catch {
       message.error(t("orderNotFound"));
     } finally {
       setUpdating(false);
@@ -257,8 +257,16 @@ export default function OrderDetailPage() {
                   <TableCell>{detail.quantity}</TableCell>
                   <TableCell>{detail.subTotal?.toLocaleString()} VND</TableCell>
                   <TableCell>
-                    <Badge variant={detail.status === "Shipping" ? "success" : "outline"}>
-                      {detail.status}
+                    <Badge
+                      variant={
+                        detail.status === "Shipping"
+                          ? "success"
+                          : detail.status === "PendingDeposit"
+                            ? "warning"
+                            : "outline"
+                      }
+                    >
+                      {t(`${detail.status.toLowerCase().replace(" ", "_")}`)} {/* Dịch trạng thái */}
                     </Badge>
                   </TableCell>
                 </TableRow>
@@ -283,11 +291,11 @@ export default function OrderDetailPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                <TableHead>{t("Service")}</TableHead>
-                <TableHead>{t("StaffName")}</TableHead>
-                <TableHead>{t("Branch")}</TableHead>
-                <TableHead>{t("appointmentTime")}</TableHead>
-                <TableHead>{t("Status")}</TableHead>
+                  <TableHead>{t("Service")}</TableHead>
+                  <TableHead>{t("StaffName")}</TableHead>
+                  <TableHead>{t("Branch")}</TableHead>
+                  <TableHead>{t("appointmentTime")}</TableHead>
+                  <TableHead>{t("Status")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -297,11 +305,19 @@ export default function OrderDetailPage() {
                     <TableCell>{appointment.staff?.staffInfo?.userName || "N/A"}</TableCell>
                     <TableCell>{appointment.branch?.branchName || "N/A"}</TableCell>
                     <TableCell>
-                    {dayjs(appointment.appointmentsTime).format("HH:mm DD/MM/YYYY")}
+                      {dayjs(appointment.appointmentsTime).format("HH:mm DD/MM/YYYY")}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={appointment.status === "Completed" ? "success" : "outline"}>
-                        {appointment.status}
+                      <Badge
+                        variant={
+                          appointment.status === "Completed"
+                            ? "success"
+                            : appointment.status === "Pending Deposit"
+                              ? "warning"
+                              : "outline"
+                        }
+                      >
+                        {t(`${appointment.status.toLowerCase().replace(" ", "_")}`)} {/* Dịch trạng thái */}
                       </Badge>
                     </TableCell>
                   </TableRow>
@@ -327,11 +343,19 @@ export default function OrderDetailPage() {
                   <TableCell>{appointment.staff?.staffInfo?.userName || "N/A"}</TableCell>
                   <TableCell>{appointment.branch?.branchName || "N/A"}</TableCell>
                   <TableCell>
-                  {dayjs(appointment.appointmentsTime).format("HH:mm DD/MM/YYYY")}
+                    {dayjs(appointment.appointmentsTime).format("HH:mm DD/MM/YYYY")}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={appointment.status === "Completed" ? "success" : "outline"}>
-                      {appointment.status}
+                    <Badge
+                      variant={
+                        appointment.status === "Completed"
+                          ? "success"
+                          : appointment.status === "Pending Deposit"
+                            ? "warning"
+                            : "outline"
+                      }
+                    >
+                      {t(`status.${appointment.status.toLowerCase().replace(" ", "_")}`)} {/* Dịch trạng thái */}
                     </Badge>
                   </TableCell>
                 </TableRow>

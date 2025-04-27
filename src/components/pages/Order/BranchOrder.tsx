@@ -70,7 +70,7 @@ const BranchOrderManagementPage = () => {
 
   const headers = [
     { label: t("customer"), key: "customer.userName" },
-    { label: t("Price"), key: "totalAmount", render: (price: number) => formatPrice(price), sortable: true },
+    { label: t("Price"), key: "totalAmount", render: (price: number) => `${formatPrice(price)} VND`, sortable: true },
     { label: t("Status"), key: "status", sortable: true },
     {
       label: t("PaymentMethod"),

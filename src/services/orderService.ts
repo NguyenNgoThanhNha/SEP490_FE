@@ -124,6 +124,18 @@ const top3Revenue = async (month: number, year: number) : Promise<ResponseProps>
 const getOrderByOrderType = async () : Promise<ResponseProps> =>{
   return await get(`Order/count-by-order-type`)
 }
+interface ConfirmOrderDeposit {
+  orderId: number;
+  totalAmount: string;
+  percent: number
+  request: {
+    returnUrl: string,
+    cancelUrl: string,
+  }
+}
+const confirmOrderDeposit = async (data: ConfirmOrderDeposit) : Promise<ResponseProps> =>{
+  return await post(`Order/confirm-order-deposit`, data)}
+
 export default {
   getAllPurchase,
   createPurchase,
@@ -138,5 +150,6 @@ export default {
   updateOrderDetail,
   top3Revenue,
   getOrderByOrderType,
+  confirmOrderDeposit,
 
 }

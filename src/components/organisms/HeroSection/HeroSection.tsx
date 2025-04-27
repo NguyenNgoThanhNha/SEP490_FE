@@ -1,7 +1,10 @@
 import React from 'react';
 import hero from '@/assets/images/hero.png'; // Hero image
+import { useTranslation } from 'react-i18next';
 
 const HeroSection: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <style>
@@ -53,17 +56,17 @@ const HeroSection: React.FC = () => {
           style={{ animation: 'flyIn 1.5s ease-out forwards' }}
         >
           <h1 className="text-4xl lg:text-5xl font-bold text-[#2e294e] leading-tight mb-6">
-            Discover Serenity at <span className="text-[#F56A79]">Solace Spa</span>
+            {t('heroTitle')} <span className="text-[#F56A79]">{t('heroHighlight')}</span>
           </h1>
           <p className="text-base lg:text-lg text-gray-600 mb-6">
-            Rejuvenate your mind and body with our premium SPA services designed for ultimate relaxation and wellness.
+            {t('heroDescription')}
           </p>
           <div className="flex space-x-4">
             <button className="px-6 py-3 bg-[#130F49] text-white rounded-full text-lg shadow-lg hover:bg-[#0e0c3b] transition">
-              Book Your Session
+              {t('bookSession')}
             </button>
             <button className="px-6 py-3 bg-transparent border-2 border-[#130F49] text-[#130F49] rounded-full text-lg hover:bg-[#130F49] hover:text-white transition">
-              Learn More
+              {t('learnMore')}
             </button>
           </div>
         </div>
@@ -75,7 +78,7 @@ const HeroSection: React.FC = () => {
         >
           <img
             src={hero}
-            alt="Relaxation"
+            alt={t('heroImageAlt')}
             className="relative w-[90%] lg:w-[75%] max-w-xl"
             style={{ animation: 'float 3s ease-in-out infinite' }}
           />

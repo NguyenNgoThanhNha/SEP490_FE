@@ -16,6 +16,7 @@ import { Input } from "@/components/atoms/ui/input";
 import TextArea from "antd/es/input/TextArea";
 import { TRoutine } from "@/types/routine.type";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
   const [steps, setSteps] = useState<SkincareStepType[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<SkincareStepType>({
     resolver: zodResolver(SkincareStepSchema),
@@ -70,6 +72,7 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
 
   const handleFinish = () => {
     toast.success(t("routineComplete"));
+    navigate('/routine-management')
   };
 
   if (isComplete) {

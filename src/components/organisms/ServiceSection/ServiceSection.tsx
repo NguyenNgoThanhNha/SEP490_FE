@@ -1,5 +1,6 @@
 import React from 'react';
 import service from '@/assets/images/service.png';
+import { useTranslation } from 'react-i18next';
 
 const floatSpinAnimation = {
   animation: 'floatSpin 5s ease-in-out infinite',
@@ -17,6 +18,8 @@ const keyframes = `
 `;
 
 const ServicesSection: React.FC = () => {
+  const { t } = useTranslation(); // Hook để sử dụng i18next
+
   return (
     <>
       <style>
@@ -24,7 +27,7 @@ const ServicesSection: React.FC = () => {
       </style>
       <div className="relative text-center lg:text-left pt-8">
         <h2 className="text-4xl font-bold text-primary my-10 ml-20">
-          Explore Our Services
+          {t('servicesTitle')} {/* Sử dụng khóa dịch */}
         </h2>
 
         <div className="flex flex-col lg:flex-row items-center lg:items-center lg:justify-between relative">
@@ -48,18 +51,18 @@ const ServicesSection: React.FC = () => {
               <li className="flex items-start">
                 <span className="bg-[#FECFD0] text-white p-3 rounded-full mr-4">%</span>
                 <div>
-                  <p className="font-semibold text-2xl mb-2">Easy and Intuitive Booking Process</p>
+                  <p className="font-semibold text-2xl mb-2">{t('servicesFeature1Title')}</p> {/* Sử dụng khóa dịch */}
                   <p className="text-[#130F49] text-lg">
-                    Our app offers a streamlined booking experience, allowing users to schedule their desired services in just a few taps.
+                    {t('servicesFeature1Description')} {/* Sử dụng khóa dịch */}
                   </p>
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="bg-[#FEDFB1] text-white p-3 rounded-full mr-4">🔔</span>
                 <div>
-                  <p className="font-semibold text-2xl mb-2">Real-Time Availability</p>
+                  <p className="font-semibold text-2xl mb-2">{t('servicesFeature2Title')}</p> {/* Sử dụng khóa dịch */}
                   <p className="text-[#130F49] text-lg">
-                    Users can view real-time availability for all services, ensuring they can book appointments that fit their schedules.
+                    {t('servicesFeature2Description')} {/* Sử dụng khóa dịch */}
                   </p>
                 </div>
               </li>
@@ -73,7 +76,7 @@ const ServicesSection: React.FC = () => {
           >
             <img
               src={service}
-              alt="Services"
+              alt={t('servicesImageAlt')} // Sử dụng khóa dịch
               className="w-full h-auto object-contain"
             />
           </div>
@@ -84,18 +87,18 @@ const ServicesSection: React.FC = () => {
               <li className="flex items-start">
                 <span className="bg-[#FAD4D8] text-white p-3 rounded-full mr-4">🌟</span>
                 <div>
-                  <p className="font-semibold text-2xl mb-2">Personalized Services</p>
+                  <p className="font-semibold text-2xl mb-2">{t('servicesFeature3Title')}</p> {/* Sử dụng khóa dịch */}
                   <p className="text-[#130F49] text-lg">
-                    Tailored experiences for every customer, ensuring satisfaction and a personalized touch.
+                    {t('servicesFeature3Description')} {/* Sử dụng khóa dịch */}
                   </p>
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="bg-[#B0EACD] text-white p-3 rounded-full mr-4">💬</span>
                 <div>
-                  <p className="font-semibold text-2xl mb-2">Seamless Communication</p>
+                  <p className="font-semibold text-2xl mb-2">{t('servicesFeature4Title')}</p> {/* Sử dụng khóa dịch */}
                   <p className="text-[#130F49] text-lg">
-                    Stay informed with notifications and updates, ensuring a smooth service experience.
+                    {t('servicesFeature4Description')} {/* Sử dụng khóa dịch */}
                   </p>
                 </div>
               </li>
