@@ -263,7 +263,16 @@ const resources = {
       enterStepDescription: 'Enter step description',
       selectProducts: 'Select Products',
       intervalBeforeNextStep: 'Interval Before Next Step (days)',
-      finishRoutine: 'Finish Routine'
+      finishRoutine: 'Finish Routine',
+      selectManager: 'Assign Manager To Branch',
+      manager: 'Manager',
+      createBranchSuccess: 'Create Branch Success',
+      updateBranchSuccess: 'Update Branch Success',
+      currentManager: 'Current Manager: ',
+      noFilesSelected: 'No File Selected',
+      notAnImage: 'Not An Image',
+      fileTooLarge: 'File Too Large',
+      filesSelected: 'File Selected'
     }
   },
   vi: {
@@ -525,6 +534,15 @@ const resources = {
       selectProducts: 'Chọn sản phẩm',
       intervalBeforeNextStep: 'Khoảng cách tới bước tiếp theo (ngày)',
       finishRoutine: 'Hoàn tất quy trình',
+      selectManager: 'Gán quản lý cho chi nhánh',
+      manager: 'Quản lý chi nhánh',
+      createBranchSuccess: 'Tạo chi nhánh thành công',
+      updateBranchSuccess: 'Cập nhật chi nhánh thành công',
+      currentManager: 'Quản lý hiện tại',
+      noFilesSelected: 'Chưa chọn tệp',
+      notAnImage: 'Không phải là hình ảnh',
+      fileTooLarge: 'Tệp quá lớn',
+      filesSelected: 'Hình ảnh đã được chọn',
     }
   }
 }
