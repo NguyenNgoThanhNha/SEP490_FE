@@ -37,7 +37,8 @@ const ServiceDetail = () => {
   const updateService = async (data: TService) => {
     setLoading(true);
     try {
-      const response = await serviceService.updateService (data as TService);
+      console.log("Payload gửi lên API:", data); // Kiểm tra payload
+      const response = await serviceService.updateService(data as TService);
       setLoading(false);
       if (response.success) {
         toast.success("Service updated successfully");
@@ -46,10 +47,10 @@ const ServiceDetail = () => {
       }
     } catch (error) {
       setLoading(false);
-      console.error(error);
-      toast.error("An error occurred while updating the promotion");
+      console.error("Error updating service:", error);
+      toast.error("An error occurred while updating the service");
     }
-  }
+  };
   return (
     <div>
     {!serviceData ? (
@@ -58,13 +59,19 @@ const ServiceDetail = () => {
       <ServiceForm
         mode="update"
         initialData={serviceData}
-        onSubmit={(values) =>
+        onSubmit={(values) => 
           updateService({
-            ...serviceData,
-            ...values,
-            serviceId: Number(serviceData?.serviceId) || 0
-          })
+            serviceId: Number(serviceId) || 0,
+            name: values.name,
+            description: values.description,
+            price: values.price,
+            duration: values.duration,
+            images: values.images,
+            serviceCategoryId: values.serviceCategoryId,
+            steps: values.steps,
+          } as TService)
         }
+        
       />
     )}
   </div>

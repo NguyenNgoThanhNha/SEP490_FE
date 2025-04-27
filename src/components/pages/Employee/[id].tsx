@@ -11,14 +11,15 @@ export const EmployeeDetail = () => {
   const [staffData, setStaffData] = useState<TStaff | null>(null);
   const [loading, setLoading] = useState(false);
   const mapTStaffToStaffType = (staff: TStaff): StaffType => ({
+    staffId: staff.staffId,
     userName: staff.staffInfo.userName,
     fullName: staff.staffInfo.fullName,
     email: staff.staffInfo.email,
     branchId: staff.branchId,
-    roleId: staff.roleId, 
+    roleId: staff.roleId,
     avatar: staff.avatar
   });
-  
+
 
   useEffect(() => {
     const fetchStaffDetails = async () => {
@@ -26,7 +27,7 @@ export const EmployeeDetail = () => {
         const response = await staffService.getStaffDetail({ staffId: Number(staffId) });
         if (response.success && response.result) {
           setStaffData(response.result.data);
-          console.log("staffid",response.result.data)
+          console.log("staffid", response.result.data)
         } else {
           toast.error("Failed to fetch staff details");
         }
@@ -40,17 +41,26 @@ export const EmployeeDetail = () => {
     }
   }, [staffId]);
 
-  const updateStaffApi = async (data: TStaff) => {
+  const updateStaffApi = async (data: TStaff) => {  await staffService.updateStaff({
+    userName: values.userName,
+    fullName: values.fullName,
+    email: values.email,
+    branchId: values.branchId,
+    roleId: values.roleId,
+    avatar: values.avatar,
+  });
     setLoading(true);
     try {
-      const mappedData = mapTStaffToStaffType(data);
-      console.log(mappedData)
-
-      const response = await staffService.updateStaff({
-        ...mappedData,
-        staffId: Number(staffId), 
-      });
-
+      const updatedData = {
+        ...staffData,
+        ...data,   // 🔥 lấy data mới đúng
+        staffId: Number(staffId),
+      }
+      const mappedData = mapTStaffToStaffType(updatedData);
+      console.log("Payload gửi lên API:", mappedData);
+  
+      const response = await staffService.updateStaff(mappedData);
+  
       setLoading(false);
       if (response.success) {
         toast.success("Staff updated successfully");
@@ -63,14 +73,17 @@ export const EmployeeDetail = () => {
       toast.error("An error occurred while updating the staff");
     }
   };
-
+  
 
   return (
     <div>
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <StaffForm mode="update" initialData={staffData ? mapTStaffToStaffType(staffData) : undefined} onSubmit={(values) => updateStaffApi({ ...staffData, ...values, staffId: Number(staffData?.staffId) || 0 })}
+        <StaffForm
+          mode="update"
+          initialData={staffData ? mapTStaffToStaffType(staffData) : undefined}
+          onSubmit={(values) => updateStaffApi(values)}
         />
       )}
     </div>

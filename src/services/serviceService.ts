@@ -49,7 +49,6 @@ interface UpdateServiceProps {
   description?: string
   price?: number
   duration?: string
-  status?: string
   images?: string[]
 }
 
@@ -59,15 +58,16 @@ const updateService = async ({
   description,
   price,
   duration,
-  status,
   images = []
 }: UpdateServiceProps): Promise<ResponseProps> => {
   const formData = new FormData()
-  if (name) formData.append('Name', name)
-  if (description) formData.append('Description', description)
+
+  formData.append('Name', name ?? '') 
+  formData.append('Description', description ?? '')
+  formData.append('Duration', duration ?? '')
+  
   if (price !== undefined) formData.append('Price', price.toString())
-  if (duration) formData.append('Duration', duration)
-  if (status) formData.append('Status', status)
+
   if (images && Array.isArray(images)) {
     images.forEach((image) => {
       formData.append('Images', image)
@@ -76,6 +76,7 @@ const updateService = async ({
 
   return await put(`Service/update-service?serviceId=${serviceId}`, formData)
 }
+
 
 const deleteService = async (serviceId: number): Promise<ResponseProps> => {
   return await del(`Service/delete-service?serviceId=${serviceId}`)

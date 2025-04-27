@@ -272,7 +272,21 @@ const resources = {
       noFilesSelected: 'No File Selected',
       notAnImage: 'Not An Image',
       fileTooLarge: 'File Too Large',
-      filesSelected: 'File Selected'
+      filesSelected: 'File Selected',
+      today: 'Today',
+      previous: 'Previous',
+      next: 'Next',
+      week: 'Week',
+      day: 'Day',
+      agenda: 'Agenda',
+      event: 'Event',
+      noEventsInRange: 'No events in range',
+      showMore: 'Show more (+{{count}})',
+      inProgress: "In Progress",
+      startTime: "Start time",
+      endTime: "End time",
+      close: "Close",
+      appointmentDetails: "Appointment Detail"
     }
   },
   vi: {
@@ -543,6 +557,20 @@ const resources = {
       notAnImage: 'Không phải là hình ảnh',
       fileTooLarge: 'Tệp quá lớn',
       filesSelected: 'Hình ảnh đã được chọn',
+      today: 'Hôm nay',
+      previous: 'Trước',
+      next: 'Tiếp theo',
+      week: 'Tuần',
+      day: 'Ngày',
+      agenda: 'Lịch trình',
+      event: 'Sự kiện',
+      noEventsInRange: 'Không có sự kiện trong khoảng thời gian này',
+      showMore: 'Xem thêm +count',
+      inProgress: "Đang tiến hành",
+      close: "Đóng",
+      appointmentDetails: "Chi tiết lịch hẹn",
+      startTime: "Thời gian bắt đầu",
+      endTime: "Thời gian kết thúc"
     }
   }
 }

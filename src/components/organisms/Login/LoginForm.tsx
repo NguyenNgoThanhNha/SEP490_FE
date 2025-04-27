@@ -99,7 +99,7 @@ const LoginForm = () => {
       } else if (roleId === 2) {
         navigate("/manager-dashboard"); 
       } else if (roleId === 4) {
-        navigate("/create-appointment"); 
+        navigate("/booking-form"); 
       } else {
         toast.error("Invalid role, please contact support.");
       }
