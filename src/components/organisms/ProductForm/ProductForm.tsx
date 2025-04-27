@@ -101,7 +101,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
             <div className="col-span-4 space-y-6">
               <ImageUploadOne 
                 onImageUpload={handleImageUpload} 
-                multiple={true} 
+                multiple={false} 
                 initialData={initialData?.images?.map(file => typeof file === "string" ? file : URL.createObjectURL(file))} 
               />
               <FormField

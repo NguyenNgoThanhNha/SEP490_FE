@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/ui/card";
 import { useTranslation } from "react-i18next";
+import { AssignManagerToBranch } from "./ManagerForm";
 
 interface BranchFormProps {
   mode: "create" | "update";
@@ -43,7 +44,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       longAddress: "",
       latAddress: "",
       status: "Active",
-      managerId: 1,
+      managerId: 0,
       companyId: 1,
     },
   });
@@ -57,6 +58,10 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
 
   const GHN_TOKEN = "e79a5ca7-014e-11f0-a9a7-7e45b9a2ff31";
   const GOONG_API_KEY = "58y8peA3QXjke7sqZK4DYCiaRvcCbh6Jaffw5qCI";
+
+  const handleManagerSelect = (userId: number) => {
+    form.setValue("managerId", userId);
+  };
 
   useEffect(() => {
     axios
@@ -176,7 +181,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? t("createBranch") : t("updateBranch")}
+                {mode === "create" ? t("createbranch") : t("updatebranch")}
               </CardTitle>
             </div>
           </CardHeader>
@@ -299,15 +304,31 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="managerId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("manager")}</FormLabel>
+                  <AssignManagerToBranch onManagerSelect={(id) => field.onChange(id)} />
+                  {mode === "update" && initialData?.managerBranch && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      {t("currentManager")}: {initialData.managerBranch.userName}
+                    </p>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardContent>
         </Card>
 
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-[#516d19] text-white px-6 py-2 rounded hover:bg-green-700"
+            className="bg-[#516d19] text-white px-6 py-2 rounded-full hover:bg-green-700"
           >
-            {mode === "create" ? t("createBranch") : t("updateBranch")}
+            {mode === "create" ? t("createbranch") : t("updatebranch")}
           </button>
         </div>
       </form>

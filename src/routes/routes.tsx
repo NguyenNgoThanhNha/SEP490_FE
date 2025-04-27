@@ -64,6 +64,7 @@ import BranchOrderManagementPage from '@/components/pages/Order/BranchOrder'
 import { LeaveRequestList } from '@/components/pages/LeaveManagement/LeaveManagement'
 import OrderDetailPage from '@/components/pages/Order/[id]'
 import ManagerDashboard from '@/components/pages/Dashboard/ManagerDashboard'
+import BranchDetailPage from '@/components/pages/BranchManagement/[id]'
 
 
 export const AppRouter = () => {
@@ -142,6 +143,8 @@ export const AppRouter = () => {
             <Route path={ROUTES.BRANCH_MANAGEMENT} element={<BranchComponent />} />
             <Route path={ROUTES.ADD_BRANCH} element={<CreateBranchPage />} />
             <Route path={ROUTES.BRANCH_ORDER_MANAGEMENT} element={<BranchOrderManagementPage />} />
+            <Route path={ROUTES.BRANCH_DETAIL} element={<BranchDetailPage />} />
+
 
             {/* BRANCH PROMOTION MANAGEMENT */}
             <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
