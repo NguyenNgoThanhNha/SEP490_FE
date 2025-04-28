@@ -61,6 +61,7 @@ export const PromotionDetail = () => {
               ...promotionData,
               ...values,
               promotionId: Number(promotionData?.promotionId) || 0,
+              promotionName: promotionData?.promotionName || values.promotionName, 
             })
           }
         />

@@ -4,14 +4,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/atoms/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePicker } from "antd";
+import "dayjs/locale/vi"; // Import ngôn ngữ tiếng Việt cho Day.js
+import "dayjs/locale/en"; // Import ngôn ngữ tiếng Anh cho Day.js
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { PromotionSchema, PromotionType } from "@/schemas/promotionSchema";
 import dayjs from "dayjs";
 import TextArea from "antd/es/input/TextArea";
-import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
+import enUS from "antd/es/date-picker/locale/en_US";
+import viVN from "antd/es/date-picker/locale/vi_VN";
+import { useTranslation } from "react-i18next";
 
 interface PromotionFormProps {
   mode: "create" | "update";
@@ -22,7 +26,6 @@ interface PromotionFormProps {
 const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const form = useForm<PromotionType>({
     resolver: zodResolver(PromotionSchema),
@@ -35,7 +38,8 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
       status: "Active",
     },
   });
-
+const { t, i18n } = useTranslation();
+const currentLocale = i18n.language === "vi" ? viVN : enUS; 
   const handleFormSubmit = async (data: PromotionType) => {
     setLoading(true);
     try {
@@ -134,6 +138,7 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                         className="w-full"
                         showTime={false}
                         format="DD/MM/YYYY"
+                        locale={currentLocale} // Sử dụng locale từ i18next
                         onChange={(date) =>
                           field.onChange(date ? date.toISOString() : "")
                         }
@@ -156,6 +161,7 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                         {...field}
                         className="w-full"
                         showTime={false}
+                        locale={currentLocale}
                         format="DD/MM/YYYY"
                         onChange={(date) =>
                           field.onChange(date ? date.toISOString() : "")
