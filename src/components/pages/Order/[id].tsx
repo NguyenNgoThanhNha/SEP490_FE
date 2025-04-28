@@ -266,7 +266,7 @@ export default function OrderDetailPage() {
                             : "outline"
                       }
                     >
-                      {t(`${detail.status.toLowerCase().replace(" ", "_")}`)} {/* Dịch trạng thái */}
+                      {t(detail.status)} {/* Dịch trực tiếp trạng thái */}
                     </Badge>
                   </TableCell>
                 </TableRow>
@@ -317,7 +317,7 @@ export default function OrderDetailPage() {
                               : "outline"
                         }
                       >
-                        {t(`${appointment.status.toLowerCase().replace(" ", "_")}`)} {/* Dịch trạng thái */}
+                        {t(appointment.status.replace(" ", "_"))} {/* Dịch trực tiếp trạng thái */}
                       </Badge>
                     </TableCell>
                   </TableRow>
@@ -355,7 +355,7 @@ export default function OrderDetailPage() {
                             : "outline"
                       }
                     >
-                      {t(`status.${appointment.status.toLowerCase().replace(" ", "_")}`)} {/* Dịch trạng thái */}
+                      {t(appointment.status.replace(" ", "_"))} {/* Dịch trực tiếp trạng thái */}
                     </Badge>
                   </TableCell>
                 </TableRow>

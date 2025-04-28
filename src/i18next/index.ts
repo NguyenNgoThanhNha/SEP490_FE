@@ -433,7 +433,8 @@ const resources = {
       fetchPromotionError: 'Failed to fetch promotions.',
       promotionAddedSuccess: 'Promotion added successfully!',
       addPromotionError: 'Failed to add promotion.',
-      invalidBranchId: 'Branch ID is invalid.'
+      invalidBranchId: 'Branch ID is invalid.',
+      pickADate: 'Pick a date'
     }
   },
   vi: {
@@ -864,7 +865,8 @@ const resources = {
       fetchPromotionError: 'Không thể lấy danh sách khuyến mãi.',
       promotionAddedSuccess: 'Thêm khuyến mãi thành công!',
       addPromotionError: 'Không thể thêm khuyến mãi.',
-      invalidBranchId: 'ID chi nhánh không hợp lệ.'
+      invalidBranchId: 'ID chi nhánh không hợp lệ.',
+      pickADate: 'Chọn ngày'
     }
   }
 }
