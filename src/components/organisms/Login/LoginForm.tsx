@@ -27,6 +27,7 @@ const LoginForm = () => {
     }
   })
   const dispatch = useDispatch()
+
   const onSubmit: SubmitHandler<UserLoginType> = async (data) => {
     setLoading(true);
 
@@ -46,7 +47,7 @@ const LoginForm = () => {
 
       const userInfo = await authService.getUserInfo();
       if (!userInfo.success) {
-        toast.error("Failed to fetch user info");
+        toast.error("Không thể lấy thông tin người dùng");
         return;
       }
 
@@ -72,7 +73,7 @@ const LoginForm = () => {
       if (roleId === 4) {
         const staffInfo = await staffService.getStaffInfo();
         if (!staffInfo.success) {
-          toast.error("Failed to fetch staff info");
+          toast.error("Không thể lấy thông tin nhân viên");
           return;
         }
 
@@ -92,7 +93,7 @@ const LoginForm = () => {
         })
       );
 
-      toast.success("Login successful!");
+      toast.success("Đăng nhập thành công!");
 
       if (roleId === 1) {
         navigate("/dashboard"); 
@@ -101,10 +102,10 @@ const LoginForm = () => {
       } else if (roleId === 4) {
         navigate("/booking-form"); 
       } else {
-        toast.error("Invalid role, please contact support.");
+        toast.error("Vai trò không hợp lệ, vui lòng liên hệ hỗ trợ.");
       }
     } catch {
-      toast.error("Something went wrong, please try again!");
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại!");
     } finally {
       setLoading(false);
     }
@@ -112,32 +113,37 @@ const LoginForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={'w-full flex flex-col gap-y-3'}>
-        <div className={'grid grid-cols-2  gap-x-2 gap-y-4'}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex flex-col gap-y-3">
+        <div className="grid grid-cols-2 gap-x-2 gap-y-4">
           <FormInput
-            name={'emailOrPhone'}
+            name="emailOrPhone"
             form={form}
-            placeholder={'Enter email or phone number'}
-            classContent={'col-span-2'}
+            placeholder="Nhập email hoặc số điện thoại"
+            classContent="col-span-2"
             autoFocus
           />
-          <FormInput name={'password'} form={form} classContent={'col-span-2'} type={'password'} />
-          <div className={'justify-end flex text-orangeTheme text-sm col-span-2 -mt-4 font-semibold'}>
-            <Link to={ROUTES.FORGOT_PASSWORD}>Forgot password</Link>
+          <FormInput
+            name="password"
+            form={form}
+            classContent="col-span-2"
+            type="password"
+          />
+          <div className="justify-end flex text-orangeTheme text-sm col-span-2 -mt-4 font-semibold">
+            <Link to={ROUTES.FORGOT_PASSWORD}>Quên mật khẩu</Link>
           </div>
         </div>
-        <div className={'flex flex-col gap-2'}>
+        <div className="flex flex-col gap-2">
           <Button
-            className={'bg-orangeTheme w-full hover:bg-orangeTheme/90'}
-            type={'submit'}
+            className="bg-orangeTheme w-full hover:bg-orangeTheme/90"
+            type="submit"
             disabled={form.formState.isSubmitting}
           >
-            Login
+            Đăng nhập
           </Button>
-          <div className={'text-sm justify-center flex gap-1'}>
-            Don’t have an account?{' '}
-            <Link to={ROUTES.SIGN_UP} className={'text-orangeTheme font-semibold'}>
-              Sign up
+          <div className="text-sm justify-center flex gap-1">
+            Chưa có tài khoản?{' '}
+            <Link to={ROUTES.SIGN_UP} className="text-orangeTheme font-semibold">
+              Đăng ký
             </Link>
           </div>
         </div>

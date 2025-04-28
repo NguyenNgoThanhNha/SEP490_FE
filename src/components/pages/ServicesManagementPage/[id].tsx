@@ -37,7 +37,7 @@ const ServiceDetail = () => {
   const updateService = async (data: TService) => {
     setLoading(true);
     try {
-      console.log("Payload gửi lên API:", data); // Kiểm tra payload
+      console.log("Payload gửi lên API:", data); 
       const response = await serviceService.updateService(data as TService);
       setLoading(false);
       if (response.success) {

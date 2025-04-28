@@ -23,6 +23,12 @@ interface FormInputProps<T extends FieldValues> {
   isDisable?: boolean
 }
 
+const vietnameseLabels: Record<string, string> = {
+  emailOrPhone: 'Email hoặc Số điện thoại',
+  password: 'Mật khẩu',
+  // thêm các nhãn khác nếu cần
+}
+
 const FormInput = <T extends FieldValues>({
   classContent,
   name,
@@ -41,7 +47,7 @@ const FormInput = <T extends FieldValues>({
       render={({ field }) => (
         <FormItem className={cn('relative', classContent)}>
           <FormControl>
-            <div className='relative w-full'>
+            <div className="relative w-full">
               <Input
                 autoFocus={autoFocus}
                 placeholder={placeholder}
@@ -50,8 +56,8 @@ const FormInput = <T extends FieldValues>({
                 {...field}
                 type={type === 'password' && showPassword ? 'text' : type}
                 className={cn(
-                  'peer w-full rounded-md borderpx-3 py-2 pr-10 placeholder-transparent focus:outline-none outline-none',
-                  type === 'password' ? '' : null
+                  'peer w-full rounded-md border px-3 py-2 pr-10 placeholder-transparent focus:outline-none outline-none',
+                  type === 'password' ? 'p-4' : '' 
                 )}
                 onChange={(e) => {
                   const value = e.target.value
@@ -65,18 +71,19 @@ const FormInput = <T extends FieldValues>({
                 }}
               />
               {type === 'password' && (
-                <button
-                  type='button'
-                  className='absolute inset-y-0 right-3 flex items-center text-gray-500'
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
+               <button
+               type="button"
+               className="absolute inset-y-0 right-3 flex items-center text-gray-500 bg-white"
+               onClick={() => setShowPassword(!showPassword)}
+             >
+               {showPassword ? <EyeOff size={14} /> : <Eye size={20} />}
+             </button>
               )}
             </div>
           </FormControl>
-          <FormLabel className='absolute font-normal bg-white blur-10 w-fit px-2 -top-5 py-1 rounded left-3 peer-focus:font-semibold'>
-            {formatLabel(name as string)}
+          <FormLabel className="absolute font-normal bg-white blur-10 w-fit px-2 -top-5 py-1 rounded left-3 peer-focus:font-semibold">
+            {/* đổi tên nhãn sang tiếng Việt nếu có trong danh sách */}
+            {vietnameseLabels[name as string] || formatLabel(name as string)}
           </FormLabel>
           <FormDescription />
           <FormMessage />

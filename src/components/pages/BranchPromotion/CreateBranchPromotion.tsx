@@ -7,6 +7,7 @@ import promotionService from "@/services/promotionService";
 import toast from "react-hot-toast";
 import { TBranchPromotion } from "@/types/branchPromotion.type";
 import { TPromotion } from "@/types/promotion.type";
+import { useTranslation } from "react-i18next";
 
 const { Option } = Select;
 
@@ -23,11 +24,13 @@ interface PromotionFormValues {
 
 const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation(); // Hook để sử dụng i18next
   const [form] = Form.useForm();
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
   const [availablePromotions, setAvailablePromotions] = useState<{
-    promotionId: number; promotionName: string
+    promotionId: number;
+    promotionName: string;
   }[]>([]);
 
   useEffect(() => {
@@ -53,20 +56,19 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
 
         setAvailablePromotions(availablePromotions);
       } else {
-        toast.error("Failed to fetch promotions.");
+        toast.error(t("fetchPromotionError")); // Sử dụng khóa dịch
       }
     } catch {
-      toast.error("Failed to fetch promotions.");
+      toast.error(t("fetchPromotionError")); // Sử dụng khóa dịch
     } finally {
       setLoading(false);
     }
   };
 
-
   const handleSubmit = async (values: PromotionFormValues) => {
     try {
       if (branchId === null) {
-        toast.error("Branch ID is invalid.");
+        toast.error(t("invalidBranchId")); // Sử dụng khóa dịch
         return;
       }
 
@@ -74,20 +76,20 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
 
       const response = await branchPromotionService.createBranchPromotion({
         promotionId: values.promotionId,
-        branchId: 1,
+        branchId: branchId,
         status: "Active",
         stockQuantity: values.stockQuantity,
       });
 
       if (response?.success) {
-        toast.success("Promotion added successfully!");
+        toast.success(t("promotionAddedSuccess")); // Sử dụng khóa dịch
         onClose();
         form.resetFields();
       } else {
-        toast.error(response.result?.message || "Failed to add promotion.");
+        toast.error(response.result?.message || t("addPromotionError")); // Sử dụng khóa dịch
       }
     } catch {
-      toast.error("Error adding promotion.");
+      toast.error(t("addPromotionError")); // Sử dụng khóa dịch
     } finally {
       setLoading(false);
     }
@@ -95,14 +97,18 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
 
   return (
     <Modal
-      title="Add Promotion to Branch"
+      title={t("addPromotionToBranch")} // Sử dụng khóa dịch
       open={isOpen}
       onCancel={onClose}
       footer={null}
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
-        <Form.Item label="Select Promotion" name="promotionId" rules={[{ required: true }]}>
-          <Select placeholder="Select a promotion">
+        <Form.Item
+          label={t("selectPromotion")} // Sử dụng khóa dịch
+          name="promotionId"
+          rules={[{ required: true, message: t("selectPromotionRequired") }]} // Sử dụng khóa dịch
+        >
+          <Select placeholder={t("selectPromotionPlaceholder")}> {/* Sử dụng khóa dịch */}
             {availablePromotions.map((promotion) => (
               <Option key={promotion.promotionId} value={promotion.promotionId}>
                 {promotion.promotionName}
@@ -111,14 +117,18 @@ const AddPromotionModal: React.FC<AddPromotionModalProps> = ({ isOpen, onClose }
           </Select>
         </Form.Item>
 
-        <Form.Item label="Stock Quantity" name="stockQuantity" rules={[{ required: true }]}>
-          <Input type="number" placeholder="Enter stock quantity" />
+        <Form.Item
+          label={t("stockQuantity")} // Sử dụng khóa dịch
+          name="stockQuantity"
+          rules={[{ required: true, message: t("stockQuantityRequired") }]} // Sử dụng khóa dịch
+        >
+          <Input type="number" placeholder={t("enterStockQuantity")} /> {/* Sử dụng khóa dịch */}
         </Form.Item>
 
         <div className="flex justify-end space-x-2">
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>{t("cancel")}</Button> {/* Sử dụng khóa dịch */}
           <Button type="primary" htmlType="submit" loading={loading} className="bg-[#516d19]">
-            Add Promotion
+            {t("addPromotion")} {/* Sử dụng khóa dịch */}
           </Button>
         </div>
       </Form>

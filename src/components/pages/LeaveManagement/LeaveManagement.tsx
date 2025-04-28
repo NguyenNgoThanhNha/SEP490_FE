@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/atoms/ui/badge"
 import { Button } from "@/components/atoms/ui/button"
@@ -131,7 +132,7 @@ export function LeaveRequestList() {
   return (
     <div>
       {/* Dropdown chọn tháng */}
-      <div className="mb-4 flex items-center gap-4">
+      <div className="mb-4 flex items-center gap-4 ">
         <label htmlFor="month-select" className="font-medium">
           Chọn tháng:
         </label>

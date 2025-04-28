@@ -25,27 +25,26 @@ interface ProductFormValues {
 
 const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onProductAdded }) => {
   const [loading, setLoading] = useState(false);
-  const {t} = useTranslation();
+  const { t } = useTranslation(); // Hook để sử dụng i18next
   const [form] = Form.useForm();
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
   const [availableProduct, setAvailableProducts] = useState<{
-    productId: number; productName: string
+    productId: number;
+    productName: string;
   }[]>([]);
 
   useEffect(() => {
-    if (isOpen && 1) {
+    if (isOpen) {
       fetchAvailableProducts();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, 1]);
+  }, [isOpen]);
 
   const fetchAvailableProducts = async () => {
     try {
       setLoading(true);
 
       const allProductResponse = await productService.getAllProduct({ page: 1, pageSize: 100 });
-
       const productBranchResponse = await branchProductService.getAllBranchProduct(branchId, 1, 100);
 
       if (allProductResponse?.success && productBranchResponse?.success) {
@@ -55,36 +54,35 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onPr
         const availableProduct = allProduct.filter((promo: TProduct) => !branchProductId.has(promo.productId));
         setAvailableProducts(availableProduct);
       } else {
-        toast.error("Failed to fetch product.");
+        toast.error(t("fetchProductError")); // Sử dụng khóa dịch
       }
     } catch {
-      toast.error("Failed to fetch product.");
+      toast.error(t("fetchProductError")); // Sử dụng khóa dịch
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleSubmit = async (values: ProductFormValues) => {
     try {
       setLoading(true);
       const response = await branchProductService.createBranchProduct({
         productId: values.productId,
-        branchId: 1,
-        status: values.status,
+        branchId: branchId,
+        status: "Active",
         stockQuantity: values.stockQuantity,
       });
 
       if (response?.success) {
-        toast.success("product added successfully!");
+        toast.success(t("productAddedSuccess")); // Sử dụng khóa dịch
         onClose();
         form.resetFields();
         onProductAdded();
       } else {
-        toast.error(response.result?.message || "Failed to add product.");
+        toast.error(response.result?.message || t("addProductError")); // Sử dụng khóa dịch
       }
     } catch {
-      toast.error("Error adding product.");
+      toast.error(t("addProductError")); // Sử dụng khóa dịch
     } finally {
       setLoading(false);
     }
@@ -92,14 +90,18 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onPr
 
   return (
     <Modal
-      title={t("addProductToBranch")}
+      title={t("addProductToBranch")} // Sử dụng khóa dịch
       open={isOpen}
       onCancel={onClose}
       footer={null}
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
-        <Form.Item label="Select Product" name="productId" rules={[{ required: true }]}>
-          <Select placeholder="Select a product">
+        <Form.Item
+          label={t("selectProduct")} // Sử dụng khóa dịch
+          name="productId"
+          rules={[{ required: true, message: t("selectProductRequired") }]} // Sử dụng khóa dịch
+        >
+          <Select placeholder={t("selectProductPlaceholder")}> {/* Sử dụng khóa dịch */}
             {availableProduct.map((product) => (
               <Option key={product.productId} value={product.productId}>
                 {product.productName}
@@ -108,21 +110,18 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onPr
           </Select>
         </Form.Item>
 
-        <Form.Item label="Status" name="status" rules={[{ required: true }]}>
-          <Select placeholder="Select status">
-            <Option value="Active">Active</Option>
-            <Option value="Inactive">Inactive</Option>
-          </Select>
-        </Form.Item>
-
-        <Form.Item label="Stock Quantity" name="stockQuantity" rules={[{ required: true }]}>
-          <Input type="number" placeholder="Enter stock quantity" />
+        <Form.Item
+          label={t("stockQuantity")} // Sử dụng khóa dịch
+          name="stockQuantity"
+          rules={[{ required: true, message: t("stockQuantityRequired") }]} // Sử dụng khóa dịch
+        >
+          <Input type="number" placeholder={t("enterStockQuantity")} /> {/* Sử dụng khóa dịch */}
         </Form.Item>
 
         <div className="flex justify-end space-x-2">
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>{t("cancel")}</Button> {/* Sử dụng khóa dịch */}
           <Button type="primary" className="bg-[#516D19]" htmlType="submit" loading={loading}>
-            Add Product
+            {t("addProduct")} {/* Sử dụng khóa dịch */}
           </Button>
         </div>
       </Form>
