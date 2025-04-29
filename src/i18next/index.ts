@@ -434,7 +434,8 @@ const resources = {
       promotionAddedSuccess: 'Promotion added successfully!',
       addPromotionError: 'Failed to add promotion.',
       invalidBranchId: 'Branch ID is invalid.',
-      pickADate: 'Pick a date'
+      pickADate: 'Pick a date',
+      productandservice: "Product and Service",
     }
   },
   vi: {
@@ -866,7 +867,8 @@ const resources = {
       promotionAddedSuccess: 'Thêm khuyến mãi thành công!',
       addPromotionError: 'Không thể thêm khuyến mãi.',
       invalidBranchId: 'ID chi nhánh không hợp lệ.',
-      pickADate: 'Chọn ngày'
+      pickADate: 'Chọn ngày',
+      productandservice: 'Sản phẩm và dịch vụ'
     }
   }
 }

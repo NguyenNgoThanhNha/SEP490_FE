@@ -42,10 +42,22 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
     },
   });
   const handleFormSubmit = async (data: ProductType) => {
-    console.log('Submitting form:', data);
+    console.log("Submitting form:", data);
     setLoading(true);
+
     try {
-      await onSubmit(data);
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === "images") {
+          if (value && Array.isArray(value) && value.length > 0) {
+            value.forEach((file) => formData.append("images", file));
+          }
+        } else {
+          formData.append(key, value as string | Blob);
+        }
+      });
+
+      await onSubmit(formData);
       navigate("/products-management");
     } catch {
       toast.error("Error submitting form");
@@ -99,10 +111,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
           </CardHeader>
           <CardContent className="grid grid-cols-7 gap-6">
             <div className="col-span-4 space-y-6">
-              <ImageUploadOne 
-                onImageUpload={handleImageUpload} 
-                multiple={false} 
-                initialData={initialData?.images?.map(file => typeof file === "string" ? file : URL.createObjectURL(file))} 
+              <ImageUploadOne
+                onImageUpload={handleImageUpload}
+                multiple={false}
+                initialData={initialData?.images?.map(file => typeof file === "string" ? file : URL.createObjectURL(file))}
               />
               <FormField
                 control={form.control}

@@ -174,7 +174,7 @@ export default function OrderDetailPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <h1 className="text-2xl font-bold tracking-tight">{t("order")} #{orderId}</h1>
-          <Badge className="ml-2">{status}</Badge>
+          <Badge className="ml-2">{t(status)}</Badge>
         </div>
         {!allShipping && orderType === "Product" && (
           <Button
@@ -197,16 +197,16 @@ export default function OrderDetailPage() {
           </CardHeader>
           <CardContent className="grid gap-3">
             <div>
-              <div className="font-medium">{customer?.userName || "N/A"}</div>
-              <div className="text-sm text-muted-foreground">{customer?.email || "N/A"}</div>
+              <div className="font-medium">{customer?.userName || ""}</div>
+              <div className="text-sm text-muted-foreground">{customer?.email || ""}</div>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <Phone className="h-4 w-4 text-muted-foreground" />
-              <span>{customer?.phoneNumber || "N/A"}</span>
+              <span>{customer?.phoneNumber || ""}</span>
             </div>
             <div className="flex items-start gap-2 text-sm">
               <MapPin className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-              <span>{customer?.address || "N/A"}</span>
+              <span>{customer?.address || ""}</span>
             </div>
           </CardContent>
         </Card>
@@ -222,12 +222,12 @@ export default function OrderDetailPage() {
             <div className="flex justify-between items-center">
               <div className="font-medium">{t("Status")}</div>
               <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-700">
-                <CheckCircle className="mr-1 h-3 w-3" /> {statusPayment || "N/A"}
+                <CheckCircle className="mr-1 h-3 w-3" /> {t(statusPayment) || ""}
               </Badge>
             </div>
             <div className="flex justify-between">
               <div className="font-medium">{t("method")}</div>
-              <div className="text-sm">{paymentMethod || "N/A"}</div>
+              <div className="text-sm">{paymentMethod || ""}</div>
             </div>
             <div className="flex justify-between">
               <div className="font-medium">{t("totalAmount")}</div>
@@ -253,7 +253,7 @@ export default function OrderDetailPage() {
             <TableBody>
               {orderDetails.map((detail) => (
                 <TableRow key={detail.orderDetailId}>
-                  <TableCell>{detail.product?.productName || "N/A"}</TableCell>
+                  <TableCell>{detail.product?.productName || ""}</TableCell>
                   <TableCell>{detail.quantity}</TableCell>
                   <TableCell>{detail.subTotal?.toLocaleString()} VND</TableCell>
                   <TableCell>
@@ -276,14 +276,14 @@ export default function OrderDetailPage() {
         ) : orderType === "Routine" ? (
           <div>
             <div className="bg-white shadow-md rounded-xl p-6 space-y-3 mt-4 max-w-xl">
-              <p><span className="font-semibold text-gray-700">{t("routineName")}:</span> {orderDetail.routine?.name || "N/A"}</p>
-              <p><span className="font-semibold text-gray-700">{t("description")}:</span> {orderDetail.routine?.description || "N/A"}</p>
-              <p><span className="font-semibold text-gray-700">{t("totalSteps")}:</span> {orderDetail.routine?.totalSteps || "N/A"}</p>
-              <p><span className="font-semibold text-gray-700">{t("targetSkinTypes")}:</span> {orderDetail.routine?.targetSkinTypes || "N/A"}</p>
+              <p><span className="font-semibold text-gray-700">{t("routineName")}:</span> {orderDetail.routine?.name || ""}</p>
+              <p><span className="font-semibold text-gray-700">{t("description")}:</span> {orderDetail.routine?.description || ""}</p>
+              <p><span className="font-semibold text-gray-700">{t("totalSteps")}:</span> {orderDetail.routine?.totalSteps || ""}</p>
+              <p><span className="font-semibold text-gray-700">{t("targetSkinTypes")}:</span> {orderDetail.routine?.targetSkinTypes || ""}</p>
               <p>
                 <span className="font-semibold text-gray-700">{t("Price")}:</span>{" "}
                 <span className="text-[#516d19] font-bold">
-                  {orderDetail.routine?.totalPrice?.toLocaleString() || "N/A"} VND
+                  {orderDetail.routine?.totalPrice?.toLocaleString() || ""} VND
                 </span>
               </p>
             </div>
@@ -301,9 +301,9 @@ export default function OrderDetailPage() {
               <TableBody>
                 {appointments.map((appointment) => (
                   <TableRow key={appointment.appointmentId}>
-                    <TableCell>{appointment.service?.name || "N/A"}</TableCell>
-                    <TableCell>{appointment.staff?.staffInfo?.userName || "N/A"}</TableCell>
-                    <TableCell>{appointment.branch?.branchName || "N/A"}</TableCell>
+                    <TableCell>{appointment.service?.name || ""}</TableCell>
+                    <TableCell>{appointment.staff?.staffInfo?.userName || ""}</TableCell>
+                    <TableCell>{appointment.branch?.branchName || ""}</TableCell>
                     <TableCell>
                       {dayjs(appointment.appointmentsTime).format("HH:mm DD/MM/YYYY")}
                     </TableCell>
@@ -339,9 +339,9 @@ export default function OrderDetailPage() {
             <TableBody>
               {appointments.map((appointment) => (
                 <TableRow key={appointment.appointmentId}>
-                  <TableCell>{appointment.service?.name || "N/A"}</TableCell>
-                  <TableCell>{appointment.staff?.staffInfo?.userName || "N/A"}</TableCell>
-                  <TableCell>{appointment.branch?.branchName || "N/A"}</TableCell>
+                  <TableCell>{appointment.service?.name || ""}</TableCell>
+                  <TableCell>{appointment.staff?.staffInfo?.userName || ""}</TableCell>
+                  <TableCell>{appointment.branch?.branchName || ""}</TableCell>
                   <TableCell>
                     {dayjs(appointment.appointmentsTime).format("HH:mm DD/MM/YYYY")}
                   </TableCell>

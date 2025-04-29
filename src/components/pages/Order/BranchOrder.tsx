@@ -71,8 +71,35 @@ const BranchOrderManagementPage = () => {
   const headers = [
     { label: t("customer"), key: "customer.userName" },
     { label: t("Price"), key: "totalAmount", render: (price: number) => `${formatPrice(price)} VND`, sortable: true },
-    { label: t("Status"), key: "status", sortable: true },
     {
+      label: t('Status'),
+      key: 'status',
+      sortable: true,
+      render: (status: string) => {
+        let variant: 'active' | 'inactive' | 'pending' | 'default';
+        let translatedStatus = '';
+
+        switch (status) {
+          case 'Completed':
+            variant = 'active';
+            translatedStatus = t('Completed');
+            break;
+          case 'Pending':
+            variant = 'pending';
+            translatedStatus = t('Pending');
+            break;
+          case 'Cancelled':
+            variant = 'inactive';
+            translatedStatus = t('Cancelled');
+            break;
+          default:
+            variant = 'default';
+            translatedStatus = t('Unknown');
+        }
+
+        return <Badge variant={variant}>{translatedStatus}</Badge>;
+      },
+    }, {
       label: t("PaymentMethod"),
       key: "paymentMethod",
       render: (status: string) => (
@@ -81,7 +108,29 @@ const BranchOrderManagementPage = () => {
         </Badge>
       ),
     },
-    { label: t("OrderType"), key: "orderType" },
+    {
+      label: t('OrderType'),
+      key: 'orderType',
+      render: (orderType: string) => {
+        let translatedOrderType = '';
+
+        switch (orderType) {
+          case 'Product':
+            translatedOrderType = t('Product'); // Dịch loại đơn hàng "Product"
+            break;
+          case 'ProductAndService':
+            translatedOrderType = t('productandservice'); // Dịch loại đơn hàng "Routine"
+            break;
+          case 'Appointment':
+            translatedOrderType = t('Appointment'); // Dịch loại đơn hàng "Service"
+            break;
+          default:
+            translatedOrderType = t('Unknown'); // Dịch loại đơn hàng không xác định
+        }
+
+        return translatedOrderType;
+      },
+    }
   ];
 
   const renderPagination = () => {

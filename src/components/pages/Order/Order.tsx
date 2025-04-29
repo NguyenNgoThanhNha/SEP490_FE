@@ -83,21 +83,21 @@ const OrderManagementPage = () => {
         let translatedStatus = '';
 
         switch (status.toLowerCase()) {
-          case 'completed':
+          case 'Completed':
             variant = 'active';
-            translatedStatus = t('Completed');
+            translatedStatus = t('completed'); // Dịch trạng thái "Completed"
             break;
-          case 'pending':
+          case 'Pending':
             variant = 'pending';
-            translatedStatus = t('Pending');
+            translatedStatus = t('pending'); // Dịch trạng thái "Pending"
             break;
-          case 'cancelled':
+          case 'Cancelled':
             variant = 'inactive';
-            translatedStatus = t('Cancelled');
+            translatedStatus = t('cancelled'); // Dịch trạng thái "Cancelled"
             break;
           default:
             variant = 'default';
-            translatedStatus = t('Unknown');
+            translatedStatus = t('Unknown'); // Dịch trạng thái không xác định
         }
 
         return <Badge variant={variant}>{translatedStatus}</Badge>;
@@ -126,7 +126,29 @@ const OrderManagementPage = () => {
         );
       },
     },
-    { label: t('OrderType'), key: 'orderType' },
+    {
+      label: t('OrderType'),
+      key: 'orderType',
+      render: (orderType: string) => {
+        let translatedOrderType = '';
+
+        switch (orderType.toLowerCase()) {
+          case 'Product':
+            translatedOrderType = t('Product'); // Dịch loại đơn hàng "Product"
+            break;
+          case 'ProductAndService':
+            translatedOrderType = t('productandservice'); // Dịch loại đơn hàng "Routine"
+            break;
+          case 'Appointment':
+            translatedOrderType = t('Appointment'); // Dịch loại đơn hàng "Service"
+            break;
+          default:
+            translatedOrderType = t('Unknown'); // Dịch loại đơn hàng không xác định
+        }
+
+        return translatedOrderType;
+      },
+    },
   ]
 
   const renderPagination = () => {
