@@ -85,26 +85,26 @@ const OrderManagementPage = () => {
         switch (status.toLowerCase()) {
           case 'Completed':
             variant = 'active';
-            translatedStatus = t('completed'); // Dịch trạng thái "Completed"
+            translatedStatus = t('completed'); 
             break;
           case 'Pending':
             variant = 'pending';
-            translatedStatus = t('pending'); // Dịch trạng thái "Pending"
+            translatedStatus = t('pending'); 
             break;
           case 'Cancelled':
             variant = 'inactive';
-            translatedStatus = t('cancelled'); // Dịch trạng thái "Cancelled"
+            translatedStatus = t('cancelled'); 
             break;
           default:
             variant = 'default';
-            translatedStatus = t('Unknown'); // Dịch trạng thái không xác định
+            translatedStatus = t('Unknown'); 
         }
 
         return <Badge variant={variant}>{translatedStatus}</Badge>;
       },
     },
     {
-      label: t('Paymentmethod'),
+      label: t('paymentmethod'),
       key: 'paymentMethod',
       render: (method: string) => {
         let icon = null;
@@ -134,16 +134,16 @@ const OrderManagementPage = () => {
 
         switch (orderType.toLowerCase()) {
           case 'Product':
-            translatedOrderType = t('Product'); // Dịch loại đơn hàng "Product"
+            translatedOrderType = t('Product'); 
             break;
           case 'ProductAndService':
-            translatedOrderType = t('productandservice'); // Dịch loại đơn hàng "Routine"
+            translatedOrderType = t('productandservice'); 
             break;
           case 'Appointment':
-            translatedOrderType = t('Appointment'); // Dịch loại đơn hàng "Service"
+            translatedOrderType = t('Appointment'); 
             break;
           default:
-            translatedOrderType = t('Unknown'); // Dịch loại đơn hàng không xác định
+            translatedOrderType = t('Unknown'); 
         }
 
         return translatedOrderType;

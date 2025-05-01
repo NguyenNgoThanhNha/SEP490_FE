@@ -12,6 +12,7 @@ const getRoutineDetail = async({id}:GetRoutineDetailProps):Promise<ResponseProps
     return await get(`Routine/${id}`)
 }
 
+
 export default {
     getListSkincareRoutines,
     getRoutineDetail,

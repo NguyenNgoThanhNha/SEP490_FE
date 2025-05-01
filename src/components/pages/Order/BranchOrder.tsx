@@ -100,7 +100,7 @@ const BranchOrderManagementPage = () => {
         return <Badge variant={variant}>{translatedStatus}</Badge>;
       },
     }, {
-      label: t("PaymentMethod"),
+      label: t("paymentMethod"),
       key: "paymentMethod",
       render: (status: string) => (
         <Badge variant={status?.toUpperCase() === "PAYOS" ? "active" : "inactive"}>
@@ -116,16 +116,16 @@ const BranchOrderManagementPage = () => {
 
         switch (orderType) {
           case 'Product':
-            translatedOrderType = t('Product'); // Dịch loại đơn hàng "Product"
+            translatedOrderType = t('Product'); 
             break;
           case 'ProductAndService':
-            translatedOrderType = t('productandservice'); // Dịch loại đơn hàng "Routine"
+            translatedOrderType = t('productandservice'); 
             break;
           case 'Appointment':
-            translatedOrderType = t('Appointment'); // Dịch loại đơn hàng "Service"
+            translatedOrderType = t('Appointment');
             break;
           default:
-            translatedOrderType = t('Unknown'); // Dịch loại đơn hàng không xác định
+            translatedOrderType = t('Unknown'); 
         }
 
         return translatedOrderType;

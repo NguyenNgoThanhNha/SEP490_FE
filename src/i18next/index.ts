@@ -435,7 +435,13 @@ const resources = {
       addPromotionError: 'Failed to add promotion.',
       invalidBranchId: 'Branch ID is invalid.',
       pickADate: 'Pick a date',
-      productandservice: "Product and Service",
+      productandservice: 'Product and Service',
+      searchService: 'Search for a service...',
+      noServiceFound: 'No services found',
+      applyProducts: 'Apply products',
+      searchAndSelectProducts: 'Search and select products',
+      noProductFound: 'No products found',
+      removeService: 'Remove service'
     }
   },
   vi: {
@@ -868,7 +874,13 @@ const resources = {
       addPromotionError: 'Không thể thêm khuyến mãi.',
       invalidBranchId: 'ID chi nhánh không hợp lệ.',
       pickADate: 'Chọn ngày',
-      productandservice: 'Sản phẩm và dịch vụ'
+      productandservice: 'Sản phẩm và dịch vụ',
+      searchService: 'Tìm kiếm dịch vụ...',
+      noServiceFound: 'Không tìm thấy dịch vụ',
+      applyProducts: 'Sản phẩm áp dụng',
+      searchAndSelectProducts: 'Tìm kiếm và chọn sản phẩm',
+      noProductFound: 'Không tìm thấy sản phẩm',
+      removeService: 'Xoá dịch vụ'
     }
   }
 }
