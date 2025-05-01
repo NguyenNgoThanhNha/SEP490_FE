@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Edit } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import { Select } from "antd";
 import {
@@ -15,6 +15,7 @@ import { Table } from "@/components/organisms/Table/Table";
 import { TRoutine } from "@/types/routine.type";
 import routineService from "@/services/routineService";
 import { useTranslation } from "react-i18next";
+import skincareRoutineService from "@/services/skincareRoutineService";
 
 const RoutineManagementPage = () => {
   const [routines, setRoutines] = useState<TRoutine[]>([]);
@@ -71,6 +72,21 @@ const RoutineManagementPage = () => {
     navigate(`/routine-management/${skincareRoutineId}`);
   };
 
+  const handleDelete = async (skincareRoutineId: number) => {
+    try {
+      const response = await skincareRoutineService.deleteSkincareRoutine(skincareRoutineId);
+      if (response?.success) {
+        toast.success(t("deleteSuccess"));
+        setRoutines((prev) => prev.filter((routine) => routine.skincareRoutineId !== skincareRoutineId));
+      } else {
+        toast.error(response?.result?.message || t("deleteError"));
+      }
+    } catch (error) {
+      console.error("Error deleting routine:", error);
+      toast.error(t("deleteError"));
+    }
+  };
+
   const headers = [
     { label: t("routineName"), key: "name", searchable: true },
     { label: t("description"), key: "description" },
@@ -86,12 +102,20 @@ const RoutineManagementPage = () => {
           selectable={true}
           data={displayedRoutines}
           actions={(row) => (
-            <button
-              className="text-blue-500 hover:text-blue-700"
-              onClick={() => handleEdit(row.skincareRoutineId as number)}
-            >
-              <Edit className="w-5 h-5" />
-            </button>
+            <div className="flex space-x-2">
+              <button
+                className="text-blue-500 hover:text-blue-700"
+                onClick={() => handleEdit(row.skincareRoutineId as number)}
+              >
+                <Edit className="w-5 h-5" />
+              </button>
+              <button
+                className="text-red-500 hover:text-red-700"
+                onClick={() => handleDelete(row.skincareRoutineId as number)}
+              >
+                <Trash className="w-5 h-5" />
+              </button>
+            </div>
           )}
         />
       </div>

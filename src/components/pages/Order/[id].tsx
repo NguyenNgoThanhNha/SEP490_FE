@@ -44,7 +44,6 @@ interface Appointment {
       userName: string;
     }
   };
-  branch: { branchName: string };
   appointmentsTime: string;
   status: string;
 }
@@ -293,7 +292,6 @@ export default function OrderDetailPage() {
                 <TableRow>
                   <TableHead>{t("Service")}</TableHead>
                   <TableHead>{t("StaffName")}</TableHead>
-                  <TableHead>{t("Branch")}</TableHead>
                   <TableHead>{t("appointmentTime")}</TableHead>
                   <TableHead>{t("Status")}</TableHead>
                 </TableRow>
@@ -303,7 +301,6 @@ export default function OrderDetailPage() {
                   <TableRow key={appointment.appointmentId}>
                     <TableCell>{appointment.service?.name || ""}</TableCell>
                     <TableCell>{appointment.staff?.staffInfo?.userName || ""}</TableCell>
-                    <TableCell>{appointment.branch?.branchName || ""}</TableCell>
                     <TableCell>
                       {dayjs(appointment.appointmentsTime).format("HH:mm DD/MM/YYYY")}
                     </TableCell>
@@ -331,7 +328,6 @@ export default function OrderDetailPage() {
               <TableRow>
                 <TableHead>{t("Service")}</TableHead>
                 <TableHead>{t("StaffName")}</TableHead>
-                <TableHead>{t("Branch")}</TableHead>
                 <TableHead>{t("appointmentTime")}</TableHead>
                 <TableHead>{t("Status")}</TableHead>
               </TableRow>
@@ -341,7 +337,6 @@ export default function OrderDetailPage() {
                 <TableRow key={appointment.appointmentId}>
                   <TableCell>{appointment.service?.name || ""}</TableCell>
                   <TableCell>{appointment.staff?.staffInfo?.userName || ""}</TableCell>
-                  <TableCell>{appointment.branch?.branchName || ""}</TableCell>
                   <TableCell>
                     {dayjs(appointment.appointmentsTime).format("HH:mm DD/MM/YYYY")}
                   </TableCell>
@@ -357,7 +352,7 @@ export default function OrderDetailPage() {
                     >
                       {t(appointment.status.replace(" ", "_"))} {/* Dịch trực tiếp trạng thái */}
                     </Badge>
-                  </TableCell>
+                                </TableCell>
                 </TableRow>
               ))}
             </TableBody>

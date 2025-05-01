@@ -25,7 +25,7 @@ const updateSkincareRoutine = async(data: CreateSkincareRoutineProps, skincareRo
 }
 
 const deleteSkincareRoutine = async( skincareRoutineId: number):Promise<ResponseProps> => {
-    return await del(`SkincareRoutine/update/${skincareRoutineId}`);
+    return await del(`SkincareRoutine/delete/${skincareRoutineId}`);
 }
 
 const getTargetSkinType = async ():Promise<ResponseProps> => {

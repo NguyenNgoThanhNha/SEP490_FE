@@ -1,13 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SkincareStepSchema, SkincareStepType } from "@/schemas/skincareRoutineStepSchema";
 import skincareRoutineStepService from "@/services/skincareRoutineStepService";
-import { MultiSelect } from "@/components/molecules/MultiSelect";
-import productService from "@/services/productService";
-import serviceService from "@/services/serviceService";
-import { TProduct } from "@/types/product.type";
-import { TService } from "@/types/serviceType";
 import toast from "react-hot-toast";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/atoms/ui/card";
 import { Button } from "@/components/atoms/ui/button";
@@ -17,6 +12,7 @@ import TextArea from "antd/es/input/TextArea";
 import { TRoutine } from "@/types/routine.type";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { ServiceAndProductSelect } from "./ServiceAndProductSelect";
 
 export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
   const { t } = useTranslation();
@@ -24,6 +20,9 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
   const [steps, setSteps] = useState<SkincareStepType[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedServices, setSelectedServices] = useState<
+    { serviceId: number; serviceName: string; productIds: number[] }[]
+  >([]);
   const navigate = useNavigate();
 
   const form = useForm<SkincareStepType>({
@@ -39,25 +38,40 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
     },
   });
 
+  useEffect(() => {
+    if (isComplete) return;
+
+    form.reset({
+      skincareRoutineId: routineData.skincareRoutineId,
+      name: "",
+      description: "",
+      step: currentStep,
+      intervalBeforeNextStep: 0,
+      productIds: [],
+      serviceIds: [],
+    });
+    setSelectedServices([]);
+  }, [currentStep, isComplete, routineData.skincareRoutineId, form]);
+
   const handleFormSubmit = async (data: SkincareStepType) => {
     setLoading(true);
-
     try {
       const newStep = {
         ...data,
         step: currentStep,
+        serviceIds: selectedServices.map((s) => s.serviceId),
+        productIds: selectedServices.flatMap((s) => s.productIds),
       };
 
       const response = await skincareRoutineStepService.createSkincareRoutineStep(newStep);
       if (response.success) {
         toast.success(t("stepAddedSuccess", { step: currentStep }));
-        setSteps([...steps, newStep]);
+        setSteps((prev) => [...prev, newStep]);
 
         if (currentStep >= routineData.totalSteps) {
           setIsComplete(true);
         } else {
-          setCurrentStep(currentStep + 1);
-          form.reset();
+          setCurrentStep((prev) => prev + 1);
         }
       } else {
         toast.error(t("stepAddError"));
@@ -72,7 +86,7 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
 
   const handleFinish = () => {
     toast.success(t("routineComplete"));
-    navigate('/routine-management')
+    navigate("/routine-management");
   };
 
   if (isComplete) {
@@ -96,7 +110,6 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                 <p>
                   <strong>{t("totalSteps")}:</strong> {routineData.totalSteps}
                 </p>
-
                 <h3 className="text-lg font-medium mt-6">{t("steps")}</h3>
                 <div className="space-y-4">
                   {steps.map((step, index) => (
@@ -126,12 +139,8 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
       <div className="max-w-3xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>
-              {t("addStepTitle", { currentStep, totalSteps: routineData.totalSteps })}
-            </CardTitle>
-            <CardDescription>
-              {t("addStepDescription", { currentStep, routineName: routineData.name })}
-            </CardDescription>
+            <CardTitle>{t("addStepTitle", { currentStep, totalSteps: routineData.totalSteps })}</CardTitle>
+            <CardDescription>{t("addStepDescription", { currentStep, routineName: routineData.name })}</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -149,7 +158,6 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="description"
@@ -157,71 +165,17 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                     <FormItem>
                       <FormLabel>{t("description")}</FormLabel>
                       <FormControl>
-                        <TextArea
-                          placeholder={t("enterStepDescription")}
-                          className="min-h-[80px]"
-                          {...field}
-                        />
+                        <TextArea placeholder={t("enterStepDescription")} className="min-h-[80px]" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="productIds"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("selectProducts")}</FormLabel>
-                      <FormControl>
-                        <MultiSelect
-                          label={t("selectProducts")}
-                          fetchOptions={async (keyword) => {
-                            const res = await productService.elasticSearchProduct(keyword);
-                            return (
-                              res?.data?.map((p: TProduct) => ({
-                                label: p.productName,
-                                value: p.productId,
-                              })) || []
-                            );
-                          }}
-                          selected={field.value || []}
-                          onChange={(value) => field.onChange(value)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="serviceIds"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("selectServices")}</FormLabel>
-                      <FormControl>
-                        <MultiSelect
-                          label={t("selectServices")}
-                          fetchOptions={async (keyword) => {
-                            const res = await serviceService.elasticSearchService(keyword);
-                            return (
-                              res?.result?.data.map((s: TService) => ({
-                                label: s.name,
-                                value: s.serviceId,
-                              })) || []
-                            );
-                          }}
-                          selected={field.value || []}
-                          onChange={(value) => field.onChange(value)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
+                <div className="space-y-4">
+                  <ServiceAndProductSelect
+                    onServiceChange={(services) => setSelectedServices(services)}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="intervalBeforeNextStep"
@@ -235,7 +189,6 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
                     </FormItem>
                   )}
                 />
-
                 <Button type="submit" className="w-full bg-[#516d19] rounded-full" disabled={loading}>
                   {currentStep === routineData.totalSteps ? t("finishRoutine") : t("addStep")}
                 </Button>
