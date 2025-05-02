@@ -92,6 +92,7 @@ const BranchOrderManagementPage = () => {
             variant = 'inactive';
             translatedStatus = t('Cancelled');
             break;
+
           default:
             variant = 'default';
             translatedStatus = t('Unknown');
@@ -116,16 +117,19 @@ const BranchOrderManagementPage = () => {
 
         switch (orderType) {
           case 'Product':
-            translatedOrderType = t('Product'); 
+            translatedOrderType = t('Product');
             break;
           case 'ProductAndService':
-            translatedOrderType = t('productandservice'); 
+            translatedOrderType = t('productandservice');
             break;
           case 'Appointment':
             translatedOrderType = t('Appointment');
             break;
+          case 'Routine':
+            translatedOrderType = t('Routine');
+            break;
           default:
-            translatedOrderType = t('Unknown'); 
+            translatedOrderType = t('Unknown');
         }
 
         return translatedOrderType;

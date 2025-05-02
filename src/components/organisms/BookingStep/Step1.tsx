@@ -292,7 +292,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
               <Select
                 placeholder={t("selectVoucher")}
                 value={selectedVoucher}
-                onChange={(val) => handleVoucherSelect(val ? Number(val) : null)} // Cho phép bỏ chọn
+                onChange={(val) => handleVoucherSelect(val ? Number(val) : null)} 
                 style={{ width: "100%" }}
               >
                 <Option value={null}>{t("noVoucher")}</Option>
