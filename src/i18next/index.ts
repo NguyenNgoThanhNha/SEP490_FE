@@ -454,6 +454,7 @@ const resources = {
       noStaffSelected: "No staff selected",
       totalItems: "Total items",
       noAppointmentsFound: "No appointments found",
+      config: "Cron Jobs"
     }
   },
   vi: {
@@ -904,6 +905,7 @@ const resources = {
       noStaffSelected: "Chưa chọn nhân viên",
       totalItems: "Tổng sản phẩm",
       noAppointmentsFound: "Không tìm thấy lịch hẹn",
+      config: "Tự động hóa hệ thống",
 
     }
   }

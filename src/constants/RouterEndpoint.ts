@@ -74,6 +74,7 @@ export enum ROUTES {
   CASHIER_CREATE_ORDER = 'create-order',
   CHECKOUT_PAGE ='checkout',
   PAYMENT_NOTI = 'payment-noti', 
+  CONFIG = 'config',
 
   //Voucher
   VOUCHER_MANAGEMENT = 'voucher-management',
