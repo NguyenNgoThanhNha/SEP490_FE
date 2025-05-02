@@ -85,19 +85,19 @@ const OrderManagementPage = () => {
         switch (status.toLowerCase()) {
           case 'Completed':
             variant = 'active';
-            translatedStatus = t('completed'); 
+            translatedStatus = t('completed');
             break;
           case 'Pending':
             variant = 'pending';
-            translatedStatus = t('pending'); 
+            translatedStatus = t('pending');
             break;
           case 'Cancelled':
             variant = 'inactive';
-            translatedStatus = t('cancelled'); 
+            translatedStatus = t('cancelled');
             break;
           default:
             variant = 'default';
-            translatedStatus = t('Unknown'); 
+            translatedStatus = t('Unknown');
         }
 
         return <Badge variant={variant}>{translatedStatus}</Badge>;
@@ -131,19 +131,22 @@ const OrderManagementPage = () => {
       key: 'orderType',
       render: (orderType: string) => {
         let translatedOrderType = '';
-
+        console.log("Order Type:", orderType);
         switch (orderType.toLowerCase()) {
           case 'Product':
-            translatedOrderType = t('Product'); 
+            translatedOrderType = t('Product');
             break;
           case 'ProductAndService':
-            translatedOrderType = t('productandservice'); 
+            translatedOrderType = t('productandservice');
             break;
           case 'Appointment':
-            translatedOrderType = t('Appointment'); 
+            translatedOrderType = t('Appointment');
+            break;
+          case 'Routine':
+            translatedOrderType = t('Routine');
             break;
           default:
-            translatedOrderType = t('Unknown'); 
+            translatedOrderType = t('Unknown');
         }
 
         return translatedOrderType;

@@ -267,6 +267,7 @@ const resources = {
       selectManager: 'Assign Manager To Branch',
       manager: 'Manager',
       createBranchSuccess: 'Create Branch Success',
+      noAddressProvided: 'No address provided',
       updateBranchSuccess: 'Update Branch Success',
       currentManager: 'Current Manager: ',
       noFilesSelected: 'No File Selected',
@@ -357,6 +358,7 @@ const resources = {
       processing: 'Processing...',
       createAccount: 'Create Account',
       checking: 'Checking...',
+      address: 'Address',
       notes: 'Notes',
       addNotes: 'Add Notes',
       errorFetchingStaff: 'Not Staff Available For This Appointment Time',
@@ -441,7 +443,17 @@ const resources = {
       applyProducts: 'Apply products',
       searchAndSelectProducts: 'Search and select products',
       noProductFound: 'No products found',
-      removeService: 'Remove service'
+      removeService: 'Remove service',
+      createOrderMore: 'Create Order More',
+      hideCreateOrderMore: 'Hide Create Order More',
+      createdSubOrder: 'Create sub order successfully!',
+      noPhoneProvided: "No phone number provided",
+      noUserNameProvided: "No user name provided",
+      noEmailProvided: "No email provided",
+      noNotesProvided: "No notes provided",
+      noStaffSelected: "No staff selected",
+      totalItems: "Total items",
+      noAppointmentsFound: "No appointments found",
     }
   },
   vi: {
@@ -880,7 +892,19 @@ const resources = {
       applyProducts: 'Sản phẩm áp dụng',
       searchAndSelectProducts: 'Tìm kiếm và chọn sản phẩm',
       noProductFound: 'Không tìm thấy sản phẩm',
-      removeService: 'Xoá dịch vụ'
+      removeService: 'Xoá dịch vụ',
+      createOrderMore: 'Tạo đơn phụ',
+      hideCreateOrderMore: 'Ẩn đơn phụ',
+      createdSubOrder: 'Đã tạo đơn phụ thành công',
+      address: "Địa chỉ",
+      noAddressProvided: "Chưa cung cấp địa chỉ",
+      noPhoneProvided: "Chưa cung cấp số điện thoại",
+      noEmailProvided: "Chưa cung cấp email",
+      noNotesProvided: "Chưa cung cấp ghi chú",
+      noStaffSelected: "Chưa chọn nhân viên",
+      totalItems: "Tổng sản phẩm",
+      noAppointmentsFound: "Không tìm thấy lịch hẹn",
+
     }
   }
 }
