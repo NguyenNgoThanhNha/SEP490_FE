@@ -65,6 +65,7 @@ import { LeaveRequestList } from '@/components/pages/LeaveManagement/LeaveManage
 import OrderDetailPage from '@/components/pages/Order/[id]'
 import ManagerDashboard from '@/components/pages/Dashboard/ManagerDashboard'
 import BranchDetailPage from '@/components/pages/BranchManagement/[id]'
+import CronJobTable from '@/components/pages/ConfigSystem/ConfigSystem'
 
 
 export const AppRouter = () => {
@@ -173,6 +174,8 @@ export const AppRouter = () => {
 
             {/* EMPLOYEE CALENDAR */}
             <Route path={ROUTES.LEAVE_SCHEDULE} element={<LeaveRequestList/>} />
+
+            <Route path={ROUTES.CONFIG} element={<CronJobTable/>} />
 
             {/* 404 PAGE */}
           </Route>

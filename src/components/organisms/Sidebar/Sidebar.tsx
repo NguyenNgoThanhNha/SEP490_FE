@@ -3,11 +3,11 @@ import {
   DashboardIcon,
   ArchiveIcon,
   PersonIcon,
-  GearIcon,
+  // GearIcon,
   ExitIcon,
   ChatBubbleIcon,
 } from "@radix-ui/react-icons";
-import { AlignJustify, BookPlus, Building, Calendar, CirclePlus, Clock, NotebookText, Package, Package2, PackagePlus, PlusCircle, ShoppingBag, SquareMenu, TicketIcon, TicketPercent, TicketPlus } from "lucide-react";
+import { AlignJustify, BookPlus, Building, Calendar, CirclePlus, Clock, NotebookText, Package, Package2, PackagePlus, PlusCircle, SettingsIcon, ShoppingBag, SquareMenu, TicketIcon, TicketPercent, TicketPlus } from "lucide-react";
 import { MenuItemComponent } from "@/components/molecules/MenuItem";
 import { useTranslation } from "react-i18next";
 import solace from "@/assets/images/solace.png";
@@ -31,6 +31,16 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
     case 1: // Admin
       return [
         { label: t("dashboard"), icon: <DashboardIcon />, path: "/dashboard" },
+        {
+          label: t("routine"),
+          icon: <Package />,
+          submenu: [
+            { label: t("manageRoutine"), icon: <Package />, path: "/routine-management" },
+            { label: t("addRoutine"), icon: <PackagePlus />, path: "/create-routine" },
+          ],
+        },
+        { label: t("config"), icon: <SettingsIcon />, path: "/config" },
+
         {
           label: t("products"),
           icon: <ArchiveIcon />,
@@ -91,14 +101,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
           ],
         },
         { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
-        {
-          label: t("routine"),
-          icon: <Package />,
-          submenu: [
-            { label: t("manageRoutine"), icon: <Package />, path: "/routine-management" },
-            { label: t("addRoutine"), icon: <PackagePlus />, path: "/create-routine" },
-          ],
-        },
+        
         {
           label: t("voucher"),
           icon: <TicketIcon />,
@@ -107,7 +110,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
             { label: t("addVoucher"), icon: <TicketPlus />, path: "/add-voucher" },
           ],
         },
-        { label: t("settings"), icon: <GearIcon />, path: "/settings" },
+        // { label: t("settings"), icon: <GearIcon />, path: "/settings" },
         { label: t("signOut"), icon: <ExitIcon />, path: "/sign-out" },
       ];
     case 2: // Manager
