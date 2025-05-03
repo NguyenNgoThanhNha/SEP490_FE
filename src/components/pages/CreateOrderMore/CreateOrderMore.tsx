@@ -17,9 +17,10 @@ const CreateOrderMore: React.FC<CreateOrderMoreProps> = ({ branchId, orderType, 
         branchId: number;
         appointmentsTime: number[];
         status: string;
-        notes: string;
+        notes: "No";
         feedback: string;
         voucherId: number;
+        serviceId: number[];
     }) => {
         try {
             const response = await orderService.createAppointmentMore({ ...data, userId }, orderId); // Truyền userId
@@ -64,7 +65,7 @@ const CreateOrderMore: React.FC<CreateOrderMoreProps> = ({ branchId, orderType, 
             {(orderType === "Service" || orderType === "ProductAndService") && (
                 <CreateServiceMore branchId={branchId} onSubmit={handleServiceSubmit} />
             )}
-            {(orderType === "Product" || orderType === "ProductAndService") && (
+            {(orderType === "ProductAndService") && (
                 <CreateProductMore branchId={branchId} onSubmit={handleProductSubmit} />
             )}
         </div>

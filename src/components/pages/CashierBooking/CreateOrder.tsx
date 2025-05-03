@@ -13,7 +13,7 @@ import { Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next"; // Import hook i18next
+import { useTranslation } from "react-i18next"; 
 
 interface SelectedProduct {
   productBranchId: number;
@@ -24,7 +24,7 @@ interface SelectedProduct {
 }
 
 const EmployeeStore: React.FC = () => {
-  const { t } = useTranslation(); // Hook để sử dụng i18next
+  const { t } = useTranslation(); 
   const [products, setProducts] = useState<TProduct[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -56,7 +56,7 @@ const EmployeeStore: React.FC = () => {
       }));
       setProducts(formattedProducts);
     } catch (error) {
-      console.error(t("fetchProductsError"), error); // Sử dụng khóa dịch
+      console.error(t("fetchProductsError"), error); 
     }
   };
 
@@ -65,7 +65,7 @@ const EmployeeStore: React.FC = () => {
       const response = await voucherService.getAllVoucher({ Status: "Active" });
       setVouchers(response.result?.data || []);
     } catch (error) {
-      console.error(t("fetchVouchersError"), error); // Sử dụng khóa dịch
+      console.error(t("fetchVouchersError"), error); 
     }
   };
 
@@ -108,24 +108,22 @@ const EmployeeStore: React.FC = () => {
 
     const selected = vouchers.find((v) => v.code === voucherCode);
     if (!selected) {
-      toast.error(t("invalidVoucher")); // Thông báo mã giảm giá không hợp lệ
+      toast.error(t("invalidVoucher")); 
       return;
     }
 
-    // Kiểm tra điều kiện áp dụng voucher
     if (bonusPoint < selected.requirePoint) {
-      toast.error(t("notEnoughPoints")); // Thông báo không đủ điểm
+      toast.error(t("notEnoughPoints"));
       return;
     }
 
     if (totalAmount < selected.minOrderAmount) {
-      toast.error(t("orderAmountTooLow", { min: selected.minOrderAmount.toLocaleString() })); // Thông báo tổng tiền không đủ
+      toast.error(t("orderAmountTooLow", { min: selected.minOrderAmount.toLocaleString() })); 
       return;
     }
 
-    // Áp dụng voucher
     setDiscountAmount(selected.discountAmount || 0);
-    toast.success(t("voucherApplied", { discount: selected.discountAmount.toLocaleString() })); // Thông báo áp dụng thành công
+    toast.success(t("voucherApplied", { discount: selected.discountAmount.toLocaleString() })); 
   };
 
   const handleCheckout = async () => {
@@ -145,27 +143,27 @@ const EmployeeStore: React.FC = () => {
       const response = await orderService.createOrderFull(orderPayload);
 
       if (!response.success) {
-        toast.error(t("orderCreationError", { message: response.result?.message })); // Sử dụng khóa dịch
+        toast.error(t("orderCreationError", { message: response.result?.message })); 
         return;
       }
 
       const orderId = response.result?.data;
-      if (!orderId) throw new Error(t("orderIdNotFound")); // Sử dụng khóa dịch
+      if (!orderId) throw new Error(t("orderIdNotFound")); 
 
       if (paymentMethod === "cash") {
         const updateResponse = await orderService.updateOrderStatus(orderId, "Completed");
         if (!updateResponse.success) {
-          toast.error(t("orderStatusUpdateError", { message: updateResponse.result?.message })); // Sử dụng khóa dịch
+          toast.error(t("orderStatusUpdateError", { message: updateResponse.result?.message })); 
           return;
         }
-        toast.success(t("orderCreatedAndPaid")); // Sử dụng khóa dịch
+        toast.success(t("orderCreatedAndPaid")); 
         setSelectedProducts([]);
       } else {
         const confirmData = {
           orderId,
           totalAmount: finalAmount.toString(),
           request: {
-            returnUrl: `${window.location.origin}/payment-noti`,
+            returnUrl: `${window.location.origin} payment-noti`,
             cancelUrl: `${window.location.origin}/payment-cancel`,
           },
         };
@@ -173,12 +171,12 @@ const EmployeeStore: React.FC = () => {
         if (payosResponse.success && payosResponse.result?.data) {
           window.location.href = payosResponse.result.data;
         } else {
-          toast.error(t("payosError", { message: payosResponse.result?.message })); // Sử dụng khóa dịch
+          toast.error(t("payosError", { message: payosResponse.result?.message })); 
         }
       }
     } catch (error) {
-      console.error(t("checkoutError"), error); // Sử dụng khóa dịch
-      toast.error(t("checkoutError")); // Sử dụng khóa dịch
+      console.error(t("checkoutError"), error); 
+      toast.error(t("checkoutError"));
     }
   };
 
@@ -188,7 +186,7 @@ const EmployeeStore: React.FC = () => {
         <h1 className="text-2xl font-bold text-center my-4 text-[#516D19]">{t("employeeStore")}</h1>
         <Input
           inputMode="numeric"
-          placeholder={t("searchProduct")} // Sử dụng khóa dịch
+          placeholder={t("searchProduct")} 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full mb-4 rounded-lg"
@@ -310,7 +308,6 @@ const EmployeeStore: React.FC = () => {
                 </div>
               </div>
 
-              {/* Nút Apply nằm ngoài Card */}
               <div className="flex justify-end mt-2">
                 <Button variant="outline" onClick={handleApplyVoucher}>
                   {t("apply")}

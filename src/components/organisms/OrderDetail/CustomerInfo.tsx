@@ -9,10 +9,27 @@ interface Props {
   email: string
   phoneNumber: string
   address: string | null
+  orderType?: string
+  shipment?: {
+    recipientName: string
+    recipientPhone: string
+    recipientAddress: string
+  }
 }
 
-export default function CustomerInfo({ userName, email, phoneNumber, address }: Props) {
-  const { t } = useTranslation()
+export default function CustomerInfo({
+  userName,
+  email,
+  phoneNumber,
+  address,
+  orderType,
+  shipment,
+}: Props) {
+  const { t } = useTranslation();
+
+  const displayName = orderType === "Product" && shipment ? shipment.recipientName : userName;
+  const displayPhone = orderType === "Product" && shipment ? shipment.recipientPhone : phoneNumber;
+  const displayAddress = orderType === "Product" && shipment ? shipment.recipientAddress : address;
 
   return (
     <Card className="overflow-hidden border-[1px] shadow-sm">
@@ -27,13 +44,13 @@ export default function CustomerInfo({ userName, email, phoneNumber, address }: 
       <CardContent className="p-0">
         <div className="p-4 flex items-center gap-3">
           <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
-            <span className="text-lg font-semibold text-primary">{userName.charAt(0).toUpperCase()}</span>
+            <span className="text-lg font-semibold text-primary">{displayName.charAt(0).toUpperCase()}</span>
           </div>
           <div>
-            <div className="font-medium">{userName || t("noUserNameProvided")}</div>
+            <div className="font-medium">{displayName || t("noUserNameProvided")}</div>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <AtSign className="h-3 w-3" />
-              {email || t("noEmailProvided")} 
+              {email || t("noEmailProvided")}
             </div>
           </div>
         </div>
@@ -49,7 +66,7 @@ export default function CustomerInfo({ userName, email, phoneNumber, address }: 
               <span className="font-medium">{t("phoneNumber")}</span>
             </div>
             <Badge variant="outline" className="font-normal">
-              {phoneNumber || t("noPhoneProvided")}
+              {displayPhone || t("noPhoneProvided")}
             </Badge>
           </div>
 
@@ -60,10 +77,10 @@ export default function CustomerInfo({ userName, email, phoneNumber, address }: 
               </div>
               <span className="font-medium">{t("address")}</span>
             </div>
-            <div className="text-sm text-right max-w-[60%]">{address || t("noAddressProvided")}</div>
+            <div className="text-sm text-right max-w-[60%]">{displayAddress || t("noAddressProvided")}</div>
           </div>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

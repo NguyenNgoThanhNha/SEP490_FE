@@ -17,7 +17,7 @@ interface AppointmentData {
 }
 
 const BookingPage: React.FC = () => {
-    const { t } = useTranslation(); // Hook để sử dụng i18next
+    const { t } = useTranslation(); 
     const [, setOrderId] = useState<number | null>(null);
     const [, setAppointmentData] = useState<AppointmentData | null>(null);
     const navigate = useNavigate();
@@ -31,13 +31,13 @@ const BookingPage: React.FC = () => {
                 setOrderId(orderId);
                 setAppointmentData(data);
                 navigate("/checkout", { state: { orderId } });
-                toast.success(t("appointmentCreated")); // Sử dụng khóa dịch
+                toast.success(t("appointmentCreated")); 
             } else {
-                toast.error(t("appointmentCreationFailed")); // Sử dụng khóa dịch
+                toast.error(t("appointmentCreationFailed")); 
             }
         } catch (error) {
             console.error("Error creating appointment", error);
-            toast.error(t("appointmentCreationError")); // Sử dụng khóa dịch
+            toast.error(t("appointmentCreationError")); 
         }
     };
 
