@@ -85,18 +85,49 @@ const CreateServiceMore: React.FC<CreateServiceMoreProps> = ({ branchId, onSubmi
 
   const handleSubmit = () => {
     const payload = {
+      userId: 0, // Thay bằng userId thực tế nếu có
       branchId,
-      services: selectedServices.map((s) => ({
-        serviceId: s.serviceId,
-        staffId: s.staffId,
-        appointmentTime: dayjs(`${selectedDate}T${selectedTime}`).format("YYYY-MM-DDTHH:mm:ss"),
-      })),
+      staffId: selectedServices.map((s) => s.staffId || 0), // Mảng staffId
+      serviceId: selectedServices.map((s) => s.serviceId), // Mảng serviceId
+      appointmentsTime: selectedServices.map((s, index) => {
+        const service = services.find((sv) => sv.serviceId === s.serviceId);
+        const duration = service?.duration || 0;
+
+        let appointmentTime = dayjs(`${selectedDate}T${selectedTime}`).local();
+
+        // Cộng dồn thời gian dựa trên index
+        if (index > 0) {
+          appointmentTime = appointmentTime.add(duration * index, "minute");
+        }
+
+        return appointmentTime.format("YYYY-MM-DDTHH:mm:ss");
+      }),
+      status: "Pending", 
+      notes: "", 
+      feedback: "", 
+      voucherId: 0, 
     };
+
+    console.log("Payload gửi đi:", payload); 
     onSubmit(payload);
   };
 
   return (
     <div className="space-y-4">
+     
+      <Select
+        mode="multiple"
+        placeholder={t("selectServices")}
+        value={selectedServices.map((s) => s.serviceId)}
+        onChange={handleServiceSelect}
+        style={{ width: "100%" }}
+      >
+        {services.map((s) => (
+          <Option key={s.serviceId} value={s.serviceId}>
+            {s.name}
+          </Option>
+        ))}
+      </Select>
       <div className="grid grid-cols-2 gap-4">
         <input
           type="date"
@@ -111,19 +142,7 @@ const CreateServiceMore: React.FC<CreateServiceMoreProps> = ({ branchId, onSubmi
           className="border p-2 rounded"
         />
       </div>
-      <Select
-        mode="multiple"
-        placeholder={t("selectServices")}
-        value={selectedServices.map((s) => s.serviceId)}
-        onChange={handleServiceSelect}
-        style={{ width: "100%" }}
-      >
-        {services.map((s) => (
-          <Option key={s.serviceId} value={s.serviceId}>
-            {s.name}
-          </Option>
-        ))}
-      </Select>
+
       {selectedServices.map((s, idx) => (
         <Select
           key={s.serviceId}

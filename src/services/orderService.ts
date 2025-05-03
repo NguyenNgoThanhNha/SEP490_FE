@@ -148,6 +148,7 @@ interface CreateAppointmentMoreData {
   notes: string
   feedback: string
   voucherId: number
+  serviceId: number[]
 }
 
 const createAppointmentMore = async (data: CreateAppointmentMoreData, orderId: number): Promise<ResponseProps> => {

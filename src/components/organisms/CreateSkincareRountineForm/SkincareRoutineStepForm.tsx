@@ -63,6 +63,8 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
         productIds: selectedServices.flatMap((s) => s.productIds),
       };
 
+      console.log("Payload gửi đi:", newStep); 
+
       const response = await skincareRoutineStepService.createSkincareRoutineStep(newStep);
       if (response.success) {
         toast.success(t("stepAddedSuccess", { step: currentStep }));
