@@ -176,7 +176,7 @@ export default function OrderDetailPage() {
         <Button variant="ghost" onClick={handleBack}>
           <ArrowLeft className="mr-2 h-4 w-4" />
         </Button>
-        {orderType !== "Product" && orderDetail.status !== "Completed" && orderDetail.status !== "Cancelled" && (
+        {orderType !== "Product" && orderType !== "Routine"&& orderDetail.status !== "Completed" && orderDetail.status !== "Cancelled" && (
           <Button onClick={() => setShowCreateOrderMore(true)} className="bg-[#516d19] rounded-full text-white">
             {t("createOrderMore")}
           </Button>
@@ -233,7 +233,7 @@ export default function OrderDetailPage() {
       >
         <CreateOrderMore
           branchId={1}
-          orderType={orderType === "Appointment" ? "Service" : "ProductAndService"}
+          orderType={orderDetail.orderType as "Appointment" | "ProductAndService"}
           orderId={Number(orderDetail.orderId)}
           userId={Number(userId)}
           onSubmit={(success) => {

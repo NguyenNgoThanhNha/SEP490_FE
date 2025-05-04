@@ -152,7 +152,8 @@ const EmployeeStore: React.FC = () => {
 
       if (paymentMethod === "cash") {
         const updateResponse = await orderService.updateOrderStatus(orderId, "Completed");
-        if (!updateResponse.success) {
+        const updatePaymentResponse = await orderService.updatePaymentStatus(orderId, "Completed");
+        if (!updateResponse.success && !updatePaymentResponse.success) {
           toast.error(t("orderStatusUpdateError", { message: updateResponse.result?.message })); 
           return;
         }

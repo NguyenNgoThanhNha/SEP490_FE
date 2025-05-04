@@ -168,6 +168,13 @@ const CreateProductMore = async (data: CreateProductMoreData, orderId: number): 
   return await post(`Order/create-order-product-more/${orderId}`, data)
 }
 
+
+const updatePaymentStatus = async (orderId: number, status: string): Promise<ResponseProps> => {
+  return await put(`Order/update-payment-status`, {
+    params: { orderId, status }
+  })
+}
+
 export default {
   getAllPurchase,
   createPurchase,
@@ -184,5 +191,6 @@ export default {
   getOrderByOrderType,
   confirmOrderDeposit,
   createAppointmentMore,
-  CreateProductMore
+  CreateProductMore,
+  updatePaymentStatus
 }

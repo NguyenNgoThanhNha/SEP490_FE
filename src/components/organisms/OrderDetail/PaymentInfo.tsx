@@ -84,7 +84,7 @@ export default function PaymentInfo({ statusPayment, paymentMethod, totalAmount,
           </div>
         </div>
 
-        {orderType === "Product" && shipment && (
+        {orderType === "Product" && shipment && paymentMethod !== "cash" && (
           <>
             <Separator />
             <div className="p-4">
@@ -126,10 +126,12 @@ export default function PaymentInfo({ statusPayment, paymentMethod, totalAmount,
           </>
         )}
 
+      
+
         <Separator />
 
         <div className="p-4 bg-muted/20">
-          {orderType === "Product" && shipment && (
+          {orderType === "Product" && shipment &&  paymentMethod !== 'cash' &&(
             <div className="space-y-2 mb-3">
               <div className="flex justify-between items-center">
                 <div className="text-sm text-muted-foreground">{t("subtotal")}</div>
