@@ -207,6 +207,8 @@ const resources = {
       selectServices: 'Select Services',
       staffForService: 'Staff for services',
       selectStaff: 'Select Staff',
+      for:"for",
+      errorFetchingServices: 'Error fetching services',
       discountAmount: 'Discount Amount',
       totalPrice: 'Total Price',
       note: 'Note',
@@ -492,7 +494,11 @@ const resources = {
       replace_staff: 'Replace Staff',
       confirm_replacement: 'Confirm Replacement',
       no_available_staff: 'No available staff.',
-      select_replacement_staff: 'Select Replacement Staff'
+      select_replacement_staff: 'Select Replacement Staff',
+      addServices: "Add Services",
+      addProducts: "Add Products",
+      pleaseSelectServiceAndStaff: 'Please select a service and staff member.',
+      Paid: 'Paid',
     }
   },
   vi: {
@@ -696,6 +702,7 @@ const resources = {
       selectServices: 'Chọn dịch vụ',
       staffForService: 'Chọn nhân viên',
       selectStaff: 'Chọn nhân viên',
+      for: "cho",
       selectVoucher: 'Chọn mã giảm giá',
       discountAmount: 'Số tiền giảm giá',
       totalPrice: 'Tổng giá',
@@ -977,12 +984,17 @@ const resources = {
       reason: 'Lý do',
       approve: 'Duyệt',
       reject: 'Từ chối',
+      Paid: "Đã thanh toán",
       viewAffectedAppointments: 'Xem lịch hẹn bị ảnh hưởng',
       view_affected_appointments: 'Xem các cuộc hẹn bị ảnh hưởng',
       replace_staff: 'Thay thế nhân viên',
       confirm_replacement: 'Xác nhận thay thế',
       no_available_staff: 'Không có nhân viên phù hợp.',
       select_replacement_staff: 'Chọn nhân viên thay thế',
+      addServices: "Thêm dịch vụ",
+      addProducts: "Thêm sản phẩm",
+      errorFetchingServices: "Không thể lấy danh sách dịch vụ.",
+      pleaseSelectServiceAndStaff: "Vui lòng chọn dịch vụ và nhân viên.",
     }
   }
 }

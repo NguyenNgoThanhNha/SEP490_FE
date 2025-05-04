@@ -5,9 +5,9 @@ import toast from "react-hot-toast";
 
 interface CreateOrderMoreProps {
     branchId: number;
-    orderType: "Service" | "Product" | "ProductAndService";
+    orderType: "Appointment" | "ProductAndService";
     orderId: number;
-    userId: number; 
+    userId: number;
     onSubmit: (success: boolean) => void;
 }
 
@@ -23,7 +23,7 @@ const CreateOrderMore: React.FC<CreateOrderMoreProps> = ({ branchId, orderType, 
         serviceId: number[];
     }) => {
         try {
-            const response = await orderService.createAppointmentMore({ ...data, userId }, orderId); // Truyền userId
+            const response = await orderService.createAppointmentMore({ ...data, userId }, orderId);
             if (response.success) {
                 toast.success("Service added successfully!");
                 onSubmit(true);
@@ -46,7 +46,7 @@ const CreateOrderMore: React.FC<CreateOrderMoreProps> = ({ branchId, orderType, 
         statusPayment: string;
     }) => {
         try {
-            const response = await orderService.CreateProductMore({ ...data, userId }, orderId); // Truyền userId
+            const response = await orderService.CreateProductMore({ ...data, userId }, orderId);
             if (response?.success) {
                 toast.success("Product added successfully!");
                 onSubmit(true);
@@ -62,9 +62,10 @@ const CreateOrderMore: React.FC<CreateOrderMoreProps> = ({ branchId, orderType, 
 
     return (
         <div className="space-y-6">
-            {(orderType === "Service" || orderType === "ProductAndService") && (
+            {(orderType === "Appointment" || orderType === "ProductAndService") && (
                 <CreateServiceMore branchId={branchId} onSubmit={handleServiceSubmit} />
             )}
+
             {(orderType === "ProductAndService") && (
                 <CreateProductMore branchId={branchId} onSubmit={handleProductSubmit} />
             )}

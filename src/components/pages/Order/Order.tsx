@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CreditCard, Edit, HandCoins } from 'lucide-react'
+import { Edit} from 'lucide-react'
 import { Table } from '@/components/organisms/Table/Table'
 import { formatPrice } from '@/utils/formatPrice'
 import toast from 'react-hot-toast'
@@ -82,19 +82,20 @@ const OrderManagementPage = () => {
         let variant: 'active' | 'inactive' | 'pending' | 'default';
         let translatedStatus = '';
 
-        switch (status.toLowerCase()) {
+        switch (status) {
           case 'Completed':
             variant = 'active';
-            translatedStatus = t('completed');
+            translatedStatus = t('Completed');
             break;
           case 'Pending':
             variant = 'pending';
-            translatedStatus = t('pending');
+            translatedStatus = t('Pending');
             break;
           case 'Cancelled':
             variant = 'inactive';
-            translatedStatus = t('cancelled');
+            translatedStatus = t('Cancelled');
             break;
+
           default:
             variant = 'default';
             translatedStatus = t('Unknown');
@@ -102,37 +103,22 @@ const OrderManagementPage = () => {
 
         return <Badge variant={variant}>{translatedStatus}</Badge>;
       },
-    },
-    {
-      label: t('paymentmethod'),
-      key: 'paymentMethod',
-      render: (method: string) => {
-        let icon = null;
-        let variant: 'active' | 'inactive' | 'default' = 'default';
-
-        if (method === 'cash') {
-          icon = <HandCoins size={14} className="inline mr-1" />;
-          variant = 'active';
-        } else if (method === 'PayOS') {
-          icon = <CreditCard size={14} className="inline mr-1" />;
-          variant = 'active';
-        }
-
-        return (
-          <Badge variant={variant}>
-            {icon}
-            {t(method)}
-          </Badge>
-        );
-      },
+    }, {
+      label: t("paymentMethod"),
+      key: "paymentMethod",
+      render: (status: string) => (
+        <Badge variant={status?.toUpperCase() === "PAYOS" ? "active" : "inactive"}>
+          {t(status.toLowerCase())}
+        </Badge>
+      ),
     },
     {
       label: t('OrderType'),
       key: 'orderType',
       render: (orderType: string) => {
         let translatedOrderType = '';
-        console.log("Order Type:", orderType);
-        switch (orderType.toLowerCase()) {
+
+        switch (orderType) {
           case 'Product':
             translatedOrderType = t('Product');
             break;
@@ -151,7 +137,7 @@ const OrderManagementPage = () => {
 
         return translatedOrderType;
       },
-    },
+    }
   ]
 
   const renderPagination = () => {
