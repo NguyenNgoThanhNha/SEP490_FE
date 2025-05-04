@@ -57,7 +57,7 @@ interface UpdateAppointmentProps {
   staffId: number;
   serviceId: number;
   branchId: number;
-  appointmentTime: string;
+  appointmentsTime: string;
   status: string;
   statusPayment: string;
   notes?: string;

@@ -151,6 +151,12 @@ export function LeaveRequestList() {
   const handleReplaceStaff = async (newStaffId: number) => {
     if (!selectedAppointment) return;
 
+    // Kiểm tra nếu staffId mới trùng với staffId hiện tại
+    if (selectedAppointment.staffId === newStaffId) {
+      toast.error(t("staffAlreadyAssigned")); // Hiển thị thông báo lỗi
+      return;
+    }
+
     const appointmentId = selectedAppointment.appointmentId;
     const updateData: UpdateAppointmentProps = {
       id: appointmentId,
@@ -158,7 +164,7 @@ export function LeaveRequestList() {
       staffId: newStaffId,
       serviceId: selectedAppointment.serviceId,
       branchId: selectedAppointment.branchId,
-      appointmentTime: selectedAppointment.appointmentsTime,
+      appointmentsTime: selectedAppointment.appointmentsTime,
       status: selectedAppointment.status,
       statusPayment: selectedAppointment.statusPayment,
       notes: selectedAppointment.notes,
@@ -171,15 +177,15 @@ export function LeaveRequestList() {
         toast.success(t("staffReplacedSuccessfully"));
         setShowReplaceModal(false);
         setSelectedAppointment(null);
-        setAffectedAppointments(prev =>
-          prev.map(app =>
+        setAffectedAppointments((prev) =>
+          prev.map((app) =>
             app.appointmentId === appointmentId
               ? { ...app, staffId: newStaffId }
               : app
           )
         );
       } else {
-        toast.error(t("Không thể thay thế nhân viên."));
+        toast.error(t("cannotReplaceStaff"));
       }
     } catch {
       toast.error(t("errorReplacingStaff"));
@@ -256,7 +262,7 @@ export function LeaveRequestList() {
             setShowReplaceModal(false)
             setShowAppointmentsModal(true)
           }}
-          onReplaceStaff={() => handleReplaceStaff(selectedAppointment.staffId)}
+          onReplaceStaff={(newStaffId) => handleReplaceStaff(newStaffId)}
         />
       )}
     </div>

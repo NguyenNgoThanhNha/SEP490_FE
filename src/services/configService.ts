@@ -11,8 +11,13 @@ const updateStatusOrderRoutine = async () => {
 const cancelAppointment = async () => {
   return await post(`Auth/run-order-appointment-update`)
 }
+const reminderAppointment = async () => {
+  return await post(`Auth/run-appointment-missing-staff-reminder`)
+}
+
 export const configService = {
   updateUserRoutineStep,
   updateStatusOrderRoutine,
-  cancelAppointment
+  cancelAppointment,
+  reminderAppointment
 }
