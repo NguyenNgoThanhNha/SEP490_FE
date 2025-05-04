@@ -3,6 +3,7 @@ import { Table, Modal, Select } from "antd";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import weekOfYear from "dayjs/plugin/weekOfYear";
+import { useTranslation } from "react-i18next";
 
 dayjs.extend(weekOfYear);
 import { TSlotWorking } from "@/types/staff-calendar.type";
@@ -40,6 +41,7 @@ const getShiftColor = (shiftName: string) => {
 };
 
 const WeeklySchedule = () => {
+  const { t } = useTranslation();
   const [selectedYear, setSelectedYear] = useState<number>(dayjs().year());
   const [selectedWeek, setSelectedWeek] = useState<number>(dayjs().week());
   const [selectedEvent, setSelectedEvent] = useState<{ employees: string[] } | null>(null);
@@ -126,7 +128,7 @@ const WeeklySchedule = () => {
         render: (record: { employees: string[] }) => {
           const employeesForDay = record.employees.length
             ? record.employees
-            : ["Không có nhân viên"];
+            : [t("noEmployees")];
 
           return (
             <div
@@ -166,7 +168,7 @@ const WeeklySchedule = () => {
               const weekEnd = generateWeekDates(selectedYear, i + 1)[5];
               return (
                 <Option key={i + 1} value={i + 1}>
-                  Tuần {i + 1} ({weekStart.format("DD/MM")} - {weekEnd.format("DD/MM")})
+                  {t("week")} {i + 1} ({weekStart.format("DD/MM")} - {weekEnd.format("DD/MM")})
                 </Option>
               );
             })}
@@ -184,7 +186,7 @@ const WeeklySchedule = () => {
           onClick={() => navigate("/leave-schedule")}
           className="px-4 py-2 bg-[#516d19] text-white font-semibold rounded hover:bg-green-800"
         >
-          Lịch nghỉ của nhân viên
+          {t("employeeLeaveSchedule")}
         </button>
       </div>
 
@@ -193,7 +195,7 @@ const WeeklySchedule = () => {
       </div>
 
       <Modal
-        title="Chi tiết lịch làm việc"
+        title={t("scheduleDetails")}
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
@@ -205,7 +207,7 @@ const WeeklySchedule = () => {
                 const [staffName] = emp.split(" (");
                 return (
                   <li key={index} className="flex items-center gap-2">
-                    <EmployeeSlot staffName={staffName} status={status} />
+                    <EmployeeSlot staffName={staffName} status="Active" />
                   </li>
                 );
               })}

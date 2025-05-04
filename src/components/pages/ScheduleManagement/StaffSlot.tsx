@@ -1,4 +1,3 @@
-import { Tooltip } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 
 interface EmployeeSlotProps {

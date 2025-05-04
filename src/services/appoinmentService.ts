@@ -1,4 +1,4 @@
-import { get, post, ResponseProps } from './root'
+import { get, post, put, ResponseProps } from './root'
 
 interface GetAppointmentProps {
   page: number
@@ -51,11 +51,28 @@ const bookingStatistic = async (branchId: number, year: number): Promise<Respons
   return await get(`Appointments/booking-statistics?branchId=${branchId}&year=${year}`)
 }
 
+interface UpdateAppointmentProps {
+  id: number
+  customerId: number;
+  staffId: number;
+  serviceId: number;
+  branchId: number;
+  appointmentTime: string;
+  status: string;
+  statusPayment: string;
+  notes?: string;
+  feedback?: string;
+}
+
+const updateAppointment = async (id: number , data: UpdateAppointmentProps): Promise<ResponseProps> => {
+  return await put(`Appointments/update/${id}`, data)
+}
+
 export default {
   getAllAppointment,
   getAppointmentDetail,
   createAppointment,
   getAppointmentByBranch,
   bookingStatistic,
-
+  updateAppointment
 }

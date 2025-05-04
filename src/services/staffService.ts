@@ -139,6 +139,28 @@ const rejectLeave = async (staffLeaveId: number): Promise<ResponseProps> => {
 const getStaffLeaveAppointments = async (staffLeaveId: number): Promise<ResponseProps> => {
   return await get(`Staff/get-staff-leave-appointments/?staffLeaveId=${staffLeaveId}`)
 }
+
+interface StaffReplacementProps {
+  branchId: number
+  startTime: string
+  endTime: string
+  date: string
+}
+const staffReplacement = async (data: StaffReplacementProps): Promise<ResponseProps> => {
+  return await get(`Staff/replacement-staff?branchId=${data.branchId}&startTime=${data.startTime}&endTime=${data.endTime}&date=${data.date}`)
+}
+
+interface updateWorkScheduleProps {
+  staffLeaveId: number;
+  staffReplaceId: number;
+  shiftId: number;
+  workDate: string;
+  dayOfWeek: string;
+}
+const updateWorkSchedule = async (data: updateWorkScheduleProps): Promise<ResponseProps> => {
+  return await post(`Staff/update-work-schedule-for-staff-leave`, data)
+}
+
 export default {
   createStaff,
   updateStaff,
@@ -157,5 +179,7 @@ export default {
   staffLeaveOfBranch,
   rejectLeave,
   approveLeave,
-  getStaffLeaveAppointments
+  getStaffLeaveAppointments,
+  staffReplacement,
+  updateWorkSchedule
 }
