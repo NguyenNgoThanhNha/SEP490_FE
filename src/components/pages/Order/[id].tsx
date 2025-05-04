@@ -96,6 +96,19 @@ export default function OrderDetailPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const fetchOrderDetails = async () => {
+    try {
+      const response = await orderService.getOrderDetail({ orderId: Number(orderId) });
+      if (response.success && response.result?.data) {
+        setOrderDetail(response.result.data);
+      } else {
+        message.error(t("orderNotFound"));
+      }
+    } catch {
+      message.error(t("orderDetailError"));
+    }
+  };
+
   useEffect(() => {
     const fetchOrderDetail = async () => {
       try {
@@ -113,6 +126,10 @@ export default function OrderDetailPage() {
     };
 
     fetchOrderDetail();
+  }, [orderId]);
+
+  useEffect(() => {
+    fetchOrderDetails();
   }, [orderId]);
 
   const handleUpdateOrderDetail = async (orderDetailsIds: number[], nextStatus: string) => {
@@ -176,7 +193,7 @@ export default function OrderDetailPage() {
         <Button variant="ghost" onClick={handleBack}>
           <ArrowLeft className="mr-2 h-4 w-4" />
         </Button>
-        {orderType !== "Product" && orderType !== "Routine"&& orderDetail.status !== "Completed" && orderDetail.status !== "Cancelled" && (
+        {orderType !== "Product" && orderType !== "Routine" && orderDetail.status !== "Completed" && orderDetail.status !== "Cancelled" && (
           <Button onClick={() => setShowCreateOrderMore(true)} className="bg-[#516d19] rounded-full text-white">
             {t("createOrderMore")}
           </Button>
@@ -191,7 +208,7 @@ export default function OrderDetailPage() {
               onClick={() => handleUpdateOrderDetail(orderDetails.map((od) => od.orderDetailId), nextStatus)}
               className="bg-[#516d19] rounded-full text-white"
             >
-              {t("updateStatusTo", { status: nextStatus })}
+              {t("updateStatus", { status: nextStatus })}
             </Button>
           </div>
         )}
@@ -236,10 +253,11 @@ export default function OrderDetailPage() {
           orderType={orderDetail.orderType as "Appointment" | "ProductAndService"}
           orderId={Number(orderDetail.orderId)}
           userId={Number(userId)}
-          onSubmit={(success) => {
+          onSubmit={async (success) => {
             if (success) {
               message.success(t("createdSubOrder"));
               setShowCreateOrderMore(false);
+              await fetchOrderDetails();
             } else {
               message.error(t("createOrderMoreError"));
             }

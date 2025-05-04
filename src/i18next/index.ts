@@ -239,6 +239,7 @@ const resources = {
       createRoutineError: 'Failed to create skincare routine.',
       unexpectedError: 'An unexpected error occurred.',
       createRoutineTitle: 'Create Skincare Routine',
+      routinestep: "Routine Step",
       createRoutineDescription: 'Fill in the details for your skincare routine.',
       enterRoutineName: 'Enter routine name',
       routineNameDescription: 'Give your skincare routine a name.',
@@ -266,6 +267,7 @@ const resources = {
       selectProducts: 'Select Products',
       intervalBeforeNextStep: 'Interval Before Next Step (days)',
       finishRoutine: 'Finish Routine',
+      notstepfound: 'No step found',
       selectManager: 'Assign Manager To Branch',
       manager: 'Manager',
       createBranchSuccess: 'Create Branch Success',
@@ -464,6 +466,8 @@ const resources = {
       shippingInfo: 'Shipping Information',
       subtotal: 'Sub Total',
       updateStatus: 'Update Status',
+      wait: "Wait",
+      beforeNextStep: "before next step",
       employeeLeaveSchedule: 'Employee Leave Schedule',
       scheduleDetails: 'Schedule Details',
       noEmployees: 'No employees available',
@@ -995,6 +999,10 @@ const resources = {
       addProducts: "Thêm sản phẩm",
       errorFetchingServices: "Không thể lấy danh sách dịch vụ.",
       pleaseSelectServiceAndStaff: "Vui lòng chọn dịch vụ và nhân viên.",
+      routinestep: "Bước quy trình",
+      nostepfound: "Không tìm thấy bước quy trình",
+      wait: "Đợi",
+      beforeNextStep: "trước bước tiếp theo",
     }
   }
 }

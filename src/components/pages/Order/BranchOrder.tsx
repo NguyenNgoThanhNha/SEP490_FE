@@ -24,19 +24,18 @@ const BranchOrderManagementPage = () => {
   const BranchId = branchIdRedux || Number(localStorage.getItem("branchId"));
   const { t } = useTranslation();
 
-  const fetchOrders = async (BranchId: number, PageIndex: number, PageSize: number, OrderType?: string) => {
+  const fetchOrders = async (PageIndex: number, PageSize: number) => {
     try {
       setLoading(true);
       const response = await orderService.getAllOrder({
         BranchId,
         PageIndex,
         PageSize,
-        OrderType: OrderType,
       });
 
       if (response?.success) {
-        setOrders(response.result?.data);
-        setTotalPages(response.result?.pagination?.totalPage || 0);
+        setOrders(response.result?.data); // Lưu danh sách đơn hàng vào state
+        setTotalPages(response.result?.pagination?.totalPage || 0); // Cập nhật tổng số trang
       } else {
         toast.error(response.result?.message || t("fetchError"));
       }
@@ -54,18 +53,18 @@ const BranchOrderManagementPage = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
-      fetchOrders(BranchId, newPage, pageSize);
+      fetchOrders(newPage, pageSize); // Gọi API với trang mới
     }
   };
 
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
-    setPage(1);
-    fetchOrders(BranchId, page, value);
+    setPage(1); // Đặt lại trang về 1
+    fetchOrders(1, value); // Gọi API với kích thước trang mới
   };
 
   useEffect(() => {
-    fetchOrders(BranchId, page, pageSize);
+    fetchOrders( page, pageSize);
   }, [BranchId, page, pageSize]);
 
   const headers = [

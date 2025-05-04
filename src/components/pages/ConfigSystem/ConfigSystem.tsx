@@ -24,6 +24,12 @@ const apiDescriptions = [
     handler: "cancelAppointment",
     description: "Tự động hủy các lịch hẹn đã quá thời gian cho phép",
   },
+  {
+    name: "Nhắc khách hàng chọn chuyên viên ",
+    key: "reminderAppointment",
+    handler: "reminderAppointment",
+    description: "Nhắc khách hàng chọn chuyên viên cho lịch hẹn",
+  },
 ];
 
 export default function CronJobTable() {

@@ -66,6 +66,7 @@ import OrderDetailPage from '@/components/pages/Order/[id]'
 import ManagerDashboard from '@/components/pages/Dashboard/ManagerDashboard'
 import BranchDetailPage from '@/components/pages/BranchManagement/[id]'
 import CronJobTable from '@/components/pages/ConfigSystem/ConfigSystem'
+import RoutineDetailPage from '@/components/pages/RoutineManagement/RoutineDetail'
 
 
 export const AppRouter = () => {
@@ -159,6 +160,9 @@ export const AppRouter = () => {
             {/* ROUTINE MANAGEMENT */}
             <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
             <Route path={ROUTES.CREATE_ROUTINE} element={<CreateRoutine />} />
+            <Route path={ROUTES.ROUTINE_DETAIL} element={<RoutineDetailPage />} />
+
+            {/* BRANCH PRODUCT MANAGEMENT */}
 
             {/* VOUCHER MANAGEMENT */}
             <Route path={ROUTES.VOUCHER_MANAGEMENT} element={<VoucherManagementPage />} />

@@ -5,11 +5,11 @@ const getListSkincareRoutines = async():Promise<ResponseProps> => {
 }
 
 interface GetRoutineDetailProps {
-    id: number
+    routineId: number
 }
 
-const getRoutineDetail = async({id}:GetRoutineDetailProps):Promise<ResponseProps> => {
-    return await get(`Routine/${id}`)
+const getRoutineDetail = async({routineId}:GetRoutineDetailProps):Promise<ResponseProps> => {
+    return await get(`Routine/get-list-skincare-routines-step/${routineId}`)
 }
 
 
