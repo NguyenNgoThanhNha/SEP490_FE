@@ -98,7 +98,8 @@ interface GetAllOrderProps {
   PageIndex?: number
 }
 const getAllOrder = async (params: GetAllOrderProps = {}): Promise<ResponseProps> => {
-  return await get('Order/get-all-order', params)
+  const queryString = new URLSearchParams(params as Record<string, string>).toString();
+  return await get(`Order/get-all-order?${queryString}`)
 }
 const revenueByBranch = async (month: number, year: number): Promise<ResponseProps> => {
   return await get(`Auth/revenue-by-branch?month=${month}&year=${year}`)

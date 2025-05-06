@@ -118,6 +118,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         { label: t("managerDashboard"), icon: <DashboardIcon />, path: "/manager-dashboard" },
         { label: t("manageOrder"), icon: <NotebookText/>, path: "/branch-order-management" },
         { label: t("manageCalendar"), icon: <Clock />, path: "/staff-calendar" },
+        { label: t("manageBranchRoutineOrder"), icon: <TicketIcon />, path: "/branch-routine-order" },
         { label: t("manageBranchPromotion"), icon: <TicketIcon />, path: "/branch-promotion-management" },
         { label: t("manageBranchProduct"), icon: <Package2 />, path: "/branch-product-management" },
         { label: t("manageBranchService"), icon: <ShoppingBag />, path: "/branch-service-management" },
