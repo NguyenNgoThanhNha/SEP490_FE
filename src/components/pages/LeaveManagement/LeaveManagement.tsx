@@ -151,9 +151,8 @@ export function LeaveRequestList() {
   const handleReplaceStaff = async (newStaffId: number) => {
     if (!selectedAppointment) return;
 
-    // Kiểm tra nếu staffId mới trùng với staffId hiện tại
     if (selectedAppointment.staffId === newStaffId) {
-      toast.error(t("staffAlreadyAssigned")); // Hiển thị thông báo lỗi
+      toast.error(t("staffAlreadyAssigned")); 
       return;
     }
 
