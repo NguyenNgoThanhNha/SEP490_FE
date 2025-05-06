@@ -67,6 +67,7 @@ import ManagerDashboard from '@/components/pages/Dashboard/ManagerDashboard'
 import BranchDetailPage from '@/components/pages/BranchManagement/[id]'
 import CronJobTable from '@/components/pages/ConfigSystem/ConfigSystem'
 import RoutineDetailPage from '@/components/pages/RoutineManagement/RoutineDetail'
+import BranchRoutineOrder from '@/components/pages/BranchRoutineOrder/BranchRoutineOrder'
 
 
 export const AppRouter = () => {
@@ -175,6 +176,11 @@ export const AppRouter = () => {
             {/* BRANCH SERVICE MANAGEMENT */}
             <Route path={ROUTES.BRANCH_SERVICE_MANAGEMENT} element={<BranchServiceManagementPage />} />
             <Route path={ROUTES.BRANCH_SERVICE_DETAIL} element={<BranchServiceDetail />} />
+
+            {/* BRANCH ROUTINE ORDER */}
+            <Route path={ROUTES.BRANCH_ROUTINE_ORDER} element={<BranchRoutineOrder/>} />
+
+            {/* EMPLOYEE MANAGEMENT */}
 
             {/* EMPLOYEE CALENDAR */}
             <Route path={ROUTES.LEAVE_SCHEDULE} element={<LeaveRequestList/>} />

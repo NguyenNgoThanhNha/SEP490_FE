@@ -207,6 +207,7 @@ export function LeaveRequestList() {
             onApprove={handleApprove}
             onReject={handleReject}
             onViewAppointments={handleViewAppointments}
+            canApproveOrReject={request.status === "pending"}
           />
         ))}
       </div>

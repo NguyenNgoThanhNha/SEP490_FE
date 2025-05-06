@@ -10,9 +10,15 @@ interface LeaveRequestCardProps {
     onApprove: (id: number) => void;
     onReject: (id: number) => void;
     onViewAppointments: (id: number) => void;
+    canApproveOrReject: boolean;
 }
 
-export function LeaveRequestCard({ request, onApprove, onReject, onViewAppointments }: LeaveRequestCardProps) {
+const hasNoAffectedAppointments = (request: StaffLeave): boolean => {
+    return !request.affectedAppointments || request.affectedAppointments.length === 0;
+};
+
+export function LeaveRequestCard({ request, onApprove, onReject, onViewAppointments, canApproveOrReject,
+}: LeaveRequestCardProps) {
     const { t } = useTranslation();
 
     const getStatusBadge = (status: string) => {
@@ -54,7 +60,7 @@ export function LeaveRequestCard({ request, onApprove, onReject, onViewAppointme
                 </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-                {request.status === "pending" && (
+                {request.status === "pending" && hasNoAffectedAppointments(request) && (
                     <>
                         <div className="flex gap-2">
                             <Button
@@ -72,24 +78,15 @@ export function LeaveRequestCard({ request, onApprove, onReject, onViewAppointme
                                 {t("reject")}
                             </Button>
                         </div>
-                        <Button
-                            variant="outline"
-                            className="w-full hover:bg-slate-50"
-                            onClick={() => onViewAppointments(request.id)}
-                        >
-                            {t("view_affected_appointments")}
-                        </Button>
                     </>
                 )}
-                {request.status !== "pending" && (
-                    <Button
-                        variant="outline"
-                        className="w-full hover:bg-slate-50"
-                        onClick={() => onViewAppointments(request.id)}
-                    >
-                        {t("view_affected_appointments")}
-                    </Button>
-                )}
+                <Button
+                    variant="outline"
+                    className="w-full hover:bg-slate-50"
+                    onClick={() => onViewAppointments(request.id)}
+                >
+                    {t("view_affected_appointments")}
+                </Button>
             </CardFooter>
         </Card>
     );

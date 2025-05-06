@@ -53,7 +53,7 @@ const BranchOrderManagementPage = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
-      fetchOrders(newPage, pageSize); // Gọi API với trang mới
+      fetchOrders(newPage, pageSize); 
     }
   };
 
