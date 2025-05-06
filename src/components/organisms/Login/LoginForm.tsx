@@ -66,10 +66,13 @@ const LoginForm = () => {
       const managedBranch = branches.find(
         (branch: TBranch) => branch.managerId === userId
       );
-
+    
       if (roleId === 2 && managedBranch) {
         localStorage.setItem("branchId", managedBranch.branchId.toString());
-      }
+        localStorage.setItem("managerId", managedBranch.managerId.toString()); 
+
+      }console.log("Managed Branch:", managedBranch);
+
       if (roleId === 4) {
         const staffInfo = await staffService.getStaffInfo();
         if (!staffInfo.success) {
@@ -80,6 +83,7 @@ const LoginForm = () => {
         const staffBranchId = staffInfo?.result?.data?.branchId;
         if (staffBranchId) {
           localStorage.setItem("branchId", staffBranchId.toString());
+
         }
       }
 

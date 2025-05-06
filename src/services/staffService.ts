@@ -1,4 +1,4 @@
-import { del, get, post, put, ResponseProps } from './root'
+import { del, get, patch, post, put, ResponseProps } from './root'
 
 interface StaffProps {
   pageIndex: number
@@ -155,10 +155,20 @@ interface updateWorkScheduleProps {
   staffReplaceId: number;
   shiftId: number;
   workDate: string;
-  dayOfWeek: string;
+  dayOfWeek: number;
 }
 const updateWorkSchedule = async (data: updateWorkScheduleProps): Promise<ResponseProps> => {
-  return await post(`Staff/update-work-schedule-for-staff-leave`, data)
+  return await patch(`Staff/update-work-schedules-for-staff-leave`, data)
+}
+
+interface UnassignStaffProps {
+  branchId: number
+  startTime: string
+  endTime: string
+  date: string
+}
+const unassignStaff = async (data: UnassignStaffProps): Promise<ResponseProps> => {
+  return await get(`Staff/unassigned-staff?branchId=${data.branchId}&startTime=${data.startTime}&endTime=${data.endTime}&date=${data.date}`)
 }
 
 export default {
@@ -181,5 +191,6 @@ export default {
   approveLeave,
   getStaffLeaveAppointments,
   staffReplacement,
-  updateWorkSchedule
+  updateWorkSchedule,
+  unassignStaff,
 }

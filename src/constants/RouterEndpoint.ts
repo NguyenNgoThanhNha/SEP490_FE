@@ -93,6 +93,7 @@ export enum ROUTES {
   CREATE_ROUTINE = 'create-routine',
   ROUTINE_DETAIL = '/routine-management/:routineId',
   BRANCH_ROUTINE_ORDER = 'branch-routine-order',
+  BRANCH_ROUTINE_ORDER_DETAIL = '/branch-routine-order/:orderId/:userRoutineId',
 
   //LEAVE schedule
   LEAVE_SCHEDULE = 'leave-schedule',

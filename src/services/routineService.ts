@@ -1,4 +1,4 @@
-import { get, ResponseProps } from "./root";
+import { get, post, ResponseProps } from "./root";
 
 const getListSkincareRoutines = async():Promise<ResponseProps> => {
     return await get("Routine/get-list-skincare-routines")
@@ -12,17 +12,31 @@ const getRoutineDetail = async({routineId}:GetRoutineDetailProps):Promise<Respon
     return await get(`Routine/get-list-skincare-routines-step/${routineId}`)
 }
 
-interface GetRoutineByUserIdProps {
-    userId: number;
-    routineId: number;
-}
-const getRoutineByUserId = async({routineId, userId}: GetRoutineByUserIdProps):Promise<ResponseProps> => {
-    return await get(`Routine/get-routine-by-userId/${routineId}/${userId}`) 
+
+const getRoutineByUserId = async(userRoutineId: number):Promise<ResponseProps> => {
+    return await get(`Routine/get-routine-by-userId/${userRoutineId}`) 
 }
 
+const trackingUserRoutine = async(userRoutineId: number):Promise<ResponseProps> => {      
+    return await get(`Routine/tracking-user-routine/${userRoutineId}`) 
+}
+
+interface CreateUserRoutineLoggerProps {
+    stepId: number
+    managerId: number
+    actionDate: string
+    step_Logger: string
+    notes: string
+}
+
+const createUserRoutineLogger = async(data: CreateUserRoutineLoggerProps):Promise<ResponseProps> => {        
+    return await post(`UserRoutineLogger/create`, data) 
+}
 export default {
     getListSkincareRoutines,
     getRoutineDetail,
-    getRoutineByUserId
+    getRoutineByUserId,
+    trackingUserRoutine,
+    createUserRoutineLogger
     
 }
