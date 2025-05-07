@@ -32,11 +32,24 @@ interface CreateUserRoutineLoggerProps {
 const createUserRoutineLogger = async(data: CreateUserRoutineLoggerProps):Promise<ResponseProps> => {        
     return await post(`UserRoutineLogger/create`, data) 
 }
+
+interface UserRoutineLoggerProps {
+    userRoutineId: number
+    pageIndex: number
+    pageSize: number
+}
+
+const getUserRoutineLogger = async({userRoutineId, pageIndex, pageSize}: UserRoutineLoggerProps):Promise<ResponseProps> => {        
+    return await get(`UserRoutineLogger/get-all?userRoutineId=${userRoutineId}&pageIndex=${pageIndex}&pageSize=${pageSize}`)
+}
+
+
 export default {
     getListSkincareRoutines,
     getRoutineDetail,
     getRoutineByUserId,
     trackingUserRoutine,
-    createUserRoutineLogger
+    createUserRoutineLogger,
+    getUserRoutineLogger,
     
 }

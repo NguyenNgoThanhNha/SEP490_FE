@@ -15,7 +15,7 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
     <div className="space-y-3">
       <h4 className="font-medium flex items-center gap-2">
         <Calendar className="h-4 w-4 text-muted-foreground" />
-        {t("title")} {/* "Appointments" */}
+        {t("service")}               
       </h4>
       <div className="grid gap-3">
         {appointments.map((appointment) => (

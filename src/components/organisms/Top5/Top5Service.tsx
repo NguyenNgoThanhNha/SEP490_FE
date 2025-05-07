@@ -30,7 +30,7 @@ const Top5Service = () => {
 
   const columns = [
     {
-        header: t("Service Name"),
+        header: t("service"),
         accessor: (item: TopService) => item.name,
     },
     {

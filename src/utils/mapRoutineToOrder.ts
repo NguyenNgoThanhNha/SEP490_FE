@@ -71,16 +71,21 @@ export interface OrderDetailItem {
       ? routineData.result.data.userRoutineSteps
       : [routineData.result?.data?.userRoutineSteps]
   
-    const orderItems = orderData?.result?.data?.orderDetails || []
-    const appointments = orderData?.result?.data?.appointments || []
+    const allOrderItems = orderData?.result?.data?.orderDetails || []
+    const allAppointments = orderData?.result?.data?.appointments || []
   
     return userRoutineSteps.map((step: any) => {
+      const stepNumber = step.skinCareRoutineStep?.step
+  
+      const stepOrderItems = allOrderItems.filter((item: any) => item.step === stepNumber)
+      const stepAppointments = allAppointments.filter((appt: any) => appt.step === stepNumber)
+  
       return {
         stepId: step.userRoutineStepId,
         userRoutineId: step.userRoutineId,
         stepName: step.skinCareRoutineStep?.name ?? "No Name",
         description: step.skinCareRoutineStep?.description ?? "",
-        stepNumber: step.skinCareRoutineStep?.step ?? 0,
+        stepNumber: stepNumber ?? 0,
         intervalBeforeNextStep: step.skinCareRoutineStep?.intervalBeforeNextStep ?? 0,
         stepStatus: step.stepStatus ?? "Unknown",
         dueDate: step.endDate ?? null,
@@ -90,11 +95,12 @@ export interface OrderDetailItem {
         customer: {
           userId: routineData?.result?.data?.user?.userId ?? 0,
         },
-        orderDetailItems: orderItems,
-        appointments: appointments,
+        orderDetailItems: stepOrderItems,
+        appointments: stepAppointments,
       }
     })
   }
+  
   
   export const formatDate = (dateString: string | null) => {
     if (!dateString) return "N/A"

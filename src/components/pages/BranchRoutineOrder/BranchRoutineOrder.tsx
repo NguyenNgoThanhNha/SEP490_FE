@@ -109,32 +109,6 @@ const BranchRoutineOrder = () => {
         </Badge>
       ),
     },
-    {
-      label: t('OrderType'),
-      key: 'orderType',
-      render: (orderType: string) => {
-        let translatedOrderType = '';
-
-        switch (orderType) {
-          case 'Product':
-            translatedOrderType = t('Product');
-            break;
-          case 'ProductAndService':
-            translatedOrderType = t('productandservice');
-            break;
-          case 'Appointment':
-            translatedOrderType = t('Appointment');
-            break;
-          case 'Routine':
-            translatedOrderType = t('Routine');
-            break;
-          default:
-            translatedOrderType = t('Unknown');
-        }
-
-        return translatedOrderType;
-      },
-    }
   ];
 
   const renderPagination = () => {

@@ -15,7 +15,7 @@ export type TProduct = {
     status: "Active" | "Sold Out"; 
     createdDate: string; 
     updatedDate: string; 
-    images: File;
+    images: File[];
     brand: string    
   };
   

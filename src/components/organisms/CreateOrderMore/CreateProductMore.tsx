@@ -225,9 +225,17 @@ const CreateProductMore: React.FC<CreateProductMoreProps> = ({ branchId, onSubmi
                       onClick={() => (!isSelected ? handleIncreaseQuantity(product.productId) : null)}
                     >
                      
+                     {product.images?.[0] ? (
+                        <img
+                          src={product.images[0] || "/placeholder.svg"}
+                          alt={product.productName}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
                         <div className="h-full w-full flex items-center justify-center">
                           <ShoppingCart className="h-8 w-8 text-muted-foreground" />
                         </div>
+                      )}
                      
                       {isSelected && (
                         <div className="absolute top-1 right-1">
