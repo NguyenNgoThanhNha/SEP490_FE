@@ -75,6 +75,7 @@ export enum ROUTES {
   CHECKOUT_PAGE ='checkout',
   PAYMENT_NOTI = 'payment-noti', 
   CONFIG = 'config',
+  PAYMENT_CANCEL = 'payment-cancel',
 
   //Voucher
   VOUCHER_MANAGEMENT = 'voucher-management',

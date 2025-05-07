@@ -69,6 +69,7 @@ import CronJobTable from '@/components/pages/ConfigSystem/ConfigSystem'
 import RoutineDetailPage from '@/components/pages/RoutineManagement/RoutineDetail'
 import BranchRoutineOrder from '@/components/pages/BranchRoutineOrder/BranchRoutineOrder'
 import BranchOrderRoutineDetail from '@/components/pages/BranchRoutineOrder/[id]'
+import PaymentCancelPage from '@/components/organisms/PaymentButton/PaymentCancel'
 
 
 export const AppRouter = () => {
@@ -139,6 +140,7 @@ export const AppRouter = () => {
             <Route path={ROUTES.CHECKOUT_PAGE} element={<CheckoutPage />} />
             <Route path={ROUTES.CASHIER_CREATE_ORDER} element={<EmployeeStore />} />
             <Route path={ROUTES.PAYMENT_NOTI} element={<PaymentSuccessPage />} />
+            <Route path={ROUTES.PAYMENT_CANCEL} element={<PaymentCancelPage />} />
 
             {/* SERVICES'S CATEGORY */}
             <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />

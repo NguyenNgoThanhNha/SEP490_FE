@@ -4,6 +4,7 @@ import CustomerInfo from "@/components/organisms/OrderDetail/CustomerInfo";
 import PaymentInfo from "@/components/organisms/OrderDetail/PaymentInfo";
 import ProductInfo from "@/components/organisms/OrderDetail/ProductInfo";
 import RoutineInfo from "@/components/organisms/OrderDetail/RoutineInfo";
+import PaymentButton from "@/components/organisms/PaymentButton/PaymentButton";
 import CreateOrderMore from "@/components/pages/CreateOrderMore/CreateOrderMore";
 import orderService from "@/services/orderService";
 import { message, Spin, Modal } from "antd";
@@ -138,7 +139,7 @@ export default function OrderDetailPage() {
         orderDetailsIds,
         status: nextStatus,
       };
-  
+
       const response = await orderService.updateOrderDetail(payload);
       if (response.success) {
         message.success(`Cập nhật trạng thái đơn hàng thành công: ${nextStatus}`);
@@ -152,13 +153,14 @@ export default function OrderDetailPage() {
             })),
           };
         });
-  
-        // Nếu trạng thái mới là "Completed", cập nhật trạng thái thanh toán
-        if (nextStatus === "Completed" && orderDetail?.statusPayment !== "Paid") {
+
+        if (nextStatus === "Completed" && orderDetail?.statusPayment !== "Paid" && orderDetail?.status !== "Completed") {
+
           const paymentResponse = await orderService.updatePaymentStatus(Number(orderId), "Paid");
-          if (paymentResponse.success) {
+          const orderResponse = await orderService.updateOrderStatus(Number(orderId), "Completed");
+          if (paymentResponse.success && orderResponse.success) {
             message.success("Cập nhật trạng thái thanh toán thành công!");
-            fetchOrderDetails(); // Cập nhật lại thông tin
+            fetchOrderDetails();
           } else {
             message.error("Cập nhật trạng thái thanh toán thất bại!");
           }
@@ -171,8 +173,8 @@ export default function OrderDetailPage() {
       message.error("Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng.");
     }
   };
-  
-  
+
+
 
   const handleBack = () => {
     navigate(-1);
@@ -251,6 +253,17 @@ export default function OrderDetailPage() {
 
       {(orderType === "Appointment" || orderType === "ProductAndService" || orderType === "Routine") && (
         <AppointmentList appointments={appointments} />
+      )}
+      {orderType !== "Product" && orderDetail.statusPayment === "Pending" &&(
+        <div className="flex justify-end mt-6">
+          <PaymentButton
+            orderId={Number(orderId)}
+            totalAmount={totalAmount}
+            statusPayment={statusPayment}
+            orderType={orderType}
+            onPaymentSuccess={() => fetchOrderDetails()} 
+          />
+        </div>
       )}
       <Modal
         title={t("createOrderMore")}

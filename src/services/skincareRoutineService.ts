@@ -32,11 +32,15 @@ const getTargetSkinType = async ():Promise<ResponseProps> => {
     return await get('SkincareRoutine/get-target-skin-type');
 }
 
+const updateSkincareRoutineStatus = async (routineId: number):Promise<ResponseProps> => {
+    return await put(`SkincareRoutine/active-skincare-routine/${routineId}`);
+}
 export default {
     getAllSkincareRoutine,
     getSkincareRoutineDetail,
     createSkincareRoutine,
     updateSkincareRoutine,
     deleteSkincareRoutine,
-    getTargetSkinType
+    getTargetSkinType,
+    updateSkincareRoutineStatus,
 }

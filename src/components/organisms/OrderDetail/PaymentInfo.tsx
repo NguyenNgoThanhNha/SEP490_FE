@@ -101,16 +101,6 @@ export default function PaymentInfo({ statusPayment, paymentMethod, totalAmount,
                   <div className="text-sm font-medium">{shipment.shippingCost.toLocaleString()} VND</div>
                 </div>
 
-                <div className="flex justify-between items-center mb-4">
-                  <div className="text-sm text-muted-foreground">{t("shippingStatus")}</div>
-                  <Badge
-                    variant="outline"
-                    className={`${getStatusColor(shipment.shippingStatus)} font-medium px-2.5 py-0.5`}
-                  >
-                    {t(shipment.shippingStatus)}
-                  </Badge>
-                </div>
-
                 <div className="flex justify-between items-center">
                   <div className="text-sm text-muted-foreground">{t("estimatedDeliveryDate")}</div>
                   <div className="text-sm font-medium">

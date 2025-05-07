@@ -84,9 +84,7 @@ const confirmOrderProduct = async (data: ConfirmOrderProduct): Promise<ResponseP
 
 const updateOrderStatus = async (orderId: number, orderStatus: string): Promise<ResponseProps> => {
   console.log('Payload gửi đến API:', { orderId, orderStatus })
-  return await patch(`Order/update-order-status`, null, {
-    params: { orderId, orderStatus }
-  })
+  return await patch(`Order/update-order-status?orderId=${orderId}&orderStatus=${orderStatus}`)
 }
 
 interface GetAllOrderProps {
@@ -172,8 +170,8 @@ const CreateProductMore = async (data: CreateProductMoreData, orderId: number): 
 
 const updatePaymentStatus = async (orderId: number, status: string): Promise<ResponseProps> => {
   return await put(`Order/update-order-payment-status`, {
-    params: { orderId, status }
-  })
+    orderId, status }
+  )
 }
 
 export default {

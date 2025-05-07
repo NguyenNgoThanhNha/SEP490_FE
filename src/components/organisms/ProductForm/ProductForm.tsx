@@ -13,6 +13,7 @@ import { Loader } from "lucide-react";
 import categoryService from "@/services/categoryService";
 import { TCate } from "@/types/category.type";
 import { useTranslation } from "react-i18next";
+import FileUpload from "@/components/atoms/ui/image-upload";
 
 interface ProductFormProps {
   mode: "create" | "update";
@@ -111,11 +112,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
           </CardHeader>
           <CardContent className="grid grid-cols-7 gap-6">
             <div className="col-span-4 space-y-6">
-              <ImageUploadOne
-                onImageUpload={handleImageUpload}
-                multiple={false}
-                initialData={initialData?.images?.map(file => typeof file === "string" ? file : URL.createObjectURL(file))}
-              />
+            <FileUpload onImageUpload={handleImageUpload} multiple={true} initialData={initialData?.images} />
+
               <FormField
                 control={form.control}
                 name="productName"

@@ -13,6 +13,7 @@ import { TRoutine } from "@/types/routine.type";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ServiceAndProductSelect } from "./ServiceAndProductSelect";
+import skincareRoutineService from "@/services/skincareRoutineService";
 
 export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
   const { t } = useTranslation();
@@ -63,7 +64,7 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
         productIds: selectedServices.flatMap((s) => s.productIds),
       };
 
-      console.log("Payload gửi đi:", newStep); 
+      console.log("Payload gửi đi:", newStep);
 
       const response = await skincareRoutineStepService.createSkincareRoutineStep(newStep);
       if (response.success) {
@@ -86,9 +87,21 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
     }
   };
 
-  const handleFinish = () => {
-    toast.success(t("routineComplete"));
-    navigate("/routine-management");
+  const handleFinish = async () => {
+    try {
+      toast.success(t("routineComplete"));
+
+      const response = await skincareRoutineService.updateSkincareRoutineStatus(routineData.skincareRoutineId);
+      if (response.success) {
+        toast.success(t("routineUpdatedSuccess"));
+        navigate("/routine-management");
+      } else {
+        toast.error(t("routineUpdateError"));
+      }
+    } catch (error) {
+      console.error(t("routineUpdateError"), error);
+      toast.error(t("routineUpdateError"));
+    }
   };
 
   if (isComplete) {
