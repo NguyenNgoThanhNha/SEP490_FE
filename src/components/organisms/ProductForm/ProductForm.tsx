@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 interface ProductFormProps {
   mode: "create" | "update";
   initialData?: ProductType;
-  onSubmit: (data: ProductType) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<void>;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }) => {
@@ -84,7 +84,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
   }, []);
   useEffect(() => {
     if (initialData?.images) {
-      setImages(initialData.images);
+      setImages(initialData.images);               
       form.setValue("images", initialData.images);
     }
   }, [initialData]);

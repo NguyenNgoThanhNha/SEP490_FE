@@ -32,13 +32,13 @@ interface CreateProductProps {
 const createProduct = async (data: CreateProductProps): Promise<ResponseProps> => {
   const formData = new FormData()
   formData.append('ProductName', data.productName)
-  formData.append('ProductDescription', data.productDescription)
+  formData.append('ProductDescription', data .productDescription)
   formData.append('Dimension', data.dimension)
-  formData.append('Price', data.price.toString())
-  formData.append('Quantity', data.quantity.toString())
+  formData.append('Price', data.price?.toString() ?? '');
+  formData.append('Quantity', data.quantity?.toString() ?? '');
   formData.append('Brand', data.brand)
-  formData.append('CategoryId', data.categoryId.toString())
-  formData.append('CompanyId', data.companyId.toString())
+  formData.append('CategoryId', data.categoryId?.toString() ?? '');
+  formData.append('CompanyId', data.companyId?.toString() ?? '');
   formData.append('Image', data.images)
   return await post('Product/create', formData)
 }
