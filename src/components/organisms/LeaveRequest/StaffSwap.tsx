@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { StaffSwapModal } from "./StaffSwapModal";
 import { StaffReplaceModal } from "./StaffReplace";
 
-
 interface ModalWrapperProps {
   availableStaff: any[];
   appointment: {
@@ -10,6 +9,7 @@ interface ModalWrapperProps {
     appointmentEndTime: string;
   };
   staffLeaveId: number;
+  unsignedInfo?: any; // <-- thêm unsignedInfo nếu có
   onClose: () => void;
   onReplaceStaff: (newStaffId: number) => void;
   onSwapSuccess?: () => void;
@@ -19,6 +19,7 @@ export function StaffModalController({
   availableStaff,
   appointment,
   staffLeaveId,
+  unsignedInfo,
   onClose,
   onReplaceStaff,
   onSwapSuccess,
@@ -36,6 +37,7 @@ export function StaffModalController({
       <StaffSwapModal
         staffLeaveId={staffLeaveId}
         appointment={appointment}
+        unsignedInfo={unsignedInfo} // <-- truyền vào đây
         onClose={onClose}
         onSuccess={onSwapSuccess}
       />

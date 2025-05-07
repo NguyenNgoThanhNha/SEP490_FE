@@ -27,8 +27,9 @@ const CreateOrderMore: React.FC<CreateOrderMoreProps> = ({ branchId, orderType, 
             if (response.success) {
                 toast.success("Service added successfully!");
                 onSubmit(true);
-            } else {
-                toast.error("Failed to add service.");
+            } else  {
+                const errorMessage = response.result?.message || "Failed to add service.";
+                toast.error(errorMessage);
                 onSubmit(false);
             }
         } catch {

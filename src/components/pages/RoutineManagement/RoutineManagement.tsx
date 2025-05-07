@@ -99,7 +99,6 @@ const RoutineManagementPage = () => {
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}
-          selectable={true}
           data={displayedRoutines}
           actions={(row) => (
             <div className="flex space-x-2">

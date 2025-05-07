@@ -287,7 +287,7 @@ const CreateServiceMore: React.FC<CreateServiceMoreProps> = ({ branchId, onSubmi
                           ))}
                         </Select>
                         {staffs[service.serviceId]?.length === 0 && (
-                          <p className="text-sm text-red-500">{t(" no_available_staff")}</p>
+                          <p className="text-sm text-red-500">Không có nhân viên phù hợp</p>
                         )}
                       </div>
                     )}

@@ -73,7 +73,6 @@ const BranchOrderManagementPage = () => {
     {
       label: t('Status'),
       key: 'status',
-      sortable: true,
       render: (status: string) => {
         let variant: 'active' | 'inactive' | 'pending' | 'default';
         let translatedStatus = '';
@@ -185,7 +184,6 @@ const BranchOrderManagementPage = () => {
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}
-          selectable={true}
           data={orders.length > 0 ? orders : []}
           badgeConfig={{
             key: "status",

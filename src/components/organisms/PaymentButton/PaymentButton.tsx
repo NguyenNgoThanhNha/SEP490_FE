@@ -10,6 +10,7 @@ interface PaymentButtonProps {
   orderType: string;
   onPaymentSuccess: () => void;
 }
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const PaymentButton = ({ orderId, totalAmount, statusPayment, orderType, onPaymentSuccess }: PaymentButtonProps) => {
   const [paymentMethod, setPaymentMethod] = useState<string>("cash");
@@ -18,19 +19,25 @@ const PaymentButton = ({ orderId, totalAmount, statusPayment, orderType, onPayme
   const handlePayment = async () => {
     if (paymentMethod === "payOs") {
       try {
+        let amountToPay = totalAmount;
+  
+        if (statusPayment === "PendingDeposit") {
+          amountToPay = totalAmount * 0.7;
+        }
+  
         const response = await orderService.confirmAppointment({
           orderId,
-          totalAmount: totalAmount.toString(),
+          totalAmount: amountToPay.toString(),
           request: {
-            returnUrl: `${window.location.origin}/payment-success`,
-            cancelUrl: `${window.location.origin}/payment-cancel`,
+            returnUrl: `${BASE_URL}/payment-success`,
+            cancelUrl: `${BASE_URL}/payment-cancel`,
           },
-        }
-        )
+        });
+  
         if (response.success) {
           message.success(t("payOsSuccess"));
           window.location.href = response.result?.data;
-          onPaymentSuccess();
+          // Do NOT call onPaymentSuccess here yet because payment hasn't completed
         } else {
           message.error(t("payOsFailed"));
         }
@@ -39,19 +46,35 @@ const PaymentButton = ({ orderId, totalAmount, statusPayment, orderType, onPayme
       }
     } else if (paymentMethod === "cash") {
       try {
-        const paymentResponse = await orderService.updatePaymentStatus(orderId, "Paid");
+        // Determine new payment status
+        const newStatus =
+          statusPayment === "PendingDeposit" ? "PaidDeposit" : "Paid";
+  
+        const paymentResponse = await orderService.updatePaymentStatus(
+          orderId,
+          newStatus
+        );
+  
         if (paymentResponse.success) {
           message.success(t("cashSuccess"));
-          if (orderType === "Routine" || orderType === "ProductAndService") {
+  
+          if (
+            (orderType === "Routine" || orderType === "ProductAndService") &&
+            newStatus === "Paid"
+          ) {
             const orderDetailsIds = await getAllOrderDetailIds(orderId);
-            const updateDetailsResponse = await orderService.updateOrderDetail({ orderDetailsIds, status: "Completed" });
+            const updateDetailsResponse = await orderService.updateOrderDetail({
+              orderDetailsIds,
+              status: "Completed",
+            });
+  
             if (updateDetailsResponse.success) {
               message.success(t("updateOrderStatusSuccess"));
             } else {
               message.error(t("updateOrderStatusFailed"));
             }
           }
-
+  
           onPaymentSuccess();
         } else {
           message.error(t("updatePaymentStatusFailed"));
@@ -61,6 +84,7 @@ const PaymentButton = ({ orderId, totalAmount, statusPayment, orderType, onPayme
       }
     }
   };
+  
 
   const getAllOrderDetailIds = async (orderId: number) => {
     try {
@@ -72,7 +96,7 @@ const PaymentButton = ({ orderId, totalAmount, statusPayment, orderType, onPayme
     }
   };
 
-  if (statusPayment === "Pending") {
+  if (statusPayment === "Pending" || statusPayment === "PendingDeposit") {
     return (
       <div className="flex justify-end">
         <Select

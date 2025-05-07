@@ -16,6 +16,7 @@ interface StaffSwapModalProps {
   appointment: Appointment;
   onClose: () => void;
   onSuccess?: () => void;
+  unsignedInfo?: any;
 }
 
 export function StaffSwapModal({

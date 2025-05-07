@@ -112,42 +112,50 @@ export function LeaveRequestList() {
     }
   }
 
+  const [unassignedInfo, setUnassignedInfo] = useState<any>(null) // điều chỉnh theo kiểu dữ liệu bạn cần
+
   const handleOpenReplaceModal = async (appointment: TAppointment) => {
     setSelectedAppointment(appointment);
-
+  
     try {
       const [date, startTime] = appointment.appointmentsTime.split("T");
       const [, endTime] = appointment.appointmentEndTime.split("T");
-      const serviceId = appointment.serviceId
+      const serviceId = appointment.serviceId;
+  
       const payload: StaffReplacementProps = {
-        branchId: branchId,
+        branchId,
         startTime,
         endTime,
         date,
-        serviceId
+        serviceId,
       };
-
-
-
+  
       const response = await staffService.staffReplacement(payload);
-
       if (response?.data) {
-
         setAvailableStaff(response.data);
       } else {
         setAvailableStaff([]);
-        toast("cannotLoadAvailableStaff");
       }
-
+  
+      // Luôn gọi unassignStaff để lấy dữ liệu dù availableStaff có trống
+      const res = await staffService.unassignStaff(payload);
+      if (res?.data) {
+        setUnassignedInfo(res.data); // hoặc response.result.data nếu vậy
+      } else {
+        setUnassignedInfo(null);
+      }
+  
       setShowReplaceModal(true);
       setShowAppointmentsModal(false);
     } catch {
       toast.error(t("cannotLoadAvailableStaff"));
       setAvailableStaff([]);
+      setUnassignedInfo(null);
       setShowReplaceModal(true);
       setShowAppointmentsModal(false);
     }
   };
+  
 
   const handleReplaceStaff = async (newStaffId: number) => {
     if (!selectedAppointment) return;
@@ -257,16 +265,17 @@ export function LeaveRequestList() {
       )}
 
       {showReplaceModal && selectedAppointment && (
-        <StaffModalController
-          availableStaff={availableStaff}
-          appointment={selectedAppointment} 
-          staffLeaveId={selectedRequest?.id ?? 0} 
-          onClose={() => {
-            setShowReplaceModal(false)
-            setShowAppointmentsModal(true)
-          }}
-          onReplaceStaff={(newStaffId) => handleReplaceStaff(newStaffId)}
-        />
+       <StaffModalController
+       availableStaff={[]}
+       appointment={selectedAppointment}
+       staffLeaveId={selectedRequest?.id ?? 0}
+       unassignedInfo={unassignedInfo} // <-- truyền thêm prop
+       onClose={() => {
+         setShowReplaceModal(false)
+         setShowAppointmentsModal(true)
+       }}
+       onReplaceStaff={(newStaffId) => handleReplaceStaff(newStaffId)}
+     />
 
       )}
     </div>
