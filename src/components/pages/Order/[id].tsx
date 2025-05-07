@@ -138,9 +138,7 @@ export default function OrderDetailPage() {
         orderDetailsIds,
         status: nextStatus,
       };
-
-      console.log("Payload gửi đi:", payload);
-
+  
       const response = await orderService.updateOrderDetail(payload);
       if (response.success) {
         message.success(`Cập nhật trạng thái đơn hàng thành công: ${nextStatus}`);
@@ -154,6 +152,17 @@ export default function OrderDetailPage() {
             })),
           };
         });
+  
+        // Nếu trạng thái mới là "Completed", cập nhật trạng thái thanh toán
+        if (nextStatus === "Completed" && orderDetail?.statusPayment !== "Paid") {
+          const paymentResponse = await orderService.updatePaymentStatus(Number(orderId), "Paid");
+          if (paymentResponse.success) {
+            message.success("Cập nhật trạng thái thanh toán thành công!");
+            fetchOrderDetails(); // Cập nhật lại thông tin
+          } else {
+            message.error("Cập nhật trạng thái thanh toán thất bại!");
+          }
+        }
       } else {
         message.error("Cập nhật trạng thái đơn hàng thất bại!");
       }
@@ -162,6 +171,8 @@ export default function OrderDetailPage() {
       message.error("Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng.");
     }
   };
+  
+  
 
   const handleBack = () => {
     navigate(-1);

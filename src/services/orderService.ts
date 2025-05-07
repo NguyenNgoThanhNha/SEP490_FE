@@ -171,7 +171,7 @@ const CreateProductMore = async (data: CreateProductMoreData, orderId: number): 
 
 
 const updatePaymentStatus = async (orderId: number, status: string): Promise<ResponseProps> => {
-  return await put(`Order/update-payment-status`, {
+  return await put(`Order/update-order-payment-status`, {
     params: { orderId, status }
   })
 }
