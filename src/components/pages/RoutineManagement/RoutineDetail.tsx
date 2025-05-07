@@ -54,7 +54,7 @@ const RoutineDetailPage = () => {
               name: s.service.name,
               description: s.service.description,
               price: s.service.price,
-              duration: `${s.service.duration} min`,
+              duration: `${s.service.duration} `,
               images: s.service.images,
             })),
             products: step.productRoutineSteps.map((p: any) => ({
@@ -192,7 +192,7 @@ const RoutineDetailPage = () => {
                                     </div>
                                     <div className="text-right">
                                       <div className="text-sm font-medium">{service.price.toLocaleString()} VND</div>
-                                      <div className="text-xs text-gray-500 mt-1">{service.duration}</div>
+                                      <div className="text-xs text-gray-500 mt-1">{service.duration} phút</div>
                                     </div>
                                   </div>
                                 </CardContent>

@@ -118,12 +118,13 @@ export function LeaveRequestList() {
     try {
       const [date, startTime] = appointment.appointmentsTime.split("T");
       const [, endTime] = appointment.appointmentEndTime.split("T");
-
+      const serviceId = appointment.serviceId
       const payload: StaffReplacementProps = {
         branchId: branchId,
         startTime,
         endTime,
         date,
+        serviceId
       };
 
 

@@ -145,9 +145,10 @@ interface StaffReplacementProps {
   startTime: string
   endTime: string
   date: string
+  serviceId: number
 }
 const staffReplacement = async (data: StaffReplacementProps): Promise<ResponseProps> => {
-  return await get(`Staff/replacement-staff?branchId=${data.branchId}&startTime=${data.startTime}&endTime=${data.endTime}&date=${data.date}`)
+  return await get(`Staff/replacement-staff?branchId=${data.branchId}&startTime=${data.startTime}&endTime=${data.endTime}&serviceId=${data.serviceId}&date=${data.date}`)
 }
 
 interface updateWorkScheduleProps {
