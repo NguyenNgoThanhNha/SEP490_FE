@@ -7,7 +7,7 @@ import {
   ExitIcon,
   ChatBubbleIcon,
 } from "@radix-ui/react-icons";
-import { AlignJustify, BookPlus, Building, Calendar, CirclePlus, Clock, List, NotebookText, Package, Package2, PackagePlus, PlusCircle, SettingsIcon, ShoppingBag, SquareMenu, TicketIcon, TicketPercent, TicketPlus } from "lucide-react";
+import { AlignJustify, BookPlus, Building, Calendar, CirclePlus, Clock, List, NotebookText, Package, Package2, PackagePlus, PlusCircle, SettingsIcon, ShoppingBag, TicketIcon, TicketPlus } from "lucide-react";
 import { MenuItemComponent } from "@/components/molecules/MenuItem";
 import { useTranslation } from "react-i18next";
 import solace from "@/assets/images/solace.png";
@@ -84,14 +84,14 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         //   ],
         // },
         // { label: t("customer"), icon: <PersonIcon />, path: "/customers-management" },
-        {
-          label: t("promote"),
-          icon: <TicketPercent />,
-          submenu: [
-            { label: t("promote"), icon: <TicketPercent />, path: "/promotions-management" },
-            { label: t("addPromote"), icon: <TicketPlus/>, path: "/create-promote" },
-          ],
-        },
+        // {
+        //   label: t("promote"),
+        //   icon: <TicketPercent />,
+        //   submenu: [
+        //     { label: t("promote"), icon: <TicketPercent />, path: "/promotions-management" },
+        //     { label: t("addPromote"), icon: <TicketPlus/>, path: "/create-promote" },
+        //   ],
+        // },
         {
           label: t("branch"),
           icon: <Building />,
@@ -100,7 +100,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
             { label: t("addBranch"), icon: <CirclePlus />, path: "/add-branch" },
           ],
         },
-        { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
+        // { label: t("manageCateSer"), icon: <SquareMenu />, path: "/service-cate-management" },
         
         {
           label: t("voucher"),
@@ -119,7 +119,7 @@ const getMenuItemsByRole = (roleID: number, t: (key: string) => string): MenuIte
         { label: t("manageOrder"), icon: <NotebookText/>, path: "/branch-order-management" },
         { label: t("manageCalendar"), icon: <Clock />, path: "/staff-calendar" },
         { label: t("manageBranchRoutineOrder"), icon: <List />, path: "/branch-routine-order" },
-        { label: t("manageBranchPromotion"), icon: <TicketIcon />, path: "/branch-promotion-management" },
+        // { label: t("manageBranchPromotion"), icon: <TicketIcon />, path: "/branch-promotion-management" },
         { label: t("manageBranchProduct"), icon: <Package2 />, path: "/branch-product-management" },
         { label: t("manageBranchService"), icon: <ShoppingBag />, path: "/branch-service-management" },
         { label: t("manageSchedule"), icon: <Calendar />, path: "/schedule-management" },

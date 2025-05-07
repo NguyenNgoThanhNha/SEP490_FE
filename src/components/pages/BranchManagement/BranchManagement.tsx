@@ -102,8 +102,7 @@ const BranchManagementPage = () => {
     { label: t("branchaddress"), key: "branchAddress", searchable: true },
     { label: t("branchphone"), key: "branchPhone", searchable: true },
     { label: t("district"), key: "district" },
-    { label: t("wardCode"), key: "wardCode" },
-    { label: t("Status"), key: "status" },
+    { label: t("ward"), key: "wardCode" },
   ];
 
   return (

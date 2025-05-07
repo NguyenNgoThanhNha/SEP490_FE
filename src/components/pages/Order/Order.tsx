@@ -28,13 +28,12 @@ const OrderManagementPage = () => {
   const [pageSize, setPageSize] = useState(6)
   const [totalPages, setTotalPages] = useState(0)
 
-  const fetchOrders = async (PageIndex: number, PageSize: number, OrderType?: string) => {
+  const fetchOrders = async (PageIndex: number, PageSize: number) => {
     try {
       setLoading(true)
       const response = await orderService.getAllOrder({
         PageIndex,
         PageSize,
-        OrderType: OrderType
       })
 
       if (response?.success) {
