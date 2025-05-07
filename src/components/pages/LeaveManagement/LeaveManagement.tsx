@@ -5,13 +5,13 @@ import staffService from "@/services/staffService"
 import type { TAppointment } from "@/types/appoinment.type"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/atoms/ui/tabs"
 import { AffectedAppointmentsModal } from "./AffectedAppointment"
-import { StaffReplaceModal } from "@/components/organisms/LeaveRequest/StaffReplace"
 import { MonthSelector } from "@/components/organisms/LeaveRequest/MonthSelect"
 import { LeaveRequestCard } from "@/components/organisms/LeaveRequest/LeaveRequestCard"
 import appoinmentService from "@/services/appoinmentService"
 import toast from "react-hot-toast"
 import { TStaff } from "@/types/staff.type"
 import { useTranslation } from "react-i18next"
+import { StaffModalController } from "@/components/organisms/LeaveRequest/StaffSwap"
 
 export interface StaffLeave {
   leaveDate: string
@@ -38,7 +38,7 @@ export function LeaveRequestList() {
   const [selectedRequest, setSelectedRequest] = useState<StaffLeave | null>(null)
   const [selectedAppointment, setSelectedAppointment] = useState<TAppointment | null>(null)
   const [availableStaff, setAvailableStaff] = useState<TStaff[]>([])
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   useEffect(() => {
     fetchLeaveRequests()
   }, [branchId, selectedMonth])
@@ -91,7 +91,7 @@ export function LeaveRequestList() {
       } else {
         toast.error("cannotRejectLeaveRequest")
       }
-    } catch  {
+    } catch {
       toast.error("errorRejectingLeaveRequest")
     }
   }
@@ -140,7 +140,7 @@ export function LeaveRequestList() {
 
       setShowReplaceModal(true);
       setShowAppointmentsModal(false);
-    } catch  {
+    } catch {
       toast.error(t("cannotLoadAvailableStaff"));
       setAvailableStaff([]);
       setShowReplaceModal(true);
@@ -152,7 +152,7 @@ export function LeaveRequestList() {
     if (!selectedAppointment) return;
 
     if (selectedAppointment.staffId === newStaffId) {
-      toast.error(t("staffAlreadyAssigned")); 
+      toast.error(t("staffAlreadyAssigned"));
       return;
     }
 
@@ -256,14 +256,17 @@ export function LeaveRequestList() {
       )}
 
       {showReplaceModal && selectedAppointment && (
-        <StaffReplaceModal
+        <StaffModalController
           availableStaff={availableStaff}
+          appointment={selectedAppointment} 
+          staffLeaveId={selectedRequest?.id ?? 0} 
           onClose={() => {
             setShowReplaceModal(false)
             setShowAppointmentsModal(true)
           }}
           onReplaceStaff={(newStaffId) => handleReplaceStaff(newStaffId)}
         />
+
       )}
     </div>
   )

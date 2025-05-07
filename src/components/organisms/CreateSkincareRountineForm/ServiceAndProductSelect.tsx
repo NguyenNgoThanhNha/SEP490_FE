@@ -25,7 +25,7 @@ export function ServiceAndProductSelect({ onServiceChange }: Props) {
   const [selectedServices, setSelectedServices] = useState<SelectedService[]>([]);
   const [fetchingProducts, setFetchingProducts] = useState(false);
   const [productOptionsMap, setProductOptionsMap] = useState<Record<number, { label: string; value: number }[]>>({});
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const fetchServices = async (keyword: string) => {
     setFetchingServices(true);
@@ -100,19 +100,13 @@ export function ServiceAndProductSelect({ onServiceChange }: Props) {
     onServiceChange(updatedServices);
   };
 
-  const resetForm = () => {
-    setSelectedServices([]);
-    setProductOptionsMap({});
-    toast.success("Form đã được reset!");
-  };
-
   return (
     <div className="space-y-6">
       <div>
         <Select
           showSearch
           allowClear
-          placeholder={t("searchService")} 
+          placeholder={t("searchService")}
           filterOption={false}
           onSearch={fetchServices}
           notFoundContent={fetchingServices ? <Spin size="small" /> : t("noServiceFound")}
@@ -134,9 +128,10 @@ export function ServiceAndProductSelect({ onServiceChange }: Props) {
                   <label>{t("applyProducts")}:</label>
                   <Select
                     mode="multiple"
+                    filterOption={false}
                     allowClear
                     style={{ width: "100%" }}
-                    placeholder={t("searchAndSelectProducts")} 
+                    placeholder={t("searchAndSelectProducts")}
                     value={service.productIds}
                     onSearch={(keyword) => {
                       console.log("Search keyword:", keyword);
@@ -146,7 +141,7 @@ export function ServiceAndProductSelect({ onServiceChange }: Props) {
                       console.log("Selected productIds:", value);
                       handleProductChange(service.serviceId, value);
                     }}
-                    notFoundContent={fetchingProducts ? <Spin size="small" /> : t("noProductFound")} 
+                    notFoundContent={fetchingProducts ? <Spin size="small" /> : t("noProductFound")}
                     options={productOptionsMap[service.serviceId] || []}
                   />
                 </div>
@@ -154,20 +149,13 @@ export function ServiceAndProductSelect({ onServiceChange }: Props) {
                   className="mt-2 bg-[#516d19] rounded-full"
                   onClick={() => handleRemoveService(service.serviceId)}
                 >
-                  {t("removeService")} 
+                  {t("removeService")}
                 </Button>
               </CardContent>
             </Card>
           ))}
         </div>
       )}
-
-      <Button
-        className="mt-4 bg-[#516d19] rounded-full"
-        onClick={resetForm}
-      >
-        Hoàn tất
-      </Button>
     </div>
   );
 }
