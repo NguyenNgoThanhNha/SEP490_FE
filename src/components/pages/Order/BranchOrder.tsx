@@ -104,7 +104,7 @@ const BranchOrderManagementPage = () => {
       key: "paymentMethod",
       render: (status: string) => (
         <Badge variant={status?.toUpperCase() === "PAYOS" ? "active" : "inactive"}>
-          {t(status.toLowerCase())}
+          {t(status)}
         </Badge>
       ),
     },

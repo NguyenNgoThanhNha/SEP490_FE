@@ -15,7 +15,7 @@ export function ProductList({ products }: ProductListProps) {
     <div className="space-y-3">
       <h4 className="font-medium flex items-center gap-2">
         <Package className="h-4 w-4 text-muted-foreground" />
-        {t("title")} {/* "Products" */}
+        {t("products")} 
       </h4>
       <div className="grid gap-3">
         {products.map((item) => (
@@ -28,7 +28,6 @@ export function ProductList({ products }: ProductListProps) {
               <div className="flex gap-4 text-sm text-muted-foreground mt-1">
                 <span>{t("quantity")}: {item.quantity}</span>
                 <span>{t("price")}: {formatPrice(item.unitPrice)} VND</span>
-                <span>{t("total")}: {formatPrice(item.quantity * item.unitPrice)} VND</span>
               </div>
             </div>
             <Badge

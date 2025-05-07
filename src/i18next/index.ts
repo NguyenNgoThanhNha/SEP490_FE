@@ -524,6 +524,8 @@ const resources = {
       saveError: 'Unable to save feedback. Please try again.',
       saveErrorUnexpected: 'An error occurred while saving feedback.',
       userroutinetracking: 'User Routine Tracking',
+      ProductAndService: 'Product and Service',
+      manageBranchRoutineOrder: 'Manage Branch Routine Order'
     }
   },
   vi: {
@@ -548,6 +550,7 @@ const resources = {
       manageBlog: 'Quản lý bài đăng',
       createBlog: 'Tạo bài đăng',
       order: 'Đơn hàng',
+      ProductAndService: 'Sản phẩm và dịch vụ',
       manageOrder: 'Quản lý đơn hàng',
       createOrder: 'Tạo đơn hàng',
       manageEmployee: 'Quản lý nhân sự',
@@ -1049,7 +1052,17 @@ const resources = {
       saveButton: 'Lưu phản hồi',
       savedSuccess: 'Phản hồi đã được lưu thành công!',
       saveError: 'Không thể lưu phản hồi. Vui lòng thử lại.',
-      saveErrorUnexpected: 'Đã xảy ra lỗi khi lưu phản hồi.'
+      saveErrorUnexpected: 'Đã xảy ra lỗi khi lưu phản hồi.',
+      manageBranchRoutineOrder: 'Quản lý đơn hàng quy trình chi nhánh',
+      running: 'Đang chạy',
+      done: "Hoàn tất",
+      error: 'Lỗi',
+      cronjobadminpanel: 'Bảng điều khiển quản lý cronjob',
+      cronjobdes: "Quản lý và chạy thủ công các tác vụ tự động của hệ thống",
+      task: "Tác vụ",
+      runagain: "Chạy lại",
+      run: 'Chạy',
+      Order: 'Đơn hàng',
     }
   }
 }
