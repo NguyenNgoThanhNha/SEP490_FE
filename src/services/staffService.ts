@@ -155,7 +155,6 @@ interface updateWorkScheduleProps {
   staffReplaceId: number;
   shiftId: number;
   workDate: string;
-  dayOfWeek: number;
 }
 const updateWorkSchedule = async (data: updateWorkScheduleProps): Promise<ResponseProps> => {
   return await patch(`Staff/update-work-schedules-for-staff-leave`, data)
