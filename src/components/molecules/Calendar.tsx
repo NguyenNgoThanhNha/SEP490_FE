@@ -1,14 +1,14 @@
 import React from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
-import "moment/locale/vi"; // Import ngôn ngữ tiếng Việt cho moment
+import "moment/locale/vi"; // Ensure Vietnamese locale is imported
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Event } from "@/types/staff-calendar.type";
 import { Loader2 } from "lucide-react";
 import CustomToolbar from "./Toolbar";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next"; // Uncomment if using i18next for translations
 
-moment.locale("vi"); // Thiết lập ngôn ngữ mặc định cho moment
+moment.locale("vi"); // Set moment to use Vietnamese locale
 const localizer = momentLocalizer(moment);
 
 interface CustomCalendarProps {
@@ -17,22 +17,26 @@ interface CustomCalendarProps {
   loading: boolean;
 }
 
-const CustomCalendar: React.FC<CustomCalendarProps> = ({ events, onEventClick, loading }) => {
-  const { t } = useTranslation();
+const CustomCalendar: React.FC<CustomCalendarProps> = ({
+  events,
+  onEventClick,
+  loading,
+}) => {
+  // const { t } = useTranslation(); // Uncomment if using i18next
 
   const messages = {
-    today: t("today"),
-    previous: t("previous"),
-    next: t("next"),
-    month: t("month"),
-    week: t("week"),
-    day: t("day"),
-    agenda: t("agenda"),
-    date: t("date"),
-    time: t("time"),
-    event: t("event"),
-    noEventsInRange: t("noEventsInRange"),
-    showMore: (count: number) => t("showMore", { count }),
+    today: "Hôm nay",
+    previous: "Trước",
+    next: "Tiếp",
+    month: "Tháng",
+    week: "Tuần",
+    day: "Ngày",
+    agenda: "Lịch biểu",
+    date: "Ngày",
+    time: "Giờ",
+    event: "Sự kiện",
+    noEventsInRange: "Không có sự kiện nào trong khoảng thời gian này",
+    showMore: (count: number) => `+${count} sự kiện`,
   };
 
   return (
@@ -43,6 +47,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ events, onEventClick, l
         </div>
       ) : (
         <Calendar
+          culture={"vi-VN"} // Set culture to Vietnamese
           localizer={localizer}
           events={events}
           startAccessor="start"
@@ -55,7 +60,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ events, onEventClick, l
           components={{
             toolbar: CustomToolbar,
           }}
-          messages={messages}
+          messages={messages} // Use the defined messages for localization
           style={{
             height: "100%",
             width: "100%",
@@ -81,19 +86,23 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ events, onEventClick, l
               fontSize: "14px",
               color: "#333",
               borderRadius: "8px",
-              backgroundColor: moment(date).isSame(moment(), "month") ? "#F5F5DC" : "transparent",
+              backgroundColor: moment(date).isSame(moment(), "month")
+                ? "#F5F5DC"
+                : "transparent",
             },
           })}
           formats={{
-            dayFormat: (date) => moment(date).format("dddd DD"), // Hiển thị "Thứ Hai 13"
-            weekdayFormat: (date) => moment(date).format("dddd"), // Hiển thị "Thứ Hai"
+            weekdayFormat: (date) => moment(date).format("dddd"), // Thứ hai, Thứ ba,...
+            dayFormat: (date) => moment(date).format("dddd, DD/MM"),
+            dayHeaderFormat: (date) => moment(date).format("dddd, DD/MM"),
             dayRangeHeaderFormat: ({ start, end }) =>
-              `${moment(start).format("DD/MM")} - ${moment(end).format("DD/MM")}`, // Hiển thị "27/04 - 03/05"
-            timeGutterFormat: (date) => moment(date).format("HH:mm"), // Hiển thị "09:00", "10:00", v.v.
+              `${moment(start).format ("DD/MM")} - ${moment(end).format("DD/MM")}`,
+            timeGutterFormat: (date) => moment(date).format("HH:mm"),
           }}
-          min={new Date(2024, 0, 1, 9, 0)} // Bắt đầu từ 9:00 sáng
-          max={new Date(2024, 0, 1, 21, 0)} // Kết thúc lúc 21:00 tối
-          scrollToTime={new Date(2024, 0, 1, 9, 0)} // Cuộn đến 9:00 sáng
+          
+          min={new Date(2024, 0, 1, 9, 0)}
+          max={new Date(2024, 0, 1, 21, 0)}
+          scrollToTime={new Date(2024, 0, 1, 9, 0)}
         />
       )}
     </div>
