@@ -139,7 +139,7 @@ export function SkincareStepForm({ routineData }: { routineData: TRoutine }) {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleFinish} className="w-full">
+              <Button onClick={handleFinish} className="w-full bg-[#516d19] rounded-full" disabled={loading}>
                 {t("finish")}
               </Button>
             </CardFooter>
