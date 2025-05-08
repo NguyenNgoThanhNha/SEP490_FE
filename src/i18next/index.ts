@@ -1051,6 +1051,7 @@ const resources = {
       nofeedbackprovidedyet: 'Chưa có phản hồi nào',
       hideDetails: 'Ẩn chi tiết',
       showDetails: 'Hiện chi tiết',
+      routineUpdatedSuccess: "Cập nhật gói liệu trình thành công!",
       addFeedback: 'Thêm phản hồi',
       title: 'Phản hồi của bạn',
       placeholder: 'Chia sẻ cảm nhận của bạn về bước này...',
