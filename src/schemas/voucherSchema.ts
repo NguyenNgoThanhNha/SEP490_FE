@@ -8,6 +8,8 @@ export const VoucherSchema = z
     discountAmount: z.number(),
     validFrom: z.string(),
     validTo: z.string(),
+    minOrderAmount: z.number().optional(),
+    requirePoint: z.number().optional(),
     status: z.literal('Active'),
     remainQuantity: z.number().optional(),
   })

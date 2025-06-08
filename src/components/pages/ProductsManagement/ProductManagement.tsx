@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Edit, Trash } from "lucide-react";
-import ReusableAreaChart from "@/components/molecules/AreaChart";
-import RechartsPieChart from "@/components/molecules/PieChart";
 import { Table } from "@/components/organisms/Table/Table";
 import productService from "@/services/productService"; 
 import { formatPrice } from "@/utils/formatPrice";
@@ -88,7 +86,7 @@ const ProductManagementPage = () => {
   const headers = [
     { label: t("Image"), key: "image", hiding: true },
     { label: t("Product"), key: "productName" },
-    { label: t("Price"), key: "price", render: (price: number) => formatPrice(price), sortable: true },
+    { label: t("Price"), key: "price", render: (price: number) => `${formatPrice(price)} VND`, sortable: true },
     { label: t("Quantity"), key: "quantity", sortable: true },
     { 
       label: t("category"), 
@@ -143,29 +141,7 @@ const ProductManagementPage = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <div className="flex gap-6 mb-8">
-        <div className="flex-1">
-          <ReusableAreaChart
-            title="Product used"
-            showTotal={true}
-            chartData={[
-              { label: "Jan", value: 2000 },
-              { label: "Feb", value: 1150 },
-              { label: "Mar", value: 1800 },
-              { label: "Apr", value: 900 },
-            ]}
-          />
-        </div>
-        <div className="flex-1">
-          <RechartsPieChart
-            title="Type distribution"
-            subtitle="Product Type"
-            labels={["Serum", "Toner", "Others"]}
-            data={[59, 20, 21]}
-          />
-        </div>
-      </div>
-
+    
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}
@@ -195,7 +171,7 @@ const ProductManagementPage = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="whitespace-nowrap text-gray-400 text-sm">
-              Number of rows per page
+              {t("Numberofrowsperpage")}
             </span>
             <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
               {[5, 10, 15, 20].map((size) => (

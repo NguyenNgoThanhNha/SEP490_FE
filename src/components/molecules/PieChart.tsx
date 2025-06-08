@@ -10,9 +10,8 @@ type PieChartProps = {
 
 const RechartsPieChart: React.FC<PieChartProps> = ({ title, subtitle, labels, data }) => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-
-  const COLORS = ["#4A3AFF", "#2D5BFF", "#93AAFD"];
-  const HOVER_COLORS = ["#ef4444", "#3b82f6", "#10b981"];
+  const COLORS = ["#A3C653", "#7DA53D", "#5E8B2D"]; 
+  const HOVER_COLORS = ["#88B04B", "#6C9A34", "#4C7A1F"];
   const total = data.reduce((sum, value) => sum + value, 0);
 
   const chartData = labels.map((label, index) => ({

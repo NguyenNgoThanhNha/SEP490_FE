@@ -13,19 +13,20 @@ import { Loader } from "lucide-react";
 import categoryService from "@/services/categoryService";
 import { TCate } from "@/types/category.type";
 import { useTranslation } from "react-i18next";
+import FileUpload from "@/components/atoms/ui/image-upload";
 
 interface ProductFormProps {
   mode: "create" | "update";
   initialData?: ProductType;
-  onSubmit: (data: ProductType) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<void>;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [categories, setCategories] = useState<TCate[] | null>(null);
-  const [, setImages] = useState<string[]>(initialData?.images || []);
-  const {t} = useTranslation();
+  const [, setImages] = useState<string[] | File[]>(initialData?.images || []);
+  const { t } = useTranslation();
 
   const form = useForm<ProductType>({
     resolver: zodResolver(ProductSchema),
@@ -34,44 +35,40 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
       productDescription: "",
       price: 0,
       dimension: "",
-      volume: 0,
       quantity: 0,
-      discount: 0,
       categoryId: 0,
       companyId: 1,
       images: [],
-      skintypesuitable: "", 
+      brand: "",
     },
   });
   const handleFormSubmit = async (data: ProductType) => {
+    console.log("Submitting form:", data);
     setLoading(true);
+
     try {
       const formData = new FormData();
-      formData.append("productName", data.productName);
-      formData.append("productDescription", data.productDescription);
-      formData.append("price", data.price.toString());
-      formData.append("volume", data.volume.toString());
-      formData.append("quantity", data.quantity.toString());
-      formData.append("discount", data.discount.toString());
-      formData.append("categoryId", data.categoryId.toString());
-      formData.append("companyId", data.companyId.toString());
-      formData.append("skintypesuitable", data.skintypesuitable);
-  
-      if (data.images && data.images.length > 0) {
-        formData.append("image", data.images[0]); 
-      }
-  
-      await onSubmit(formData as any); 
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === "images") {
+          if (value && Array.isArray(value) && value.length > 0) {
+            value.forEach((file) => formData.append("images", file));
+          }
+        } else {
+          formData.append(key, value as string | Blob);
+        }
+      });
+
+      await onSubmit(formData);
       navigate("/products-management");
     } catch {
-      toast.error("Error submitting form:");
+      toast.error("Error submitting form");
     } finally {
       setLoading(false);
     }
   };
-  
-  useEffect(() => {
+  console.log("Errors:", form.formState.errors);
 
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await categoryService.getAllCate({ page: 1, pageSize: 10 });
@@ -86,18 +83,20 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
     };
     fetchCategories();
   }, []);
-  useEffect (() => {
-    if(initialData?.images) {
-      setImages(initialData.images);
+  useEffect(() => {
+    if (initialData?.images) {
+      setImages(initialData.images);               
       form.setValue("images", initialData.images);
     }
   }, [initialData]);
-  
-  const handleImageUpload = (file: File) => {
-    setImages([URL.createObjectURL(file)]); 
-    form.setValue("images", file); 
+
+  const handleImageUpload = (files: File[]) => {
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImages(previews);
+    form.setValue("images", files);
   };
-  
+
+
   console.log("Current images:", form.watch("images"));
 
   return (
@@ -107,13 +106,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? t("CreateProduct")  : t("UpdateProduct")}
+                {mode === "create" ? t("CreateProduct") : t("UpdateProduct")}
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-7 gap-6">
             <div className="col-span-4 space-y-6">
-              <ImageUploadOne onImageUpload={handleImageUpload} multiple={true}  initialData={initialData?.images} />
+            <FileUpload onImageUpload={handleImageUpload} multiple={true} initialData={initialData?.images} />
+
               <FormField
                 control={form.control}
                 name="productName"
@@ -142,16 +142,34 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
               />
               <FormField
                 control={form.control}
-                name="volume"
+                name="dimension"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("Dimension")} (ml)</FormLabel>
+                    <FormLabel>{t("Dimension")}</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
+                        type="text"
                         placeholder={t("Entervolume")}
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        onChange={(e) => field.onChange((e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="brand"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("brand")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder={t("Enterbrand")}
+                        {...field}
+                        onChange={(e) => field.onChange((e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -168,6 +186,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                     <FormLabel>{t("Price")} (VND)</FormLabel>
                     <FormControl>
                       <Input
+                        {...field}
+
                         type="text"
                         placeholder={t("Enterprice")}
                         onChange={(e) => field.onChange(Number(e.target.value.replace(/\D/g, '')))}
@@ -188,24 +208,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                       <Input
                         type="number"
                         placeholder={t("Enterquantity")}
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="discount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('Discount')} (%)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder={t("Enterdiscount")}
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
@@ -244,6 +246,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                   </FormItem>
                 )}
               />
+
             </div>
           </CardContent>
         </Card>
@@ -253,7 +256,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
             onClick={() => navigate("/products-management")}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
-           {t('Cancel')} 
+            {t('Cancel')}
           </button>
           <button
             type="submit"
@@ -265,7 +268,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode, initialData, onSubmit }
                 <Loader className="animate-spin h-5 w-5 text-white" />
               </div>
             ) : (
-              mode === "create" ? t("CreateProduct")  : t("UpdateProduct")
+              mode === "create" ? t("CreateProduct") : t("UpdateProduct")
             )}
           </button>
         </div>

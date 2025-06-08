@@ -14,7 +14,7 @@ import { RootState } from "@/store";
 import { useTranslation } from "react-i18next";
 
 const BranchPromotionManagementPage = () => {
-  const [branchPromtions, setBranchPromtions] = useState<TBranchPromotion[]>([]);
+  const [branchPromotions, setBranchPromotions] = useState<TBranchPromotion[]>([]);
   const [, setLoading] = useState(false);
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -23,7 +23,7 @@ const BranchPromotionManagementPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const fetchBranchPromotion = async (branchId: number, page: number, pageSize: number) => {
     try {
@@ -31,37 +31,35 @@ const BranchPromotionManagementPage = () => {
       const response = await branchPromotionService.getAllBranchPromotion({ branchId, page, pageSize });
       if (response?.success) {
         const activePromotions = response.result?.data.filter((item: TBranchPromotion) => item.status === "Active") || [];
-        setBranchPromtions(activePromotions);
+        setBranchPromotions(activePromotions);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || "Failed to fetch branch promotions.");
+        toast.error(response.result?.message || t("fetchError"));
       }
     } catch {
-      toast.error("Failed to fetch branch promotions.");
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
   };
 
-
-
   const handleDelete = (id: number) => {
     Modal.confirm({
-      title: "Are you sure?",
-      content: "This action cannot be undone.",
-      okText: "Yes, delete",
-      cancelText: "Cancel",
+      title: t("confirmDeleteTitle"),
+      content: t("confirmDeleteContent"),
+      okText: t("confirmDeleteOk"),
+      cancelText: t("confirmDeleteCancel"),
       onOk: async () => {
         try {
           const response = await branchPromotionService.deleteBranchPromotion(id);
           if (response?.success) {
-            toast.success("Branch Promotion deleted successfully.");
-            setBranchPromtions(prev => prev.filter(item => item.id !== id));
+            toast.success(t("deleteSuccess"));
+            setBranchPromotions((prev) => prev.filter((item) => item.id !== id));
           } else {
-            toast.error(response.result?.message || "Failed to delete branch promotion.");
+            toast.error(response.result?.message || t("deleteError"));
           }
         } catch {
-          toast.error("Failed to delete branch promotion.");
+          toast.error(t("deleteError"));
         }
       },
     });
@@ -73,7 +71,7 @@ const BranchPromotionManagementPage = () => {
 
   const handlePageChange = (newPage: number) => {
     if (!branchId) {
-      toast.error("Branch ID is required!");
+      toast.error(t("branchIdRequired"));
       return;
     }
 
@@ -102,33 +100,32 @@ const BranchPromotionManagementPage = () => {
       render: (value: string) => (
         <img
           src={value}
-          alt="Promotion"
+          alt={t("promotionImage")}
           style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "5px" }}
         />
-      )
+      ),
     },
     { label: t("PromotionName"), key: "promotion.promotionName" },
     {
       label: t("Discount"),
       key: "promotion.discountPercent",
       sortable: true,
-      render: (value: number) => `${value}%`
+      render: (value: number) => `${value}%`,
     },
     {
       label: t("StartDate"),
       key: "promotion.startDate",
       sortable: true,
       render: (value: string) =>
-        value ? format(new Date(value), "dd/MM/yyyy HH:mm") : "Invalid Date"
+        value ? format(new Date(value), "dd/MM/yyyy HH:mm") : t("invalidDate"),
     },
     {
       label: t("EndDate"),
       key: "promotion.endDate",
       sortable: true,
       render: (value: string) =>
-        value ? format(new Date(value), "dd/MM/yyyy HH:mm") : "Invalid Date"
-    }
-
+        value ? format(new Date(value), "dd/MM/yyyy HH:mm") : t("invalidDate"),
+    },
   ];
 
   const renderPagination = () => {
@@ -182,7 +179,7 @@ const BranchPromotionManagementPage = () => {
           className="px-4 py-1 bg-[#516d19] text-white rounded-lg hover:bg-green-700 ml-auto"
           onClick={() => setIsModalOpen(true)}
         >
-          Add Promotion
+          {t("addPromote")}
         </button>
       </div>
       <AddPromotionModal
@@ -194,12 +191,12 @@ const BranchPromotionManagementPage = () => {
         <Table
           headers={headers}
           selectable={true}
-          data={branchPromtions.length > 0 ? branchPromtions : []}
+          data={branchPromotions.length > 0 ? branchPromotions : []}
           badgeConfig={{
             key: "status",
             values: {
-              Active: { label: "Active", color: "green", textColor: "white" },
-              SoldOut: { label: "Expired", color: "red", textColor: "white" },
+              Active: { label: t("active"), color: "green", textColor: "white" },
+              Expired: { label: t("expired"), color: "red", textColor: "white" },
             },
           }}
           actions={(row) => (
@@ -219,12 +216,12 @@ const BranchPromotionManagementPage = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="whitespace-nowrap text-gray-400 text-sm">
-              Number of rows per page
+              {t("Numberofrowsperpage")}
             </span>
             <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
               {[5, 10, 15, 20].map((size) => (
                 <Select.Option key={size} value={size}>
-                  {size} items
+                  {size} {t("items")}
                 </Select.Option>
               ))}
             </Select>
@@ -232,11 +229,11 @@ const BranchPromotionManagementPage = () => {
           <Pagination className="flex">
             <PaginationContent>
               <PaginationPrevious onClick={() => handlePageChange(page - 1)} isDisabled={page === 1}>
-                Prev
+                {t("Prev")}
               </PaginationPrevious>
               {renderPagination()}
               <PaginationNext onClick={() => handlePageChange(page + 1)} isDisabled={page === totalPages}>
-                Next
+                {t("Next")}
               </PaginationNext>
             </PaginationContent>
           </Pagination>

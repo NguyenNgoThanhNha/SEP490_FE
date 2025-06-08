@@ -88,7 +88,7 @@ const BranchServiceDetail = () => {
             price: branchService.service?.price ?? 0,
             duration: branchService.service?.duration?? "",
             status: branchService.status,
-            steps: branchService.service.steps ?? ""
+            steps: branchService.service.steps ?? []
           }}
           onSubmit={(values) => handleUpdate(values)}
         />

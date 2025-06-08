@@ -3,6 +3,7 @@ export type TSlotWorking  ={
   staffName: string,
   slots: [
     {
+      status: unknown
       workDate: string,
       dayOfWeek: number,
       shiftId: number,

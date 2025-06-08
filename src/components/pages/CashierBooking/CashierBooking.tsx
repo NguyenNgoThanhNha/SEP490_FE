@@ -2,25 +2,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import appoinmentService from "@/services/appoinmentService";
 import BookingForm from "@/components/organisms/BookingStep/Step1";
+import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next"; // Import hook i18next
 
 interface AppointmentData {
     userId: number;
     staffId: number[];
     serviceId: number[];
     branchId: number;
-    appointmentsTime: string[];
+    appointmentsTime: string;
     notes: string;
     status: string;
     voucherId?: number;
 }
 
 const BookingPage: React.FC = () => {
+    const { t } = useTranslation(); 
     const [, setOrderId] = useState<number | null>(null);
     const [, setAppointmentData] = useState<AppointmentData | null>(null);
     const navigate = useNavigate();
 
-    const onSubmit = async (data) => {
-
+    const onSubmit = async (data: AppointmentData) => {
         try {
             const response = await appoinmentService.createAppointment(data);
 
@@ -28,13 +30,14 @@ const BookingPage: React.FC = () => {
                 const orderId = response.result.data;
                 setOrderId(orderId);
                 setAppointmentData(data);
-                navigate("/checkout", { state: { orderId, appointmentData: data } });
+                navigate("/checkout", { state: { orderId } });
+                toast.success(t("appointmentCreated")); 
             } else {
-                alert("Failed to create appointment. Please try again.");
+                toast.error(t("appointmentCreationFailed")); 
             }
         } catch (error) {
             console.error("Error creating appointment", error);
-            alert("An error occurred while booking the appointment.");
+            toast.error(t("appointmentCreationError")); 
         }
     };
 

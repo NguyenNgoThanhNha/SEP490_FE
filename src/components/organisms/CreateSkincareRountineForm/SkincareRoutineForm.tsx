@@ -1,41 +1,26 @@
-import {
-  Card,
-  CardContent,
-} from "@/components/atoms/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/atoms/ui/form";
-import { Input } from "@/components/atoms/ui/input";
-import { Loader } from "lucide-react";
-import toast from "react-hot-toast";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/atoms/ui/select";
-import skincareRoutineService from "@/services/skincareRoutineService";
-import { SkincareRoutineSchema, SkincareRoutineType } from "@/schemas/skincareRoutineSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SkincareRoutineSchema, SkincareRoutineType } from "@/schemas/skincareRoutineSchema";
+import skincareRoutineService from "@/services/skincareRoutineService";
 import { TRoutine } from "@/types/routine.type";
+import toast from "react-hot-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/atoms/ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/ui/form";
+import { Input } from "@/components/atoms/ui/input";
+import TextArea from "antd/es/input/TextArea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/ui/select";
+import { Button } from "@/components/atoms/ui/button";
+import { useTranslation } from "react-i18next";
 
 const SkincareRoutineForm = ({
   onCreated,
 }: {
   onCreated: (routine: TRoutine) => Promise<void>;
 }) => {
+  const { t } = useTranslation();
   const [skinTypes, setSkinTypes] = useState<string[]>([]);
-  const [selectedSkinTypes, setSelectedSkinTypes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isRoutineCreated, setIsRoutineCreated] = useState(false);
 
   const form = useForm<SkincareRoutineType>({
     resolver: zodResolver(SkincareRoutineSchema),
@@ -44,13 +29,9 @@ const SkincareRoutineForm = ({
       description: "",
       totalSteps: 0,
       totalPrice: 0,
-      targetSkinTypes: []
+      targetSkinTypes: [],
     },
   });
-
-  useEffect(() => {
-    form.setValue("targetSkinTypes", selectedSkinTypes);
-  }, [selectedSkinTypes]);
 
   useEffect(() => {
     const fetchSkinTypes = async () => {
@@ -60,185 +41,170 @@ const SkincareRoutineForm = ({
           setSkinTypes(res.result?.data || []);
         }
       } catch {
-        toast.error("Không lấy được danh sách loại da");
+        toast.error(t("fetchSkinTypesError"));
       }
     };
     fetchSkinTypes();
-  }, []);
+  }, [t]);
 
   const handleFormSubmit = async (data: SkincareRoutineType) => {
-    if (selectedSkinTypes.length === 0) {
-      toast.error("Vui lòng chọn ít nhất 1 loại da phù hợp");
+    if (data.targetSkinTypes.length === 0) {
+      toast.error(t("selectAtLeastOneSkinType"));
       return;
     }
 
     setLoading(true);
     try {
-      const payload = {
-        ...data,
-        targetSkinTypes: selectedSkinTypes,
-      };
-
-      const res = await skincareRoutineService.createSkincareRoutine(payload);
+      const res = await skincareRoutineService.createSkincareRoutine(data);
 
       if (res.success) {
-        toast.success("Tạo skincare routine thành công!");
-        setIsRoutineCreated(true);
+        toast.success(t("createRoutineSuccess"));
         onCreated(res.result?.data);
         form.reset();
       } else {
-        toast.error("Tạo skincare routine thất bại");
+        toast.error(t("createRoutineError"));
       }
     } catch (error) {
       console.error(error);
-      toast.error("Có lỗi xảy ra khi tạo routine");
+      toast.error(t("unexpectedError"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleFormSubmit)}
-        className="space-y-6"
-      >
+    <div className="container mx-auto py-10 px-4">
+      <div className="max-w-3xl mx-auto">
         <Card>
-          <CardContent className="grid grid-cols-1 gap-6 mt-2">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tên Routine</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nhập tên routine" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <CardHeader>
+            <CardTitle>{t("createRoutineTitle")}</CardTitle>
+            <CardDescription>{t("createRoutineDescription")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("routineName")}</FormLabel>
+                      <FormControl>
+                        <Input placeholder={t("enterRoutineName")} {...field} />
+                      </FormControl>
+                      <FormDescription>{t("routineNameDescription")}</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mô tả</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Mô tả routine" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("description")}</FormLabel>
+                      <FormControl>
+                        <TextArea
+                          placeholder={t("enterRoutineDescription")}
+                          className="min-h-[100px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>{t("routineDescriptionDescription")}</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="totalSteps"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tổng số bước</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min={1}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        const parsed = value === "" ? undefined : parseInt(value, 10);
-                        field.onChange(parsed);
-                      }}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="totalSteps"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("totalSteps")}</FormLabel>
+                        <FormControl>
+                          <Input type="number" min={1} max={10} {...field} />
+                        </FormControl>
+                        <FormDescription>{t("totalStepsDescription")}</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-            <FormField
-              control={form.control}
-              name="totalPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Giá tiền (VND)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min={0}
-                      step={1000}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        const parsed = value === "" ? undefined : parseFloat(value);
-                        field.onChange(parsed);
-                      }}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormItem>
-              <FormLabel>Loại da phù hợp</FormLabel>
-              <Select onValueChange={(value) => {
-                if (!selectedSkinTypes.includes(value)) {
-                  setSelectedSkinTypes((prev) => [...prev, value]);
-                }
-              }}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Chọn loại da" />
-                </SelectTrigger>
-                <SelectContent>
-                  {skinTypes.map((type) => (
-                    <SelectItem value={type} key={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {selectedSkinTypes.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {selectedSkinTypes.map((type) => (
-                    <span
-                      key={type}
-                      className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm cursor-pointer"
-                      onClick={() =>
-                        setSelectedSkinTypes((prev) =>
-                          prev.filter((t) => t !== type)
-                        )
-                      }
-                    >
-                      {type} ✕
-                    </span>
-                  ))}
+                  <FormField
+                    control={form.control}
+                    name="totalPrice"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("totalPrice")}</FormLabel>
+                        <FormControl>
+                          <Input type="number" min={0} step={1000} {...field} />
+                        </FormControl>
+                        <FormDescription>{t("totalPriceDescription")}</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
-              )}
-            </FormItem>
+
+                <FormField
+                  control={form.control}
+                  name="targetSkinTypes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("targetSkinTypes")}</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          if (!field.value.includes(value)) {
+                            field.onChange([...field.value, value]);
+                          }
+                        }}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder={t("selectSkinTypes")} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {skinTypes.map((type) => (
+                            <SelectItem value={type} key={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>{t("targetSkinTypesDescription")}</FormDescription>
+                      <FormMessage />
+                      {field.value.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {field.value.map((type: string) => (
+                            <span
+                              key={type}
+                              className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm cursor-pointer"
+                              onClick={() =>
+                                field.onChange(field.value.filter((t: string) => t !== type))
+                              }
+                            >
+                              {type} ✕
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </FormItem>
+                  )}
+                />
+
+                <Button type="submit" className="w-full bg-[#516d19] rounded-full" disabled={loading}>
+                  {loading ? t("creating") : t("createRoutine")}
+                </Button>
+              </form>
+            </Form>
           </CardContent>
         </Card>
-
-        {!isRoutineCreated && (
-          <div className="flex justify-end space-x-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className="relative rounded-full bg-[#6a9727] text-white px-6 py-2 font-semibold hover:bg-[#55841b] transition disabled:opacity-50"
-            >
-              {loading ? (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Loader className="animate-spin h-5 w-5 text-white" />
-                </div>
-              ) : (
-                "Tạo Routine"
-              )}
-            </button>
-          </div>
-        )}
-      </form>
-    </Form>
+      </div>
+    </div>
   );
 };
 

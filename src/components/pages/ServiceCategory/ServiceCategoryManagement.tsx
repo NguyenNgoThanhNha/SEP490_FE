@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Edit, Trash } from "lucide-react";
 import toast from "react-hot-toast";
-// import RechartsPieChart from "@/components/molecules/PieChart";
 import { Select } from "antd";
 import {
   Pagination,
@@ -16,6 +15,7 @@ import {
 import { Table } from "@/components/organisms/Table/Table";
 import { TServiceCategory } from "@/types/serviceCategory.type";
 import serviceCategory from "@/services/serviceCategory";
+import { useTranslation } from "react-i18next";
 
 const ServicesCateManagementPage = () => {
   const [services, setServices] = useState<TServiceCategory[]>([]);
@@ -24,6 +24,7 @@ const ServicesCateManagementPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
+  const { t } = useTranslation();
 
   const fetchServices = async (page: number, pageSize: number) => {
     try {
@@ -33,10 +34,10 @@ const ServicesCateManagementPage = () => {
         setServices(response.result?.data || []);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || "Failed to fetch services.");
+        toast.error(response.result?.message || t("fetchError"));
       }
     } catch {
-      toast.error("Failed to fetch services.");
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
@@ -44,21 +45,21 @@ const ServicesCateManagementPage = () => {
 
   const handleDelete = (serviceCategoryId: number) => {
     Modal.confirm({
-      title: "Are you sure?",
-      content: "This action cannot be undone.",
-      okText: "Yes, delete",
-      cancelText: "Cancel",
+      title: t("confirmDeleteTitle"),
+      content: t("confirmDeleteContent"),
+      okText: t("confirmDeleteOk"),
+      cancelText: t("confirmDeleteCancel"),
       onOk: async () => {
         try {
           const response = await serviceCategory.deleteServiceCate(serviceCategoryId);
           if (response?.success) {
-            toast.success("Service deleted successfully.");
+            toast.success(t("deleteSuccess"));
             fetchServices(page, pageSize);
           } else {
-            toast.error(response.result?.message || "Failed to delete service.");
+            toast.error(response.result?.message || t("deleteError"));
           }
         } catch {
-          toast.error("Failed to delete service.");
+          toast.error(t("deleteError"));
         }
       },
     });
@@ -86,18 +87,27 @@ const ServicesCateManagementPage = () => {
   }, [page, pageSize]);
 
   const headers = [
-    { label: "Name", key: "name", searchable: true },
+    { label: t("serviceCategoryName"), key: "name", searchable: true },
     {
-      label: "Description",
+      label: t("description"),
       key: "description",
     },
-    // {
-    //   label: "Thumbnail",
-    //   key: "thumbnail",
-    //   render: (thumbnail: string) => <img src={thumbnail} alt="Thumbnail" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
-    // },
     {
-      label: "Status",
+      label: t("Image"),
+      key: "thumbnail",
+      render: (thumbnail: string) => (
+        <img
+          src={thumbnail}
+          onError={(e) => {
+            e.currentTarget.src = "https://i.pinimg.com/736x/36/cc/a8/36cca88b83b1846acf77f17b10ef62dd.jpg";
+          }}
+          alt={t("thumbnail")}
+          style={{ width: "50px", height: "50px", objectFit: "cover" }}
+        />
+      ),
+    },
+    {
+      label: t("Status"),
       key: "status",
       render: (status: string) => (
         <span
@@ -106,26 +116,17 @@ const ServicesCateManagementPage = () => {
             borderRadius: "5px",
             color: status === "Active" ? "darkgreen" : "darkred",
             backgroundColor: status === "Active" ? "#d4edda" : "#f8d7da",
-            fontWeight: "bold"
+            fontWeight: "bold",
           }}
         >
-          {status === "Active" ? "Active" : "Inactive"}
+          {status === "Active" ? t("active") : t("inactive")}
         </span>
-      )
-    }
+      ),
+    },
   ];
+
   return (
     <div className="p-6 min-h-screen">
-      {/* <div className="flex space-x-6">
-        <div className="w-1/2 p-4">
-          <RechartsPieChart
-            title="Type distribution"
-            subtitle="Service Type"
-            labels={["Body", "Facial", "Others"]}
-            data={[59, 20, 21]}
-          />
-        </div>
-      </div> */}
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
           headers={headers}
@@ -147,19 +148,14 @@ const ServicesCateManagementPage = () => {
               </button>
             </>
           )}
-          // filters={[
-          //   {
-          //     key: '', // Specify the key for the filter (e.g., 'duration')
-          //     values: ['60 phút', '75 phút', '90 phút'], // Values to filter by
-          //     type: 'default', // Type can be 'time' or 'default', adjust as needed
-          //   },
-          // ]}
         />
       </div>
       <div className="absolute right-10 mt-3">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <span className="whitespace-nowrap text-gray-400 text-sm">Number of rows per page</span>
+            <span className="whitespace-nowrap text-gray-400 text-sm">
+              {t("Numberofrowsperpage")}
+            </span>
             <Select
               defaultValue={pageSize}
               onChange={handlePageSizeChange}
@@ -167,7 +163,7 @@ const ServicesCateManagementPage = () => {
             >
               {[5, 10, 15, 20].map((size) => (
                 <Select.Option key={size} value={size}>
-                  {size} items
+                  {size} {t("items")}
                 </Select.Option>
               ))}
             </Select>
@@ -178,7 +174,7 @@ const ServicesCateManagementPage = () => {
                 onClick={() => handlePageChange(page - 1)}
                 isDisabled={page === 1}
               >
-                Prev
+                {t("Prev")}
               </PaginationPrevious>
               {Array.from({ length: totalPages }, (_, index) => (
                 <PaginationItem key={index}>
@@ -194,13 +190,12 @@ const ServicesCateManagementPage = () => {
                 onClick={() => handlePageChange(page + 1)}
                 isDisabled={page === totalPages}
               >
-                Next
+                {t("Next")}
               </PaginationNext>
             </PaginationContent>
           </Pagination>
         </div>
       </div>
-
     </div>
   );
 };

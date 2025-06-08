@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/atoms/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/atoms/ui/card";
 import { Form } from "@/components/atoms/ui/form";
@@ -11,48 +11,58 @@ import {
   FormMessage,
 } from "@/components/atoms/ui/form";
 import { Input } from "@/components/atoms/ui/input";
-import { Select } from "antd";
-
+import { Select, message } from "antd";
+import { useTranslation } from "react-i18next";
 import branchService from "@/services/branchService";
 import serviceService from "@/services/serviceService";
 import staffService from "@/services/staffService";
-
 import { TBranch } from "@/types/branch.type";
 import { TService } from "@/types/serviceType";
 import { TStaff } from "@/types/staff.type";
 import { TAppointment } from "@/types/appoinment.type";
-
 import { formatPrice } from "@/utils/formatPrice";
 import RegisterWithPhone from "./RegisterForm";
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import voucherService from "@/services/voucherService";
+import toast from "react-hot-toast";
+import { TVoucher } from "@/types/voucher.type";
 
 const { Option } = Select;
+dayjs.extend(utc);
 
 interface BookingFormProps {
   onSubmit: (data: any) => Promise<void>;
 }
 
-
 const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
-  const [branches, setBranches] = useState<TBranch[]>([]);
+  const { t } = useTranslation();
+  const [, setBranches] = useState<TBranch[]>([]);
   const [services, setServices] = useState<TService[]>([]);
   const [staffs, setStaffs] = useState<Record<number, TStaff[]>>({});
-  const [userId, setUserId] = useState<number | null>(null);
-
+  const [, setUserId] = useState<number | null>(null);
+  const [vouchers, setVouchers] = useState<TVoucher[]>([]);
+  const [selectedVoucher, setSelectedVoucher] = useState<number | null>(null);
+  const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
+  const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
+  const [bonusPoint, setBonusPoint] = useState<number>(0);
+  console.log("bonus point", bonusPoint)
   const form = useForm<TAppointment>({
     defaultValues: {
       name: "",
       phone: "",
-      branchId: undefined,
+      branchId: branchId || 0,
       date: "",
       time: "",
       notes: "",
-      voucher: "",
+      voucher: 0,
       userId: undefined,
       service: [],
     },
   });
 
-  const selectedBranch = useWatch({ control: form.control, name: "branchId" });
   const selectedDate = useWatch({ control: form.control, name: "date" });
   const selectedTime = useWatch({ control: form.control, name: "time" });
   const selectedServices = useWatch({ control: form.control, name: "service" });
@@ -64,56 +74,65 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
   }, []);
 
   useEffect(() => {
-    if (!selectedBranch) return;
+    if (!branchId) return;
     serviceService
       .getAllServiceForBranch({
-        branchId: selectedBranch,
+        branchId: branchId,
         page: 1,
         pageSize: 50,
       })
       .then((res) => setServices(res.result?.data || []));
-  }, [selectedBranch]);
+  }, [branchId]);
+
+  useEffect(() => {
+    voucherService.getAllVoucher({ Status: "Active" })
+      .then((res) => {
+        setVouchers(res.result?.data || []);
+      });
+  }, []);
+
 
   useEffect(() => {
     const fetchStaffs = async () => {
-      if (!selectedBranch || !selectedDate || !selectedTime || selectedServices.length === 0) return;
+      if (!branchId || !selectedDate || !selectedTime || selectedServices.length === 0) return;
 
-      const baseDate = new Date(`${selectedDate}T${selectedTime}`);
+      const baseDate = dayjs(`${selectedDate}T${selectedTime}`);
       let currentTime = baseDate;
 
-      const serviceIds = selectedServices.map((s: any) => s.serviceId);
-      const startTimes: string[] = [];
+      const staffMap: Record<number, TStaff[]> = {};
 
       for (let s of selectedServices) {
-        startTimes.push(currentTime.toISOString());
         const service = services.find((sv) => sv.serviceId === s.serviceId);
-        if (service?.duration) {
-          currentTime = new Date(currentTime.getTime() + service.duration * 60000);
+        if (!service) continue;
+
+        const res = await staffService.getListStaffAvailable({
+          branchId: branchId,
+          serviceId: s.serviceId,
+          workDate: currentTime.format("YYYY-MM-DD HH:mm:ss.SSSSSS"),
+          startTime: currentTime.format("HH:mm:ss"),
+        });
+
+        if (res.success && res.result?.data) {
+          staffMap[s.serviceId] = res.result.data;
+          if (res.result.data.length === 0) {
+            message.warning(t("noStaffForService", { serviceName: service.name }));
+          }
+        } else {
+          staffMap[s.serviceId] = [];
+          message.error(t("errorFetchingStaff", { serviceName: service.name }));
+        }
+
+        if (service.duration) {
+          const durationInMinutes = Number(service.duration);
+          currentTime = currentTime.add(durationInMinutes + 7, "minute");
         }
       }
-
-      const res = await staffService.getStaffFreeInTime({
-        branchId: selectedBranch,
-        serviceIds,
-        startTimes,
-      });
-
-      const staffMap: Record<number, TStaff[]> = {};
-      (res.result?.data || []).forEach((item: any) => {
-        staffMap[item.serviceId] = item.staffs;
-      });
 
       setStaffs(staffMap);
     };
 
     fetchStaffs();
-  }, [selectedBranch, selectedDate, selectedTime, selectedServices, services]);
-
-  useEffect(() => {
-    if (userId) {
-      form.setValue("userId", userId);
-    }
-  }, [userId]);
+  }, [branchId, selectedDate, selectedTime, selectedServices]);
 
   const handleServiceSelect = (selectedIds: number[]) => {
     const currentServices = form.getValues("service");
@@ -128,127 +147,87 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
     form.setValue("service", updated);
   };
 
-  const computeAppointmentTimes = () => {
-    const baseDateTime = new Date(`${selectedDate}T${selectedTime}`);
-    const selectedServices = form.getValues("service");
-    let currentTime = baseDateTime;
-
-    const result = selectedServices.map((s) => {
-      const svc = services?.find((ser) => ser.serviceId === s.serviceId);
-      const newService = {
-        ...s,
-        appointmentTime: currentTime.toISOString(),
-      };
-      if (svc?.duration) {
-        currentTime = new Date(currentTime.getTime() + (svc.duration + 6) * 60000);
-      }
-      return newService;
-    });
-
-    return result;
-  };
-
-
-  const handleSubmit = (data: TAppointment) => {
-    const finalServiceData = computeAppointmentTimes();
-
-    console.log("🔎 finalServiceData", finalServiceData);
-    const branchName = branches.find((b) => b.branchId === data.branchId)?.branchName || "";
-    const customerName = form.getValues("name") || ""; // nếu form có tên
-    const serviceDetails = finalServiceData.map((s) => {
-      const service = services.find((sv) => sv.serviceId === s.serviceId);
-      return {
-        serviceId: s.serviceId,
-        serviceName: service?.name || "",
-        price: service?.price || 0,
-        duration: service?.duration || 0,
-        appointmentTime: s.appointmentTime,
-      };
-    });
-    const staffInfo = finalServiceData.map((s) => {
-      const staff = staffs[s.serviceId]?.find((st) => st.staffId === s.staffId);
-      return {
-        serviceId: s.serviceId,
-        staffId: staff?.staffId || 0,
-        staffName: staff?.staffInfo.userName || "",
-      };
-    });
-
-    const formatted = {
-      userId: data.userId ?? 0,
-      staffId: finalServiceData.map((s) => s.staffId ?? 0),
-      serviceId: finalServiceData.map((s) => s.serviceId ?? 0),
-      branchId: data.branchId ?? 0,
-      appointmentsTime: finalServiceData.map((s) => s.appointmentTime || ""),
-      status: "Pending",
-      notes: data.notes || "",
-      feedback: "",
-      voucherId: data.voucher ? Number(data.voucher) : 0,
-      total: totalPrice,
-      branchName,
-      customerName,
-      serviceDetails,
-      staffInfo,
-    };
-    onSubmit(formatted);
-  };
-
-
   const totalPrice = selectedServices.reduce((sum: number, s: any) => {
     const svc = services.find((sv) => sv.serviceId === s.serviceId);
     return sum + (svc?.price || 0);
   }, 0);
 
+  const discountAmount =
+    vouchers.find((v) => v.voucherId === selectedVoucher)?.discountAmount || 0;
+  const finalPrice = totalPrice - discountAmount;
+  const handleVoucherSelect = (voucherId: number) => {
+    const voucher = vouchers.find((v) => v.voucherId === voucherId);
+
+    if (voucher) {
+      if (bonusPoint < voucher.requirePoint) {
+        toast.error(t("notEnoughPoints")); // Sử dụng khóa dịch
+        return;
+      }
+
+      if (totalPrice < voucher.minOrderAmount) {
+        toast.error(t("orderAmountTooLow")); // Sử dụng khóa dịch
+        return;
+      }
+
+      setSelectedVoucher(voucherId);
+    }
+  };
+  const handleSubmit = (data: TAppointment) => {
+    const payload = {
+      userId: data.userId || 0,
+      staffId: data.service.map((s) => s.staffId || 0),
+      serviceId: data.service.map((s) => s.serviceId || 0),
+      branchId: data.branchId || 0,
+
+      appointmentsTime: data.service.map((s, index) => {
+        const selectedService = services.find((sv) => sv.serviceId === s.serviceId);
+        const duration = selectedService?.duration || 0;
+
+        let appointmentTime = dayjs(`${data.date}T${data.time}`).local();
+
+        // Only add duration if index is greater than 0
+        if (index > 0) {
+          appointmentTime = appointmentTime.add(duration * index, 'minute');
+        }
+
+        return appointmentTime.format('YYYY-MM-DDTHH:mm:ss');
+      }),
+
+
+      status: "Pending",
+      notes: data.notes || "",
+      feedback: "",
+      voucherId: selectedVoucher || 0,
+    };
+
+    console.log("Payload gửi lên API:", payload);
+    onSubmit(payload);
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto shadow-md">
-      <CardHeader className="text-lg font-semibold">Booking Appointment</CardHeader>
+      <CardHeader className="text-lg font-semibold">{t("bookingForm")}</CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <RegisterWithPhone
-              onRegisterSuccess={(id) => {
+              onRegisterSuccess={(id, points) => {
                 setUserId(id);
+                setBonusPoint(points);
                 form.setValue("userId", id);
               }}
             />
-            <FormField
-              control={form.control}
-              name="branchId"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Branch</FormLabel>
-                  <Controller
-                    control={form.control}
-                    name="branchId"
-                    render={({ field }) => (
-                      <Select
-                        placeholder="Select branch"
-                        value={field.value}
-                        onChange={(val) => field.onChange(Number(val))}
-                        style={{ width: "100%" }}
-                      >
-                        {branches.map((branch) => (
-                          <Option key={branch.branchId} value={branch.branchId}>
-                            {branch.branchName}
-                          </Option>
-                        ))}
-                      </Select>
-                    )}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
-            {/* Date and Time */}
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date</FormLabel>
-                    <FormControl><Input type="date" {...field} /></FormControl>
+                    <FormLabel>{t("date")}</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -258,20 +237,20 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
                 name="time"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Time</FormLabel>
-                    <FormControl><Input type="time" {...field} /></FormControl>
+                    <FormLabel>{t("time")}</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-
-            {/* Service Select */}
             <FormItem>
-              <FormLabel>Services</FormLabel>
+              <FormLabel>{t("service")}</FormLabel>
               <Select
                 mode="multiple"
-                placeholder="Select services"
+                placeholder={t("selectServices")}
                 value={selectedServices.map((s: any) => s.serviceId)}
                 onChange={handleServiceSelect}
                 style={{ width: "100%" }}
@@ -282,19 +261,16 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
                   </Option>
                 ))}
               </Select>
-              <p className="text-right font-semibold mt-2">
-                Total: {formatPrice(totalPrice)} VND
-              </p>
             </FormItem>
-
-            {/* Staff per service */}
             {selectedServices.map((s: any, idx: number) => (
               <FormItem key={s.serviceId}>
                 <FormLabel>
-                  Staff for: {services.find((sv) => sv.serviceId === s.serviceId)?.name}
+                  {t("staffForService", {
+                    serviceName: services.find((sv) => sv.serviceId === s.serviceId)?.name,
+                  })}
                 </FormLabel>
                 <Select
-                  placeholder="Select staff"
+                  placeholder={t("selectStaff")}
                   value={s.staffId}
                   onChange={(val) => {
                     const updated = [...form.getValues("service")];
@@ -311,21 +287,40 @@ const BookingForm: React.FC<BookingFormProps> = ({ onSubmit }) => {
                 </Select>
               </FormItem>
             ))}
-
+            <FormItem>
+              <FormLabel>{t("voucher")}</FormLabel>
+              <Select
+                placeholder={t("selectVoucher")}
+                value={selectedVoucher}
+                onChange={(val) => handleVoucherSelect(val ? Number(val) : null)} 
+                style={{ width: "100%" }}
+              >
+                <Option value={null}>{t("noVoucher")}</Option>
+                {vouchers.map((voucher) => (
+                  <Option key={voucher.voucherId} value={voucher.voucherId}>
+                    {voucher.code} - {t("Discount")} {formatPrice(voucher.discountAmount)} VND
+                  </Option>
+                ))}
+              </Select>
+              <p className="text-right font-semibold mt-2">
+                {t("totalPrice")}: {formatPrice(finalPrice)} VND
+              </p>
+            </FormItem>
             <FormField
               control={form.control}
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Note</FormLabel>
-                  <FormControl><Input placeholder="Additional notes" {...field} /></FormControl>
+                  <FormLabel>{t("notes")}</FormLabel>
+                  <FormControl>
+                    <Input placeholder={t("addNotes")} {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <Button type="submit" className="w-full bg-[#516D19]">
-              Book Now
+              {t("bookAppointment")}
             </Button>
           </form>
         </Form>

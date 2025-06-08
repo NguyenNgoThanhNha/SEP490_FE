@@ -10,9 +10,10 @@ export const SkincareStepSchema = z.object({
   ,
   productIds: z.array(z.number()),
   serviceIds: z.array(z.number()),
-  intervalBeforeNextStep: z
-  .number()
-  .min(0, "Thời gian nghỉ phải >= 0"),
+  intervalBeforeNextStep: z.preprocess(
+    (val) => val === '' ? undefined : Number(val),
+    z.number().min(0, "Thời gian nghỉ phải >= 0")
+  ),
 });
 
 export type SkincareStepType = z.infer<typeof SkincareStepSchema>;

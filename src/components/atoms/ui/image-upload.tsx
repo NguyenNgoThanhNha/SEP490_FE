@@ -18,15 +18,16 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
 
   useEffect(() => {
     if (initialData.length > 0) {
-      setPreviews(initialData);
+      setPreviews(initialData.slice(0, multiple ? initialData.length : 1));
+      setSelectedFiles([]);
     }
-  }, [initialData]);
+  }, [initialData, multiple]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
     if (files.length === 0) {
-      message.warning("No files selected!");
+      message.warning(t("noFilesSelected"));
       return;
     }
 
@@ -35,34 +36,36 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
 
     files.forEach((file) => {
       if (!file.type.startsWith("image/")) {
-        message.error(`${file.name} is not an image.`);
+        message.error(`${file.name} ${t("notAnImage")}`);
         return;
       }
       if (file.size > MAX_FILE_SIZE) {
-        message.error(`${file.name} is too large. Max file size is 5MB.`);
+        message.error(`${file.name} ${t("fileTooLarge")}`);
         return;
       }
       validFiles.push(file);
       newPreviews.push(URL.createObjectURL(file));
     });
 
-    setSelectedFiles((prevFiles) => (multiple ? [...prevFiles, ...validFiles] : validFiles));
-    setPreviews((prevPreviews) => (multiple ? [...prevPreviews, ...newPreviews] : newPreviews));
+    setSelectedFiles(multiple ? [...validFiles] : [validFiles[0]]);
+    setPreviews(multiple ? [...newPreviews] : [newPreviews[0]]);
 
-    onImageUpload(validFiles);
+    onImageUpload(multiple ? validFiles : [validFiles[0]]);
   };
 
   const handleRemoveFile = (index: number) => {
     const newPreviews = previews.filter((_, i) => i !== index);
+    const newSelectedFiles = selectedFiles.filter((_, i) => i !== index);
+
     setPreviews(newPreviews);
-    setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
-    onImageUpload(selectedFiles.filter((_, i) => i !== index));
+    setSelectedFiles(newSelectedFiles);
+    onImageUpload(newSelectedFiles);
   };
 
   return (
     <div className="space-y-4">
       <label className="block text-sm font-medium text-gray-700">
-        {multiple ? t("UploadImages")  : t("UploadImage")}
+        {multiple ? t("UploadImages") : t("UploadImage")}
       </label>
 
       <div className="flex flex-wrap gap-4">
@@ -86,22 +89,24 @@ const FileUpload: React.FC<FileUploadProps> = ({ onImageUpload, multiple = false
           </div>
         ))}
 
-        <label className="w-32 h-32 bg-white border border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 cursor-pointer">
-          <input
-            type="file"
-            onChange={handleFileChange}
-            className="hidden"
-            accept="image/*"
-            multiple={multiple}
-          />
-          <PlusCircleIcon color="green" size={32} />
-          <span className="text-xs mt-1">{t('addImage')}</span>
-        </label>
+        {(!multiple && previews.length === 0) || multiple ? (
+          <label className="w-32 h-32 bg-white border border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 cursor-pointer">
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="hidden"
+              accept="image/*"
+              multiple={multiple}
+            />
+            <PlusCircleIcon color="green" size={32} />
+            <span className="text-xs mt-1">{t("addImage")}</span>
+          </label>
+        ) : null}
       </div>
 
       {selectedFiles.length > 0 && (
         <div className="text-gray-500 text-center mt-2">
-          {selectedFiles.length} file(s) selected.
+          {selectedFiles.length} {t("filesSelected")}
         </div>
       )}
     </div>

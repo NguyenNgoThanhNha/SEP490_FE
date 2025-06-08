@@ -1,4 +1,5 @@
 export type TBranch = {
+    totalRevenue: number,
     branchId: number,
     branchName: string,
     branchAddress: string,

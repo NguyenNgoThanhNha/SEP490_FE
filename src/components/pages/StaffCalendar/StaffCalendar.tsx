@@ -1,31 +1,36 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { formatEvents } from "@/utils/helpers"; 
+import { formatEvents } from "@/utils/helpers";
 import { Event } from "@/types/staff-calendar.type";
 import EventPopup from "@/components/molecules/EventPopup";
 import CustomCalendar from "@/components/molecules/Calendar";
 import { TAppointment } from "@/types/appoinment.type";
 import appoinmentService from "@/services/appoinmentService";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 const StaffCalendar = () => {
   const [selectedTask, setSelectedTask] = useState<TAppointment | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const { id } = useParams(); 
-
+  const { id } = useParams();
+  const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
+  const branchId = branchIdRedux || Number(localStorage.getItem("branchId"));
+    const roleID = useSelector((state: RootState) => state.auth.user?.roleID);
+  
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
         const appointmentsResponse = await appoinmentService.getAppointmentByBranch({
-          BranchId: 1, 
-          Page: 1, 
-          PageSize: 10, 
+          BranchId: branchId,
+          Page: 1,
+          PageSize: 100,
         });
 
         const appointments: TAppointment[] = appointmentsResponse.result?.data || [];
-        setEvents(formatEvents(appointments)); 
+        setEvents(formatEvents(appointments));
 
         setLoading(false);
       } catch (error) {
@@ -40,11 +45,11 @@ const StaffCalendar = () => {
   const handleEventClick = async (event: Event) => {
     try {
       const appointmentDetailsResponse = await appoinmentService.getAppointmentDetail({
-        appointmentId: Number(event.id) , 
+        appointmentId: Number(event.id),
       });
 
-      const appointmentDetails: TAppointment = appointmentDetailsResponse.result?.data; 
-      
+      const appointmentDetails: TAppointment = appointmentDetailsResponse.result?.data;
+
       setSelectedTask(appointmentDetails);
       setShowPopup(true);
     } catch (error) {
@@ -53,7 +58,7 @@ const StaffCalendar = () => {
   };
 
   const closePopup = () => setShowPopup(false);
-  
+
   const markTaskComplete = () => {
     if (selectedTask) {
       setSelectedTask({ ...selectedTask, status: "Completed" });
@@ -72,6 +77,7 @@ const StaffCalendar = () => {
     <>
       {showPopup && selectedTask && (
         <EventPopup
+          roleId={Number(roleID)}
           selectedTask={selectedTask}
           onClose={closePopup}
           onComplete={markTaskComplete}

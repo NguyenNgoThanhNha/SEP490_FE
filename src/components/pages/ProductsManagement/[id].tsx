@@ -53,12 +53,16 @@ const ProductDetailPage = () => {
       ) : (
         <ProductForm
           mode="update"
-          initialData={productData}
+          initialData={{
+            ...productData,
+            images: productData?.images ? [productData.images] : undefined,
+          }}
           onSubmit={(values) =>
             updateProduct({
               ...productData,
               ...values,
-              productId: Number(productData?.productId) || 0
+              productId: Number(productData?.productId) || 0,
+              images: Array.isArray(values.images) && values.images[0] ? values.images[0] : new File([], "")
             })
           }
         />

@@ -21,6 +21,9 @@ import { branchSchema, BranchType } from "@/schemas/branchSchema";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/ui/card";
+import { useTranslation } from "react-i18next";
+import { AssignManagerToBranch } from "./ManagerForm";
 
 interface BranchFormProps {
   mode: "create" | "update";
@@ -41,8 +44,8 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       longAddress: "",
       latAddress: "",
       status: "Active",
-      managerId: 1,
-      companyId: 1
+      managerId: 0,
+      companyId: 1,
     },
   });
 
@@ -51,9 +54,14 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
   const [districts, setDistricts] = useState<any[]>([]);
   const [wards, setWards] = useState<any[]>([]);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const GHN_TOKEN = "e79a5ca7-014e-11f0-a9a7-7e45b9a2ff31";
   const GOONG_API_KEY = "58y8peA3QXjke7sqZK4DYCiaRvcCbh6Jaffw5qCI";
+
+  const handleManagerSelect = (userId: number) => {
+    form.setValue("managerId", userId);
+  };
 
   useEffect(() => {
     axios
@@ -61,7 +69,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         headers: { Token: GHN_TOKEN },
       })
       .then((res) => setProvinces(res.data.data))
-      .catch((err) => console.error("Failed to fetch provinces", err));
+      .catch((err) => console.error(t("fetchProvincesError"), err));
   }, []);
 
   useEffect(() => {
@@ -75,8 +83,9 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         params: { province_id: provinceId },
       })
       .then((res) => setDistricts(res.data.data))
-      .catch((err) => console.error("Failed to fetch districts", err));
+      .catch((err) => console.error(t("fetchDistrictsError"), err));
   }, [provinceId]);
+
   useEffect(() => {
     const district = form.getValues("district");
     if (!district) return;
@@ -87,7 +96,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         params: { district_id: district },
       })
       .then((res) => setWards(res.data.data))
-      .catch((err) => console.error("Failed to fetch wards", err));
+      .catch((err) => console.error(t("fetchWardsError"), err));
   }, [form.watch("district")]);
 
   useEffect(() => {
@@ -98,11 +107,10 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       if (!isReady) return;
 
       fetchCoordinates(branchAddress, provinceId, district, wardCode);
-    }, 800); 
+    }, 800);
 
     return () => clearTimeout(timeout);
   }, [form.watch("branchAddress"), form.watch("district"), form.watch("wardCode"), provinceId]);
-
 
   const fetchCoordinates = async (
     branchAddress: string,
@@ -110,14 +118,14 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
     district: number,
     wardCode: number
   ) => {
-    const provinceName = provinces.find(p => String(p.ProvinceID) === String(provinceId))?.ProvinceName;
-    const districtName = districts.find(d => d.DistrictID === Number(district))?.DistrictName;
-    const wardName = wards.find(w => Number(w.WardCode) === Number(wardCode))?.WardName;
+    const provinceName = provinces.find((p) => String(p.ProvinceID) === String(provinceId))?.ProvinceName;
+    const districtName = districts.find((d) => d.DistrictID === Number(district))?.DistrictName;
+    const wardName = wards.find((w) => Number(w.WardCode) === Number(wardCode))?.WardName;
 
     if (!provinceName || !districtName || !wardName) return;
 
     const fullAddress = `${branchAddress}, ${wardName}, ${districtName}, ${provinceName}`;
-    console.log("Full address:", fullAddress);
+    console.log(t("fullAddress"), fullAddress);
 
     try {
       const res = await axios.get("https://rsapi.goong.io/geocode", {
@@ -133,12 +141,12 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
         form.setValue("longAddress", result.geometry.location.lng.toString());
       }
     } catch (err) {
-      console.error("Failed to fetch coordinates from Goong", err);
+      console.error(t("fetchCoordinatesError"), err);
     }
   };
 
   const handleFormSubmit = async (data: BranchType) => {
-      const payload = {
+    const payload = {
       BranchName: data.branchName,
       BranchPhone: data.branchPhone,
       BranchAddress: data.branchAddress,
@@ -150,153 +158,178 @@ const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) 
       ManagerId: data.managerId,
       CompanyId: data.companyId,
     };
-  
+
     try {
       if (!data.latAddress || !data.longAddress) {
         await fetchCoordinates(data.branchAddress, provinceId, data.district, data.wardCode);
       }
-  
-      await onSubmit(payload as any); 
-      toast.success(`${mode === "create" ? "Created" : "Updated"} branch successfully`);
+
+      await onSubmit(payload as any);
+      toast.success(
+        `${mode === "create" ? t("createBranchSuccess") : t("updateBranchSuccess")}`
+      );
       navigate("/branchs-management");
     } catch {
-      toast.error("Something went wrong while submitting branch");
+      toast.error(t("submitBranchError"));
     }
   };
-  
+
   return (
-    <Form {...form}>
+    <Form {...form} className="w-full">
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="branchName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Branch Name</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Enter branch name" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Card>
+          <CardHeader className="space-y-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl font-bold">
+                {mode === "create" ? t("createbranch") : t("updatebranch")}
+              </CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+            <FormField
+              control={form.control}
+              name="branchName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("branchname")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder={t("Enterbranchname")} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="branchPhone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone Number</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Enter phone number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="branchPhone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("branchphone")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder={t("Enterbranchphone")} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="province"
-          render={() => (
-            <FormItem>
-              <FormLabel>Province</FormLabel>
-              <Select onValueChange={(val) => setProvinceId(val)} value={provinceId}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select province" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {provinces.map((p) => (
-                    <SelectItem key={p.ProvinceID} value={p.ProvinceID.toString()}>
-                      {p.ProvinceName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="district"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>District</FormLabel>
-              <Select
-                onValueChange={(val) => field.onChange(Number(val))}
-                value={field.value?.toString()}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select district" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {districts.map((d) => (
-                    <SelectItem key={d.DistrictID} value={d.DistrictID.toString()}>
-                      {d.DistrictName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="wardCode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ward</FormLabel>
-              <Select
-                onValueChange={(val) => field.onChange(Number(val))}
-                value={field.value?.toString()}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select ward" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {wards.map((w) => (
-                    <SelectItem key={w.WardCode} value={w.WardCode}>
-                      {w.WardName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="branchAddress"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Detailed Address</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="e.g. 123 Lê Lợi, P. Bến Thành" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="province"
+              render={() => (
+                <FormItem>
+                  <FormLabel>{t("province")}</FormLabel>
+                  <Select onValueChange={(val) => setProvinceId(val)} value={provinceId}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("selectprovince")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {provinces.map((p) => (
+                        <SelectItem key={p.ProvinceID} value={p.ProvinceID.toString()}>
+                          {p.ProvinceName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="district"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("district")}</FormLabel>
+                  <Select
+                    onValueChange={(val) => field.onChange(Number(val))}
+                    value={field.value?.toString()}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("selectdistrict")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {districts.map((d) => (
+                        <SelectItem key={d.DistrictID} value={d.DistrictID.toString()}>
+                          {d.DistrictName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="wardCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("ward")}</FormLabel>
+                  <Select
+                    onValueChange={(val) => field.onChange(Number(val))}
+                    value={field.value?.toString()}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("selectward")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {wards.map((w) => (
+                        <SelectItem key={w.WardCode} value={w.WardCode}>
+                          {w.WardName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="branchAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("branchaddress")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder={t("Enterbranchaddress")} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="managerId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("manager")}</FormLabel>
+                  <AssignManagerToBranch onManagerSelect={(id) => field.onChange(id)} />
+                  {mode === "update" && initialData?.managerBranch && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      {t("currentManager")}: {initialData.managerBranch.userName}
+                    </p>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
 
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-[#516d19] text-white px-6 py-2 rounded hover:bg-green-700"
+            className="bg-[#516d19] text-white px-6 py-2 rounded-full hover:bg-green-700"
           >
-            {mode === "create" ? "Create Branch" : "Update Branch"}
+            {mode === "create" ? t("createbranch") : t("updatebranch")}
           </button>
-
         </div>
       </form>
     </Form>

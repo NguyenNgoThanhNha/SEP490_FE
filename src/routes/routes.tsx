@@ -61,6 +61,15 @@ import BranchServiceManagementPage from '@/components/pages/BranchService/Branch
 import BranchServiceDetail from '@/components/pages/BranchService/[id]'
 import { CreateRoutine } from '@/components/pages/RoutineManagement/CreateRoutine'
 import BranchOrderManagementPage from '@/components/pages/Order/BranchOrder'
+import { LeaveRequestList } from '@/components/pages/LeaveManagement/LeaveManagement'
+import OrderDetailPage from '@/components/pages/Order/[id]'
+import ManagerDashboard from '@/components/pages/Dashboard/ManagerDashboard'
+import BranchDetailPage from '@/components/pages/BranchManagement/[id]'
+import CronJobTable from '@/components/pages/ConfigSystem/ConfigSystem'
+import RoutineDetailPage from '@/components/pages/RoutineManagement/RoutineDetail'
+import BranchRoutineOrder from '@/components/pages/BranchRoutineOrder/BranchRoutineOrder'
+import BranchOrderRoutineDetail from '@/components/pages/BranchRoutineOrder/[id]'
+import PaymentCancelPage from '@/components/organisms/PaymentButton/PaymentCancel'
 
 
 export const AppRouter = () => {
@@ -86,7 +95,10 @@ export const AppRouter = () => {
         </Route>
         <Route path={ROUTES.ROOT} element={<MainLayout />}>
           <Route element={<PrivateRoute />}>
+
             <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            <Route path={ROUTES.MANAGER_DASHBOARD} element={<ManagerDashboard />} />
+
             {/* PRODUCT MANAGEMENT */}
             <Route path={ROUTES.PRODUCT_MANAGEMNT} element={<ProductManagementPage />} />
             <Route path={ROUTES.CREATE_PRODUCT} element={<CreateProductPage />} />
@@ -115,7 +127,9 @@ export const AppRouter = () => {
 
             {/* ORDER MANAGEMENT */}
             <Route path={ROUTES.ORDER_MANAGEMENT} element={<OrderPage />} />
+            <Route path={ROUTES.ORDER_DETAIL} element={<OrderDetailPage/>} />
 
+            {/* EMPLOYEE MANAGEMENT */}
             {/* USER MANAGEMENT */}
             <Route path={ROUTES.CUSTOMER_MANAGEMENT} element={<CustomerManagementPage />} />
 
@@ -126,6 +140,7 @@ export const AppRouter = () => {
             <Route path={ROUTES.CHECKOUT_PAGE} element={<CheckoutPage />} />
             <Route path={ROUTES.CASHIER_CREATE_ORDER} element={<EmployeeStore />} />
             <Route path={ROUTES.PAYMENT_NOTI} element={<PaymentSuccessPage />} />
+            <Route path={ROUTES.PAYMENT_CANCEL} element={<PaymentCancelPage />} />
 
             {/* SERVICES'S CATEGORY */}
             <Route path={ROUTES.SERVICE_CATEGORY} element={<ServicesCateManagementPage />} />
@@ -134,6 +149,8 @@ export const AppRouter = () => {
             <Route path={ROUTES.BRANCH_MANAGEMENT} element={<BranchComponent />} />
             <Route path={ROUTES.ADD_BRANCH} element={<CreateBranchPage />} />
             <Route path={ROUTES.BRANCH_ORDER_MANAGEMENT} element={<BranchOrderManagementPage />} />
+            <Route path={ROUTES.BRANCH_DETAIL} element={<BranchDetailPage />} />
+
 
             {/* BRANCH PROMOTION MANAGEMENT */}
             <Route path={ROUTES.BRANCH_PROMOTION_MANAGEMENT} element={<BranchPromotionManagementPage />} />
@@ -147,6 +164,9 @@ export const AppRouter = () => {
             {/* ROUTINE MANAGEMENT */}
             <Route path={ROUTES.ROUTINE_MANAGEMENT} element={<RoutineManagementPage />} />
             <Route path={ROUTES.CREATE_ROUTINE} element={<CreateRoutine />} />
+            <Route path={ROUTES.ROUTINE_DETAIL} element={<RoutineDetailPage />} />
+
+            {/* BRANCH PRODUCT MANAGEMENT */}
 
             {/* VOUCHER MANAGEMENT */}
             <Route path={ROUTES.VOUCHER_MANAGEMENT} element={<VoucherManagementPage />} />
@@ -159,6 +179,19 @@ export const AppRouter = () => {
             {/* BRANCH SERVICE MANAGEMENT */}
             <Route path={ROUTES.BRANCH_SERVICE_MANAGEMENT} element={<BranchServiceManagementPage />} />
             <Route path={ROUTES.BRANCH_SERVICE_DETAIL} element={<BranchServiceDetail />} />
+
+            {/* BRANCH ROUTINE ORDER */}
+            <Route path={ROUTES.BRANCH_ROUTINE_ORDER} element={<BranchRoutineOrder/>} />
+            <Route path={ROUTES.BRANCH_ROUTINE_ORDER_DETAIL} element={<BranchOrderRoutineDetail/>} />
+
+            {/* EMPLOYEE MANAGEMENT */}
+
+            {/* EMPLOYEE CALENDAR */}
+            <Route path={ROUTES.LEAVE_SCHEDULE} element={<LeaveRequestList/>} />
+
+            <Route path={ROUTES.CONFIG} element={<CronJobTable/>} />
+
+            {/* 404 PAGE */}
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />

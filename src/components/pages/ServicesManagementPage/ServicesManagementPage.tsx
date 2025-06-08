@@ -31,10 +31,13 @@ const ServicesManagementPage = () => {
       setLoading(true);
       const response = await serviceService.getAllService({ page, pageSize });
       if (response?.success) {
-        setServices(response.result?.data || []);
+        const activeService = response.result?.data.filter(
+          (service: TService) => service.status === "Active"
+        ) || [];
+        setServices(activeService);
         setTotalPages(response.result?.pagination?.totalPage || 0);
       } else {
-        toast.error(response.result?.message || t("Failedtofetchservices"));
+        toast.error(response.result?.message || "Failed to fetch products.");
       }
     } catch {
       toast.error(t("Failedtofetchservices"));
@@ -93,7 +96,7 @@ const ServicesManagementPage = () => {
     {
       label: t("Price"),
       key: "price",
-      render: (price: number) => formatPrice(price),
+      render: (price: number) => `${formatPrice(price)} VND`,
       sortable: true,
     },
     { label: t("Duration"), key: "duration", render: (duration: number) => `${duration} ${t('minutes')}` },

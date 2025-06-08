@@ -4,13 +4,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/atoms/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePicker } from "antd";
-import { Switch } from "@/components/atoms/ui/switch";
+import "dayjs/locale/vi"; // Import ngôn ngữ tiếng Việt cho Day.js
+import "dayjs/locale/en"; // Import ngôn ngữ tiếng Anh cho Day.js
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { PromotionSchema, PromotionType } from "@/schemas/promotionSchema";
 import dayjs from "dayjs";
 import TextArea from "antd/es/input/TextArea";
+import toast from "react-hot-toast";
+import enUS from "antd/es/date-picker/locale/en_US";
+import viVN from "antd/es/date-picker/locale/vi_VN";
+import { useTranslation } from "react-i18next";
 
 interface PromotionFormProps {
   mode: "create" | "update";
@@ -30,17 +35,21 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
       startDate: "",
       endDate: "",
       discountPercent: 0,
-      status: "Inactive",
+      status: "Active",
     },
   });
-
+const { t, i18n } = useTranslation();
+const currentLocale = i18n.language === "vi" ? viVN : enUS; 
   const handleFormSubmit = async (data: PromotionType) => {
     setLoading(true);
     try {
       await onSubmit(data);
+      toast.success(
+        mode === "create" ? t("createPromotion") : t("updatePromotion")
+      );
       navigate("/promotions-management");
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch {
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
@@ -53,7 +62,7 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between mt-2">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? "Create Promotion" : "Update Promotion"}
+                {mode === "create" ? t("createPromotion") : t("updatePromotion")}
               </CardTitle>
             </div>
           </CardHeader>
@@ -64,9 +73,9 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                 name="promotionName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Promotion Name</FormLabel>
+                    <FormLabel>{t("PromotionName")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter promotion name" {...field} />
+                      <Input placeholder={t("enterPromotionName")} {...field} value={field.value} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -78,11 +87,11 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                 name="promotionDescription"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t("description")}</FormLabel>
                     <FormControl>
                       <TextArea
                         {...field}
-                        placeholder="Enter promotion description"
+                        placeholder={t("enterPromotionDescription")}
                         rows={4}
                         className="text-sm font-normal"
                         style={{ borderRadius: "8px", padding: "10px", fontFamily: "inherit" }}
@@ -98,12 +107,12 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                 name="discountPercent"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Discount Percent(%)</FormLabel>
+                    <FormLabel>{t("Discount")} (%)</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type="number"
-                        placeholder="Enter discount percentage"
+                        placeholder={t("Enterdiscount")}
                         min={0}
                         max={100}
                         value={field.value || ""}
@@ -122,13 +131,14 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                 name="startDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Start Date</FormLabel>
+                    <FormLabel>{t("StartDate")}</FormLabel>
                     <FormControl>
                       <DatePicker
                         {...field}
                         className="w-full"
                         showTime={false}
                         format="DD/MM/YYYY"
+                        locale={currentLocale} // Sử dụng locale từ i18next
                         onChange={(date) =>
                           field.onChange(date ? date.toISOString() : "")
                         }
@@ -145,36 +155,18 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                 name="endDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>End Date</FormLabel>
+                    <FormLabel>{t("EndDate")}</FormLabel>
                     <FormControl>
                       <DatePicker
                         {...field}
                         className="w-full"
                         showTime={false}
+                        locale={currentLocale}
                         format="DD/MM/YYYY"
                         onChange={(date) =>
                           field.onChange(date ? date.toISOString() : "")
                         }
                         value={field.value ? dayjs(field.value) : null}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value === "Active"}
-                        onCheckedChange={(checked) =>
-                          field.onChange(checked ? "Active" : "Inactive")
-                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -191,7 +183,7 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
             onClick={() => navigate("/promotions-management")}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
-            Cancel
+            {t("Cancel")}
           </button>
           <button
             type="submit"
@@ -203,7 +195,7 @@ const PromotionForm: React.FC<PromotionFormProps> = ({ mode, initialData, onSubm
                 <Loader className="animate-spin h-5 w-5 text-white" />
               </div>
             ) : (
-              mode === "create" ? "Create Promotion" : "Update Promotion"
+              mode === "create" ? t("createPromotion") : t("updatePromotion")
             )}
           </button>
         </div>

@@ -7,7 +7,7 @@ export type TService = {
     price: number,
     duration: string,
     status: string,
-    steps: string,
+    steps: string[],
     createdDate: string,
     updatedDate: string,
     images: File[],

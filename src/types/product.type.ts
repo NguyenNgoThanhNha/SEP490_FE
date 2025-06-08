@@ -1,10 +1,10 @@
 export type TProduct = {
+    productBranchId: number;
     stockQuantity: number;
     productId: number; 
     productName: string; 
     productDescription: string; 
     price: number; 
-    volume: number; 
     dimension: string; 
     quantity: number; 
     discount: number; 
@@ -15,8 +15,7 @@ export type TProduct = {
     status: "Active" | "Sold Out"; 
     createdDate: string; 
     updatedDate: string; 
-    images: string[];
-    skinTypeSuitable: string;
-    
+    images: File[];
+    brand: string    
   };
   

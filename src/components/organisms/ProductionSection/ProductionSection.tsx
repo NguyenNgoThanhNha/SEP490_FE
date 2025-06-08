@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import product from '@/assets/images/img.png';
 import chplay from '@/assets/images/chplay.png';
+import { useTranslation } from 'react-i18next';
 
 const fadeInAnimation = {
   animation: 'fadeIn 2s ease-out',
@@ -20,6 +21,7 @@ const keyframes = `
 `;
 
 const ProductsSection: React.FC = () => {
+  const { t } = useTranslation(); // Hook để sử dụng i18next
   const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +36,7 @@ const ProductsSection: React.FC = () => {
         }
       },
       {
-        threshold: 0.5, 
+        threshold: 0.5,
       }
     );
 
@@ -54,9 +56,8 @@ const ProductsSection: React.FC = () => {
       <style>{keyframes}</style>
       <div
         ref={sectionRef}
-        className={`flex items-center justify-center bg-yellow-100 transition-all duration-500 ${
-          isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
+        className={`flex items-center justify-center bg-yellow-100 transition-all duration-500 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
         style={fadeInAnimation}
       >
         <div className="flex flex-col lg:flex-row items-center">
@@ -65,7 +66,7 @@ const ProductsSection: React.FC = () => {
               <div className="absolute items-center"></div>
               <img
                 src={product}
-                alt="Product"
+                alt={t('productImageAlt')} // Sử dụng khóa dịch
                 className="relative w-full max-w-md mb-20 mt-20 transition-all duration-700"
               />
             </div>
@@ -73,24 +74,22 @@ const ProductsSection: React.FC = () => {
 
           <div className="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
             <h2
-              className={`text-4xl font-bold text-primary mb-4 transition-all duration-700 ${
-                isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+              className={`text-4xl font-bold text-primary mb-4 transition-all duration-700 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
             >
-              Shop Our Exclusive Products
+              {t('productsTitle')} {/* Sử dụng khóa dịch */}
             </h2>
             <p
-              className={`text-lg text-gray-600 max-w-md mb-8 transition-all duration-700 ${
-                isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+              className={`text-lg text-gray-600 max-w-md mb-8 transition-all duration-700 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
             >
-              Discover the transformative power of our premium skincare line, crafted to enhance your natural beauty and promote healthy, radiant skin.
+              {t('productsDescription')} {/* Sử dụng khóa dịch */}
             </p>
             <button className="flex items-center px-6 py-3 bg-[#cce8fd] text-[#130f49] rounded-full text-lg">
               <img src={chplay} alt="CH Play" className="w-4 h-4 mr-2" />
               <div className="text-left">
-                <span className="block text-sm font-semibold">Get it on</span>
-                <span className="block text-base font-bold">Google Play</span>
+                <span className="block text-sm font-semibold">{t('getItOn')}</span> {/* Sử dụng khóa dịch */}
+                <span className="block text-base font-bold">{t('googlePlay')}</span> {/* Sử dụng khóa dịch */}
               </div>
             </button>
           </div>

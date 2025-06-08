@@ -8,4 +8,6 @@ export type TVoucher = {
   discountAmount: number
   validFrom: string
   validTo: string
+  minOrderAmount: number
+  requirePoint: number
 }

@@ -4,11 +4,13 @@ import { Input } from "@/components/atoms/ui/input";
 import FormDatePicker from "@/components/molecules/FormDatePicker";
 import { VoucherSchema, VoucherType } from "@/schemas/voucherSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import dayjs from "dayjs";
 import { Loader } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface VoucherFormProps {
   mode: "create" | "update";
@@ -19,6 +21,7 @@ interface VoucherFormProps {
 const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const form = useForm<VoucherType>({
     resolver: zodResolver(VoucherSchema),
@@ -30,22 +33,45 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
       validFrom: "",
       validTo: "",
       status: "Active",
-      remainQuantity: 0
+      remainQuantity: 0,
+      minOrderAmount: 0,
+      requirePoint: 0,
     },
   });
 
   const handleFormSubmit = async (data: VoucherType) => {
     setLoading(true);
     try {
+      const now = dayjs().startOf("day");
+      const validFrom = dayjs(data.validFrom).startOf("day");
+      const validTo = dayjs(data.validTo).endOf("day");
+
+      if (validFrom.isBefore(now)) {
+        toast.error(t("validFromError"));
+        setLoading(false);
+        return;
+      }
+
+      if (validTo.isBefore(validFrom)) {
+        toast.error(t("validToError"));
+        setLoading(false);
+        return;
+      }
+
       const payload = {
         ...data,
-        remainQuantity: data.quantity, 
+        validFrom: validFrom.format("YYYY-MM-DDTHH:mm:ss"),
+        validTo: validTo.toISOString(),
+        remainQuantity: data.quantity,
       };
+
       await onSubmit(payload);
-      toast.success(`${mode === "create" ? "Created" : "Updated"} voucher successfully`);
+      toast.success(
+        mode === "create" ? t("createVoucherSuccess") : t("updateVoucherSuccess")
+      );
       navigate("/voucher-management");
     } catch {
-      toast("Something went wrong while submitting voucher");
+      toast.error(t("submitVoucherError"));
     } finally {
       setLoading(false);
     }
@@ -58,7 +84,7 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
           <CardHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">
-                {mode === "create" ? "Create Voucher" : "Update Voucher"}
+                {mode === "create" ? t("createVoucher") : t("updateVoucher")}
               </CardTitle>
             </div>
           </CardHeader>
@@ -68,38 +94,40 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
               name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Voucher Code</FormLabel>
+                  <FormLabel>{t("voucherCode")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter voucher code" {...field} />
+                    <Input placeholder={t("enterVoucherCode")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t("description")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter description" {...field} />
+                    <Input placeholder={t("enterDescription")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="quantity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Quantity</FormLabel>
+                  <FormLabel>{t("quantity")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Enter quantity"
-                      value={field.value || ''}
+                      placeholder={t("enterQuantity")}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
@@ -107,17 +135,56 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="discountAmount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Discount Amount (VND)</FormLabel>
+                  <FormLabel>{t("discountAmount")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Enter discount amount"
-                      value={field.value || ''}
+                      placeholder={t("enterDiscountAmount")}
+                      value={field.value || ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="minOrderAmount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("minOrderAmount")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder={t("enterMinOrderAmount")}
+                      value={field.value || ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="requirePoint"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("requirePoint")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder={t("enterRequirePoint")}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
@@ -128,17 +195,16 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
 
             <FormDatePicker name="validFrom" form={form} />
             <FormDatePicker name="validTo" form={form} />
-
           </CardContent>
         </Card>
 
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={() => navigate("/dashboard/vouchers")}
+            onClick={() => navigate("/voucher-management")}
             className="rounded-full border-2 border-[#6a9727] text-[#6a9727] px-6 py-2 font-semibold hover:bg-[#6a9727] hover:text-white transition"
           >
-            Cancel
+            {t("Cancel")}
           </button>
           <button
             type="submit"
@@ -150,7 +216,7 @@ const VoucherForm: React.FC<VoucherFormProps> = ({ mode, initialData, onSubmit }
                 <Loader className="animate-spin h-5 w-5 text-white" />
               </div>
             ) : (
-              mode === "create" ? "Create Voucher" : "Update Voucher"
+              mode === "create" ? t("createVoucher") : t("updateVoucher")
             )}
           </button>
         </div>

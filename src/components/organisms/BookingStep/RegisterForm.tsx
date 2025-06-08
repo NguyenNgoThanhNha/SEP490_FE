@@ -1,17 +1,19 @@
-import {useState } from "react";
+import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/atoms/ui/form copy";
 import { Input } from "@/components/atoms/ui/input";
 import authService from "@/services/authService";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface RegisterWithPhoneProps {
-  onRegisterSuccess: (userId: number) => void;
+  onRegisterSuccess: (userId: number, bonusPoint: number) => void;
 }
 
 const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegisterSuccess }) => {
+  const { t } = useTranslation();
   const [checking, setChecking] = useState(false);
-  const [showRegisterFields, setShowRegisterFields] = useState(false); // <-- show form khi user chưa có
+  const [showRegisterFields, setShowRegisterFields] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -31,15 +33,16 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
       const res = await authService.getUserByPhone({ phone: phoneNumber });
 
       if (res.success && res.result?.data) {
-        toast.success("Tài khoản đã tồn tại!");
-        onRegisterSuccess(res.result.data.userId);
+        toast.success(t("accountExists"));
+        const { userId, bonusPoint } = res.result.data;
+        onRegisterSuccess(userId, bonusPoint); 
         setShowRegisterFields(false);
       } else {
-        toast("Chưa có tài khoản, vui lòng nhập thêm thông tin.");
+        toast(t("accountNotFound"));
         setShowRegisterFields(true);
       }
     } catch {
-      toast.error("Lỗi kiểm tra số điện thoại!");
+      toast.error(t("phoneCheckError"));
     } finally {
       setChecking(false);
     }
@@ -49,7 +52,7 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
     const { userName, phoneNumber } = form.getValues();
 
     if (!userName || !phoneNumber) {
-      toast.error("Vui lòng nhập đầy đủ họ tên và số điện thoại.");
+      toast.error(t("missingFields"));
       return;
     }
 
@@ -61,15 +64,16 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
         password: "123456",
       });
 
-      if (createRes.success && createRes.result?.data.userId) {
-        toast.success("Tạo tài khoản thành công!");
-        onRegisterSuccess(createRes.result.data.userId);
+      if (createRes.success && createRes.result?.data) {
+        toast.success(t("accountCreated"));
+        const { userId, bonusPoint } = createRes.result.data;
+        onRegisterSuccess(userId, bonusPoint); 
         setShowRegisterFields(false);
       } else {
-        toast.error("Tạo tài khoản thất bại!");
+        toast.error(t("accountCreationFailed"));
       }
-    } catch  {
-      toast.error("Lỗi khi tạo tài khoản.");
+    } catch {
+      toast.error(t("accountCreationError"));
     } finally {
       setChecking(false);
     }
@@ -83,12 +87,12 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
           name="phoneNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone number</FormLabel>
+              <FormLabel>{t("phoneNumber")}</FormLabel> 
               <FormControl>
                 <Input
-                  placeholder="Phone Number"
+                  placeholder={t("enterPhoneNumber")}
                   {...field}
-                  onBlur={checkPhone} 
+                  onBlur={checkPhone}
                 />
               </FormControl>
             </FormItem>
@@ -102,9 +106,9 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
               name="userName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>User name</FormLabel>
+                  <FormLabel>{t("userName")}</FormLabel> 
                   <FormControl>
-                    <Input placeholder="Nhập họ tên" {...field} />
+                    <Input placeholder={t("enterUserName")} {...field} /> 
                   </FormControl>
                 </FormItem>
               )}
@@ -115,9 +119,9 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email (nếu có)</FormLabel>
+                  <FormLabel>{t("emailOptional")}</FormLabel> 
                   <FormControl>
-                    <Input placeholder="Nhập email" {...field} />
+                    <Input placeholder={t("enterEmail")} {...field} /> 
                   </FormControl>
                 </FormItem>
               )}
@@ -129,12 +133,12 @@ const RegisterWithPhoneOrEmail: React.FC<RegisterWithPhoneProps> = ({ onRegister
               onClick={handleRegister}
               disabled={checking}
             >
-              {checking ? "Đang xử lý..." : "Tạo tài khoản"}
+              {checking ? t("processing") : t("createAccount")} 
             </button>
           </>
         )}
 
-        {checking && <p className="text-sm text-blue-500">Đang kiểm tra...</p>}
+        {checking && <p className="text-sm text-blue-500">{t("checking")}</p>} 
       </form>
     </Form>
   );

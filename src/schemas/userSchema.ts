@@ -63,9 +63,9 @@ emailOrPhone: z
   }, 'Vui lòng nhập email hoặc số điện thoại hợp lệ'),
   password: z
     .string({
-      required_error: 'Password is required'
+      required_error: 'Vui lòng nhâp mật khẩu'
     })
-    .min(1, 'Password is required')
+    .min(1, 'Vui lòng nhâp mật khẩu')
 })
 export type UserLoginType = z.infer<typeof UserLoginSchema>
 //forgot-password

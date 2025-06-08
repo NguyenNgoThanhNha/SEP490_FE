@@ -17,6 +17,8 @@ interface CreateVoucherProps {
   validTo: string
   status: 'Active',
   remainQuantity: number
+  minOrderAmount: number
+  requirePoint: number
 }
 const createVoucher = async (data: CreateVoucherProps): Promise<ResponseProps> => {
   return await post('Voucher/create-voucher', data)
@@ -40,6 +42,7 @@ const updateVoucher = async (data: UpdateVoucherProps): Promise<ResponseProps> =
 const deleteVoucher = async (voucherId: number): Promise<ResponseProps> => {
   return await del(`Voucher/delete-voucher/${voucherId}`)
 }
+
 export default {
   getAllVoucher,
   createVoucher,

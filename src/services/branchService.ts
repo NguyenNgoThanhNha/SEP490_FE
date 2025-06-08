@@ -1,4 +1,4 @@
-import { del, get, post, ResponseProps } from "./root";
+import { del, get, post, put, ResponseProps } from "./root";
 import axios from "axios";
 
 const GHN_TOKEN = "e79a5ca7-014e-11f0-a9a7-7e45b9a2ff31";
@@ -18,6 +18,9 @@ const deleteBranch = async (branchId: number): Promise<ResponseProps> => {
   return await del(`Branch/delete/${branchId}`);
 };
 
+const getManagerNotInBranch = async (): Promise<ResponseProps> => {
+  return await get(`User/get-manager-not-in-branch`);
+}
 interface CreateBranchProps {
   branchName: string;
   branchAddress: string;
@@ -75,6 +78,14 @@ const getCoordinates = async (fullAddress: string): Promise<{ lat: string; lng: 
   };
 };
 
+const getBranchById = async (branchId: number): Promise<ResponseProps> => {
+  return await get(`Branch/get-by-id/${branchId}`);
+};
+
+const updateBranch = async (data: CreateBranchProps): Promise<ResponseProps> => {
+  return await put(`Branch/update`, data);
+}
+
 export default {
   getAllBranch,
   deleteBranch,
@@ -83,4 +94,7 @@ export default {
   getDistricts,
   getWards,
   getCoordinates,
+  getBranchById,
+  getManagerNotInBranch,
+  updateBranch,
 };

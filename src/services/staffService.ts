@@ -1,4 +1,4 @@
-import { del, get, post, put, ResponseProps } from './root'
+import { del, get, patch, post, put, ResponseProps } from './root'
 
 interface StaffProps {
   pageIndex: number
@@ -52,11 +52,11 @@ const updateStaff = async ({
   avatar,
   branchId
 }: UpdateStaffProps): Promise<ResponseProps> => {
-  return await put(`Staff/${staffId}`, { userName, fullName, email, avatar, branchId })
+  return await put(`Staff/update/${staffId}`, { userName, fullName, email, avatar, branchId })
 }
 
 const deleteStaff = async (staffId: number): Promise<ResponseProps> => {
-  return await del(`Staff/${staffId}`)
+  return await del(`Staff/delete/${staffId}`)
 }
 
 interface GetStaffByServiceCategoryProps {
@@ -86,13 +86,13 @@ const getStaffBusyTime = async ({ staffId, date }: StaffBusyTimeProps): Promise<
 }
 
 interface GetStaffFreeInTimeProps {
-  branchId: number,
-  serviceIds: number[],
+  branchId: number
+  serviceIds: number[]
   startTimes: string
 }
 
-const getStaffFreeInTime = async (data:  GetStaffFreeInTimeProps): Promise<ResponseProps> => {
-  return await post(`Staff/staff-free-in-time`, data);
+const getStaffFreeInTime = async (data: GetStaffFreeInTimeProps): Promise<ResponseProps> => {
+  return await post(`Staff/staff-free-in-time`, data)
 }
 
 interface AssignStaffRoleProps {
@@ -110,6 +110,67 @@ const staffWorkingSlot = async (branchId: number, month: number, year: number): 
 const getStaffInfo = async (): Promise<ResponseProps> => {
   return await get('Staff/get-staff-info')
 }
+interface GetListStaffAvailableProps {
+  serviceId: number
+  branchId: number
+  workDate: string
+  startTime: string
+}
+
+const getListStaffAvailable = async (data: GetListStaffAvailableProps): Promise<ResponseProps> => {
+  return await post('Staff/get-list-staff-available-by-service-and-time', data)
+}
+
+const getListShift = async (): Promise<ResponseProps> => {
+  return await get(`Staff/get-list-shifts`)
+}
+
+const staffLeaveOfBranch = async (branchId: number, month: number): Promise<ResponseProps> => {
+  return await post(`Staff/get-staff-leave-of-branch`, { branchId, month })
+}
+const approveLeave = async (staffLeaveId: number): Promise<ResponseProps> => {
+  return await put(`Staff/approve-staff-leave/${staffLeaveId}`)
+}
+
+const rejectLeave = async (staffLeaveId: number): Promise<ResponseProps> => {
+  return await put(`Staff/reject-staff-leave/${staffLeaveId}`)
+}
+
+const getStaffLeaveAppointments = async (staffLeaveId: number): Promise<ResponseProps> => {
+  return await get(`Staff/get-staff-leave-appointments/?staffLeaveId=${staffLeaveId}`)
+}
+
+interface StaffReplacementProps {
+  branchId: number
+  startTime: string
+  endTime: string
+  date: string
+  serviceId: number
+}
+const staffReplacement = async (data: StaffReplacementProps): Promise<ResponseProps> => {
+  return await get(`Staff/replacement-staff?branchId=${data.branchId}&startTime=${data.startTime}&endTime=${data.endTime}&serviceId=${data.serviceId}&date=${data.date}`)
+}
+
+interface updateWorkScheduleProps {
+  staffLeaveId: number;
+  staffReplaceId: number;
+  shiftId: number;
+  workDate: string;
+}
+const updateWorkSchedule = async (data: updateWorkScheduleProps): Promise<ResponseProps> => {
+  return await patch(`Staff/update-work-schedules-for-staff-leave`, data)
+}
+
+interface UnassignStaffProps {
+  branchId: number
+  startTime: string
+  endTime: string
+  date: string
+}
+const unassignStaff = async (data: UnassignStaffProps): Promise<ResponseProps> => {
+  return await get(`Staff/unassigned-staff?branchId=${data.branchId}&startTime=${data.startTime}&endTime=${data.endTime}&date=${data.date}`)
+}
+
 export default {
   createStaff,
   updateStaff,
@@ -122,5 +183,14 @@ export default {
   staffWorkingSlot,
   getStaffByServiceCategory,
   getStaffFreeInTime,
-  getStaffInfo
+  getStaffInfo,
+  getListStaffAvailable,
+  getListShift,
+  staffLeaveOfBranch,
+  rejectLeave,
+  approveLeave,
+  getStaffLeaveAppointments,
+  staffReplacement,
+  updateWorkSchedule,
+  unassignStaff,
 }

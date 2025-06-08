@@ -11,6 +11,7 @@ export enum ROUTES {
   // Dashboard
   HOME='home',
   DASHBOARD = "dashboard",
+  MANAGER_DASHBOARD = 'manager-dashboard',
   ABOUT_US = 'about-us',
   OUR_SERVICES = 'our-services',
   CONTACT = 'contact',
@@ -44,6 +45,7 @@ export enum ROUTES {
 
   // Order
   ORDER_MANAGEMENT = 'order',
+  ORDER_DETAIL = '/order-management/:orderId',
  
 
   // Blog
@@ -64,12 +66,16 @@ export enum ROUTES {
   ADD_BRANCH = 'add-branch',
   BRANCH_PROMOTION_MANAGEMENT = 'branch-promotion-management',
   BRANCH_ORDER_MANAGEMENT ='branch-order-management',
+  BRANCH_DETAIL ='/branchs-management/:branchId',
+
   // Others
   CHAT = 'chat',
   CASHIER_BOOOKING = 'booking-form',
   CASHIER_CREATE_ORDER = 'create-order',
   CHECKOUT_PAGE ='checkout',
   PAYMENT_NOTI = 'payment-noti', 
+  CONFIG = 'config',
+  PAYMENT_CANCEL = 'payment-cancel',
 
   //Voucher
   VOUCHER_MANAGEMENT = 'voucher-management',
@@ -85,5 +91,11 @@ export enum ROUTES {
   
   //Routine Management
   ROUTINE_MANAGEMENT = 'routine-management', 
-  CREATE_ROUTINE = 'create-routine'
+  CREATE_ROUTINE = 'create-routine',
+  ROUTINE_DETAIL = '/routine-management/:routineId',
+  BRANCH_ROUTINE_ORDER = 'branch-routine-order',
+  BRANCH_ROUTINE_ORDER_DETAIL = '/branch-routine-order/:orderId/:userRoutineId',
+
+  //LEAVE schedule
+  LEAVE_SCHEDULE = 'leave-schedule',
 }

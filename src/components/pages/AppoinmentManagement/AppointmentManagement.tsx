@@ -10,6 +10,7 @@ import { TAppointment } from "@/types/appoinment.type";
 import appoinmentService from "@/services/appoinmentService";
 import BranchComponent from "../BranchManagement/BranchManagement";
 import { startConnection, stopConnection } from "@/services/signalRService";
+import { t } from "i18next";
 
 const AppointmentManagementPage = () => {
   const [appointments, setAppointments] = useState<TAppointment[]>([]);
@@ -185,7 +186,7 @@ const AppointmentManagementPage = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="whitespace-nowrap text-gray-400 text-sm">
-              Number of rows per page
+             {t("Numberofrowsperpage")}
             </span>
             <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
               {[5, 10, 15, 20].map((size) => (

@@ -22,19 +22,44 @@ interface StaffFormProps {
 
 const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
+  const [branchs, setBranchs] = useState<TBranch[]>([]);
   const navigate = useNavigate();
-  const [branchs, setBranch] = useState<TBranch[]>([]);
   const { t } = useTranslation();
 
   const form = useForm<StaffType>({
     resolver: zodResolver(StaffSchema),
     defaultValues: initialData || {
       userName: "",
-      email: "",
       fullName: "",
-      branchId: 1
+      email: "",
+      branchId: 0,
+      roleId: 0,
+      avatar: "",
     },
   });
+
+  useEffect(() => {
+    const fetchBranch = async () => {
+      try {
+        const response = await branchService.getAllBranch({ page: 1, pageSize: 200, status: "Active" });
+        if (response.success) {
+          setBranchs(response.result?.data || []);
+        } else {
+          toast.error("Failed to fetch Branch");
+        }
+      } catch {
+        toast.error("An error occurred while fetching branch");
+      }
+    };
+
+    fetchBranch();
+  }, []);
+
+  useEffect(() => {
+    if (initialData) {
+      form.reset(initialData);
+    }
+  }, [initialData]);
 
   const handleFormSubmit = async (data: StaffType) => {
     setLoading(true);
@@ -47,21 +72,6 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
       setLoading(false);
     }
   };
-  useEffect(() => {
-    const fetchBranch = async () => {
-      try {
-        const response = await branchService.getAllBranch({ page: 1, pageSize: 200, status: "Active" });
-        if (response.success) {
-          setBranch(response.result?.data || []);
-        } else {
-          toast.error("Failed to fetch Branch");
-        }
-      } catch {
-        toast.error("An error occurred while fetching branch");
-      }
-    };
-    fetchBranch();
-  }, []);
 
   return (
     <Form {...form}>
@@ -74,8 +84,10 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
               </CardTitle>
             </div>
           </CardHeader>
+
           <CardContent className="grid grid-cols-7 gap-6">
             <div className="col-span-4 space-y-6">
+              {/* Username */}
               <FormField
                 control={form.control}
                 name="userName"
@@ -83,12 +95,14 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                   <FormItem>
                     <FormLabel>{t("StaffName")}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('EnterStaffName')} {...field} />
+                      <Input placeholder={t("EnterStaffName")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Fullname */}
               <FormField
                 control={form.control}
                 name="fullName"
@@ -98,7 +112,7 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                     <FormControl>
                       <TextArea
                         {...field}
-                        placeholder={t('EnterFullName')}
+                        placeholder={t("EnterFullName")}
                         rows={4}
                         className="text-sm font-normal"
                         style={{ borderRadius: "8px", padding: "10px", fontFamily: "inherit" }}
@@ -108,6 +122,8 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                   </FormItem>
                 )}
               />
+
+              {/* Email */}
               <FormField
                 control={form.control}
                 name="email"
@@ -117,7 +133,7 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder={t('EnterEmail')}
+                        placeholder={t("EnterEmail")}
                         className="text-sm font-normal"
                         style={{ borderRadius: "8px", padding: "10px", fontFamily: "inherit" }}
                       />
@@ -126,27 +142,46 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                   </FormItem>
                 )}
               />
+
+              {mode === "update" && (
+                <FormField
+                  control={form.control}
+                  name="avatar"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("Avatar URL")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder={t("EnterAvatarURL")}
+                          className="text-sm font-normal"
+                          style={{ borderRadius: "8px", padding: "10px", fontFamily: "inherit" }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               <FormField
                 control={form.control}
                 name="branchId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('Branch')}</FormLabel>
+                    <FormLabel>{t("Branch")}</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
-                      value={field.value ? field.value.toString() : undefined}
+                      value={field.value?.toString()}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder={t('SelectBranch')} />
+                          <SelectValue placeholder={t("SelectBranch")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {branchs?.map((branch) => (
-                          <SelectItem
-                            key={branch.branchId}
-                            value={branch.branchId.toString()}
-                          >
+                        {branchs.map((branch) => (
+                          <SelectItem key={branch.branchId} value={branch.branchId.toString()}>
                             {branch.branchName}
                           </SelectItem>
                         ))}
@@ -156,35 +191,38 @@ const StaffForm: React.FC<StaffFormProps> = ({ mode, initialData, onSubmit }) =>
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="roleId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('Role')}</FormLabel>
-                    <Select
-                      onValueChange={(value) => field.onChange(Number(value))}
-                      value={field.value ? field.value.toString() : undefined}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('SelectRole')} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="1">{t(' Manager')}</SelectItem>
-                        <SelectItem value="2">{t('Specialist')}</SelectItem>
-                        <SelectItem value="3">{t('Cashier')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
+              {/* Role - chỉ create */}
+              {mode === "create" && (
+                <FormField
+                  control={form.control}
+                  name="roleId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("Role")}</FormLabel>
+                      <Select
+                        onValueChange={(value) => field.onChange(Number(value))}
+                        value={field.value?.toString()}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder={t("SelectRole")} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="3">{t("Specialist")}</SelectItem>
+                          <SelectItem value="4">{t("Cashier")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
           </CardContent>
         </Card>
+
         <div className="flex justify-end space-x-4">
           <button
             type="button"

@@ -23,7 +23,7 @@ export default function ChatMessages({ messages, currentUserId }: Props) {
           >
             {!isCurrentUser && (
               <img
-                src={sender?.image || 'https://i.pinimg.com/736x/e8/d7/d0/e8d7d05f392d9c2cf0285ce928fb9f4a.jpg'}
+                src={sender?.image || 'https://i.pinimg.com/736x/c6/3b/a4/c63ba4abc256a03c3f3a830965c365ac.jpg'}
                 alt="avatar"
                 className="w-8 h-8 rounded-full mr-2"
               />
@@ -53,7 +53,7 @@ export default function ChatMessages({ messages, currentUserId }: Props) {
             </div>
             {isCurrentUser && (
               <img
-                src={sender?.image || '/default-avatar.png'}
+                src={sender?.image || 'https://i.pinimg.com/736x/c6/3b/a4/c63ba4abc256a03c3f3a830965c365ac.jpg'}
                 alt="avatar"
                 className="w-8 h-8 rounded-full ml-2"
               />

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Edit } from "lucide-react";
-import ReusableAreaChart from "@/components/molecules/AreaChart";
-import RechartsPieChart from "@/components/molecules/PieChart";
 import { Table } from "@/components/organisms/Table/Table";
 import { formatPrice } from "@/utils/formatPrice";
 import toast from "react-hot-toast";
@@ -22,34 +20,31 @@ const BranchOrderManagementPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
-  const [orderTypeFilter, ] = useState<string[]>([]);
   const branchIdRedux = useSelector((state: RootState) => state.branch.branchId);
   const BranchId = branchIdRedux || Number(localStorage.getItem("branchId"));
   const { t } = useTranslation();
 
-  const fetchOrders = async (BranchId: number, PageIndex: number, PageSize: number, OrderType?: string) => {
+  const fetchOrders = async (PageIndex: number, PageSize: number) => {
     try {
       setLoading(true);
       const response = await orderService.getAllOrder({
         BranchId,
         PageIndex,
         PageSize,
-        OrderType: OrderType,
       });
 
       if (response?.success) {
-        setOrders(response.result?.data);
-        setTotalPages(response.result?.pagination?.totalPage || 0);
+        setOrders(response.result?.data); // Lưu danh sách đơn hàng vào state
+        setTotalPages(response.result?.pagination?.totalPage || 0); // Cập nhật tổng số trang
       } else {
-        toast.error(response.result?.message || "Failed to fetch orders.");
+        toast.error(response.result?.message || t("fetchError"));
       }
     } catch {
-      toast.error("Failed to fetch orders.");
+      toast.error(t("fetchError"));
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleEdit = (orderId: number) => {
     navigate(`/order-management/${orderId}`);
@@ -58,35 +53,86 @@ const BranchOrderManagementPage = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
-      fetchOrders(BranchId, newPage, pageSize);
+      fetchOrders(newPage, pageSize); 
     }
   };
 
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
-    setPage(1);
-    fetchOrders(BranchId, page, value);
+    setPage(1); // Đặt lại trang về 1
+    fetchOrders(1, value); // Gọi API với kích thước trang mới
   };
 
   useEffect(() => {
-    fetchOrders(BranchId, page, pageSize);
+    fetchOrders( page, pageSize);
   }, [BranchId, page, pageSize]);
 
   const headers = [
-    { label: t("Customer"), key: "customer.userName" },
-    { label: t("Price"), key: "totalAmount", render: (price: number) => formatPrice(price), sortable: true },
-    { label: t("Status"), key: "status", sortable: true },
+    { label: t("customer"), key: "customer.userName" },
+    { label: t("Price"), key: "totalAmount", render: (price: number) => `${formatPrice(price)} VND`, sortable: true },
     {
-      label: t("Paymentmethod"),
+      label: t('Status'),
+      key: 'status',
+      render: (status: string) => {
+        let variant: 'active' | 'inactive' | 'pending' | 'default';
+        let translatedStatus = '';
+
+        switch (status) {
+          case 'Completed':
+            variant = 'active';
+            translatedStatus = t('Completed');
+            break;
+          case 'Pending':
+            variant = 'pending';
+            translatedStatus = t('Pending');
+            break;
+          case 'Cancelled':
+            variant = 'inactive';
+            translatedStatus = t('Cancelled');
+            break;
+
+          default:
+            variant = 'default';
+            translatedStatus = t('Unknown');
+        }
+
+        return <Badge variant={variant}>{translatedStatus}</Badge>;
+      },
+    }, {
+      label: t("paymentMethod"),
       key: "paymentMethod",
       render: (status: string) => (
-        <Badge variant={status === "PayOs" ? "active" : "inactive"}>
-            {status}
+        <Badge variant={status?.toUpperCase() === "PAYOS" ? "active" : "inactive"}>
+          {t(status)}
         </Badge>
-    ),
+      ),
     },
-    { label: t("OrderType"), key: "orderType" },
+    {
+      label: t('OrderType'),
+      key: 'orderType',
+      render: (orderType: string) => {
+        let translatedOrderType = '';
 
+        switch (orderType) {
+          case 'Product':
+            translatedOrderType = t('Product');
+            break;
+          case 'ProductAndService':
+            translatedOrderType = t('productandservice');
+            break;
+          case 'Appointment':
+            translatedOrderType = t('Appointment');
+            break;
+          case 'Routine':
+            translatedOrderType = t('Routine');
+            break;
+          default:
+            translatedOrderType = t('Unknown');
+        }
+
+        return translatedOrderType;
+      },
+    }
   ];
 
   const renderPagination = () => {
@@ -135,49 +181,20 @@ const BranchOrderManagementPage = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <div className="flex gap-6 mb-8">
-        <div className="flex-1">
-          <ReusableAreaChart
-            title="Product used"
-            showTotal={true}
-            chartData={[
-              { label: "Jan", value: 2000 },
-              { label: "Feb", value: 1150 },
-              { label: "Mar", value: 1800 },
-              { label: "Apr", value: 900 },
-            ]}
-          />
-        </div>
-        <div className="flex-1">
-          <RechartsPieChart
-            title="Type distribution"
-            subtitle="Product Type"
-            labels={["Serum", "Toner", "Others"]}
-            data={[59, 20, 21]}
-          />
-        </div>
-      </div>
-
       <div className="bg-white shadow-md rounded-lg p-4">
         <Table
-          filters={[
-            {
-              key: "orderType", 
-              values: orderTypeFilter,
-            },
-          ]} headers={headers}
-          selectable={true}
+          headers={headers}
           data={orders.length > 0 ? orders : []}
           badgeConfig={{
             key: "status",
             values: {
-              Active: { label: "Active", color: "green", textColor: "white" },
-              SoldOut: { label: "Sold Out", color: "red", textColor: "white" },
+              Active: { label: t("active"), color: "green", textColor: "white" },
+              SoldOut: { label: t("soldOut"), color: "red", textColor: "white" },
             },
           }}
           actions={(row) => (
             <>
-              <button className="text-blue-500 hover:text-blue-700" onClick={() => handleEdit(row.productId as number)}>
+              <button className="text-blue-500 hover:text-blue-700" onClick={() => handleEdit(row.orderId as number)}>
                 <Edit className="w-5 h-5" />
               </button>
             </>
@@ -189,12 +206,12 @@ const BranchOrderManagementPage = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="whitespace-nowrap text-gray-400 text-sm">
-              Number of rows per page
+              {t("Numberofrowsperpage")}
             </span>
             <Select defaultValue={pageSize} onChange={handlePageSizeChange} className="w-28">
               {[5, 10, 15, 20].map((size) => (
                 <Select.Option key={size} value={size}>
-                  {size} items
+                  {size} {t("items")}
                 </Select.Option>
               ))}
             </Select>
@@ -202,11 +219,11 @@ const BranchOrderManagementPage = () => {
           <Pagination className="flex">
             <PaginationContent>
               <PaginationPrevious onClick={() => handlePageChange(page - 1)} isDisabled={page === 1}>
-                Prev
+                {t("Prev")}
               </PaginationPrevious>
               {renderPagination()}
               <PaginationNext onClick={() => handlePageChange(page + 1)} isDisabled={page === totalPages}>
-                Next
+                {t("Next")}
               </PaginationNext>
             </PaginationContent>
           </Pagination>

@@ -1,6 +1,8 @@
 import { TBranch } from "./branch.type"
 
 export type TStaff = {
+    avatar: string
+    roleId: number
     staffId: number,
     userId: number,
     branchId: number,
